@@ -1,0 +1,13 @@
+LGS TAILWIND-ONLY PROJECT
+=========================
+
+1. Open this folder in VS Code.
+2. Open a terminal in this folder.
+3. Run: npm install
+4. Run: npm run dev
+5. Open: http://localhost:5173
+
+UI styling is Tailwind utility-first.
+There is no styles.css and no publicSite.css.
+
+Note: CivicMap.tsx imports Leaflet's own leaflet.css because Leaflet requires it.

@@ -1,0 +1,80 @@
+import type { Building, NotificationItem, ServiceRequest, User } from '../types'
+
+export const demoUsers: User[] = [
+  { id: 'u-citizen', name: 'Nadeesha Perera', shortName: 'Nadeesha', email: 'citizen@lgs.demo', role: 'CITIZEN', avatar: 'NP' },
+  { id: 'u-worker', name: 'Officer D. Fernando', shortName: 'Fernando', email: 'officer@lgs.demo', role: 'GOV_WORKER', department: 'Environmental Services', avatar: 'DF' },
+  { id: 'u-admin', name: 'Kavinda Jayasekara', shortName: 'Kavinda', email: 'admin@lgs.demo', role: 'GOV_ADMIN', department: 'Municipal Operations', avatar: 'KJ' },
+  { id: 'u-approver', name: 'Sajini De Silva', shortName: 'Sajini', email: 'approver@lgs.demo', role: 'APPROVER', department: 'Municipal Administration', avatar: 'SD' },
+  { id: 'u-superior', name: 'Municipal Director', shortName: 'Director', email: 'director@lgs.demo', role: 'SUPERIOR', department: 'Executive Office', avatar: 'MD' },
+]
+
+export const buildings: Building[] = [
+  { id: 'LGS-BLD-002193', name: 'No. 14 Residence', address: '14 Temple Road, Weddemulla', type: 'Residential', publicFacility: false, requestCount: 4, propertyId: 'PRP-10293', taxId: 'TAX-982193', taxStatus: 'Current', assessmentValue: 'Rs. 18.4M', center: [80.68922, 7.07102] },
+  { id: 'LGS-BLD-002214', name: 'Weddemulla Community Hall', address: 'Community Lane, Weddemulla', type: 'Public facility', publicFacility: true, requestCount: 9, propertyId: 'PRP-10314', taxId: 'GOV-EXEMPT', taxStatus: 'Exempt', assessmentValue: 'Rs. 42.0M', center: [80.68958, 7.0712] },
+  { id: 'LGS-BLD-002226', name: 'Central Market Block', address: 'Market Road, Weddemulla', type: 'Commercial', publicFacility: false, requestCount: 15, propertyId: 'PRP-10326', taxId: 'TAX-982226', taxStatus: 'Outstanding', assessmentValue: 'Rs. 66.7M', center: [80.68888, 7.07131] },
+  { id: 'LGS-BLD-002241', name: 'Public Library', address: 'Station Road, Weddemulla', type: 'Public facility', publicFacility: true, requestCount: 3, propertyId: 'PRP-10341', taxId: 'GOV-EXEMPT', taxStatus: 'Exempt', assessmentValue: 'Rs. 51.2M', center: [80.68975, 7.07072] },
+]
+
+const history1 = [
+  { status: 'CREATED' as const, label: 'Request submitted', at: 'Aug 25 · 10:23', by: 'Nadeesha Perera', note: 'Submitted with two photos.' },
+  { status: 'UNDER_REVIEW' as const, label: 'Reviewed by operations', at: 'Aug 25 · 14:41', by: 'Operations Desk' },
+  { status: 'ASSIGNED' as const, label: 'Assigned to Environmental Services', at: 'Aug 26 · 09:12', by: 'Kavinda Jayasekara' },
+  { status: 'INSPECTING' as const, label: 'Field inspection started', at: 'Aug 27 · 11:02', by: 'Officer D. Fernando' },
+]
+
+export const requests: ServiceRequest[] = [
+  { id: 'LGS-2026-000182', type: 'COMPLAINT', title: 'Illegal waste disposal beside drainage canal', description: 'Waste has been accumulating near the canal for several days and is blocking part of the drainage path.', status: 'INSPECTING', priority: 'HIGH', ward: 'Ward 04', department: 'Environmental Services', buildingId: 'LGS-BLD-002193', locationLabel: 'Temple Road drainage canal', latitude: 7.07106, longitude: 80.68917, createdAt: '2026-08-25T10:23:00', updatedAt: '2026-08-27T11:02:00', createdBy: 'u-citizen', assignedTo: 'u-worker', photos: ['Drain edge', 'Waste pile'], history: history1 },
+  { id: 'LGS-2026-000197', type: 'COMPLAINT', title: 'Streetlight not functioning', description: 'The light opposite the community hall has not switched on for three nights.', status: 'ASSIGNED', priority: 'NORMAL', ward: 'Ward 04', department: 'Utilities', buildingId: 'LGS-BLD-002214', locationLabel: 'Community Lane', latitude: 7.07117, longitude: 80.68951, createdAt: '2026-08-26T18:20:00', updatedAt: '2026-08-27T08:48:00', createdBy: 'u-citizen', assignedTo: 'u-worker', photos: ['Lamp post'], history: [
+    { status: 'CREATED', label: 'Request submitted', at: 'Aug 26 · 18:20', by: 'Nadeesha Perera' },
+    { status: 'UNDER_REVIEW', label: 'Reviewed by operations', at: 'Aug 27 · 08:15', by: 'Operations Desk' },
+    { status: 'ASSIGNED', label: 'Assigned to field officer', at: 'Aug 27 · 08:48', by: 'Kavinda Jayasekara' },
+  ] },
+  { id: 'LGS-2026-000205', type: 'SUGGESTION', title: 'Add pedestrian crossing near market', description: 'A marked crossing would improve safety during peak market hours.', status: 'AWAITING_APPROVAL', priority: 'NORMAL', ward: 'Ward 04', department: 'Engineering', buildingId: 'LGS-BLD-002226', locationLabel: 'Central Market Block', latitude: 7.07129, longitude: 80.68891, createdAt: '2026-08-27T09:10:00', updatedAt: '2026-08-28T09:30:00', createdBy: 'u-citizen', photos: [], history: [
+    { status: 'CREATED', label: 'Suggestion submitted', at: 'Aug 27 · 09:10', by: 'Nadeesha Perera' },
+    { status: 'UNDER_REVIEW', label: 'Engineering review completed', at: 'Aug 27 · 16:05', by: 'Engineering Desk' },
+    { status: 'AWAITING_APPROVAL', label: 'Forwarded for approval', at: 'Aug 28 · 09:30', by: 'Kavinda Jayasekara' },
+  ] },
+  { id: 'LGS-2026-000211', type: 'BOOKING', title: 'Community hall booking — youth workshop', description: 'Half-day community workshop for approximately 45 participants.', status: 'NEEDS_APPROVAL', priority: 'NORMAL', ward: 'Ward 04', department: 'Citizen Services', buildingId: 'LGS-BLD-002214', locationLabel: 'Weddemulla Community Hall', latitude: 7.0712, longitude: 80.68958, createdAt: '2026-08-27T13:32:00', updatedAt: '2026-08-27T14:00:00', createdBy: 'u-citizen', photos: [], history: [
+    { status: 'CREATED', label: 'Booking request submitted', at: 'Aug 27 · 13:32', by: 'Nadeesha Perera' },
+    { status: 'NEEDS_APPROVAL', label: 'Facility availability confirmed', at: 'Aug 27 · 14:00', by: 'Citizen Services' },
+  ] },
+  { id: 'LGS-2026-000159', type: 'COMPLAINT', title: 'Blocked roadside drain', description: 'Silt buildup is preventing water from draining after heavy rain.', status: 'RESOLVED', priority: 'HIGH', ward: 'Ward 03', department: 'Engineering', locationLabel: 'Lake View Road', latitude: 7.0707, longitude: 80.68977, createdAt: '2026-08-20T07:45:00', updatedAt: '2026-08-23T15:35:00', createdBy: 'u-citizen', assignedTo: 'u-worker', photos: ['Before', 'After'], history: [
+    { status: 'CREATED', label: 'Request submitted', at: 'Aug 20 · 07:45', by: 'Nadeesha Perera' },
+    { status: 'ASSIGNED', label: 'Assigned to Engineering', at: 'Aug 20 · 10:15', by: 'Operations Desk' },
+    { status: 'IN_PROGRESS', label: 'Drain clearing team dispatched', at: 'Aug 22 · 08:30', by: 'Engineering' },
+    { status: 'RESOLVED', label: 'Drain cleared', at: 'Aug 23 · 15:35', by: 'Officer D. Fernando' },
+  ] },
+  { id: 'LGS-2026-000213', type: 'INQUIRY', title: 'Boundary information request', description: 'Requesting public information on the mapped municipal boundary near the library.', status: 'UNDER_REVIEW', priority: 'LOW', ward: 'Ward 04', department: 'Planning', buildingId: 'LGS-BLD-002241', locationLabel: 'Public Library', latitude: 7.07075, longitude: 80.68973, createdAt: '2026-08-28T08:25:00', updatedAt: '2026-08-28T08:55:00', createdBy: 'u-citizen', photos: [], history: [
+    { status: 'CREATED', label: 'Inquiry submitted', at: 'Aug 28 · 08:25', by: 'Nadeesha Perera' },
+    { status: 'UNDER_REVIEW', label: 'Forwarded to Planning', at: 'Aug 28 · 08:55', by: 'Operations Desk' },
+  ] },
+]
+
+export const notifications: NotificationItem[] = [
+  { id: 'n1', title: 'Inspection started', body: 'Officer Fernando started inspecting request #000182.', time: '22 min ago', tone: 'info', unread: true },
+  { id: 'n2', title: 'Approval required', body: 'Booking #000211 is ready for an approval decision.', time: '1 hr ago', tone: 'warning', unread: true },
+  { id: 'n3', title: 'Request resolved', body: 'Blocked roadside drain #000159 was marked resolved.', time: 'Yesterday', tone: 'success' },
+]
+
+export const trendData = [
+  { day: 'Mon', opened: 28, resolved: 18 },
+  { day: 'Tue', opened: 34, resolved: 26 },
+  { day: 'Wed', opened: 31, resolved: 30 },
+  { day: 'Thu', opened: 42, resolved: 33 },
+  { day: 'Fri', opened: 38, resolved: 36 },
+  { day: 'Sat', opened: 22, resolved: 25 },
+  { day: 'Sun', opened: 19, resolved: 23 },
+]
+
+export const departmentData = [
+  { name: 'Environment', score: 91, open: 32 },
+  { name: 'Engineering', score: 84, open: 58 },
+  { name: 'Utilities', score: 88, open: 24 },
+  { name: 'Planning', score: 79, open: 19 },
+]
+
+export const taxData = [
+  { month: 'Jan', collected: 31 }, { month: 'Feb', collected: 35 }, { month: 'Mar', collected: 42 },
+  { month: 'Apr', collected: 39 }, { month: 'May', collected: 44 }, { month: 'Jun', collected: 46 },
+  { month: 'Jul', collected: 48 }, { month: 'Aug', collected: 45 },
+]
