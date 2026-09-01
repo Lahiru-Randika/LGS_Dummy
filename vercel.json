@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/cmc/:path*",
+      "destination": "https://cmc.visigeo.com/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}
