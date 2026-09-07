@@ -1,14 +1,35 @@
 import { CheckCircle2, Clock3, FileCheck2, MessageSquareMore, XCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MetricCard } from '../components/MetricCard'
 import { PageHeader } from '../components/PageHeader'
 import { StatusBadge, TypeBadge } from '../components/StatusBadge'
-import { requests } from '../data/mock'
+import { approvalsService } from '../services/approvals.service'
+import { ApiError } from '../services/http'
+import { requestsService } from '../services/requests.service'
+import type { ApprovalItem, ServiceRequest } from '../types'
+
+type Row = { approval: ApprovalItem; request: ServiceRequest }
 
 export function ApprovalsPage() {
-  const pending=requests.filter(r=>r.status.includes('APPROVAL')||r.status==='NEEDS_APPROVAL')
-  return <div className="mx-auto w-full max-w-[1500px]"><PageHeader eyebrow="Governance" title="Approval center" description="Review decisions with the request context, location and audit trail still attached."/>
-    <div className="mb-6 grid gap-4 md:grid-cols-3"><MetricCard icon={FileCheck2} label="Awaiting decision" value={pending.length}/><MetricCard icon={Clock3} label="Oldest request" value="18h" note="Current approval SLA: 24h"/><MetricCard icon={CheckCircle2} label="Approved this week" value="17" tone="mint"/></div>
-    <div className="grid gap-4">{pending.map(r=><article key={r.id} className="grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-violet-200 hover:bg-violet-50/30 lg:grid-cols-[1fr_auto]"><div><div className="flex flex-wrap gap-2"><TypeBadge type={r.type}/><StatusBadge status={r.status}/></div><small className="mt-4 block text-[9px] font-bold text-slate-400">{r.id} · {r.department}</small><h3 className="mt-2 font-['Manrope'] text-xl font-extrabold">{r.title}</h3><p className="mt-2 max-w-4xl text-[12px] leading-6 text-slate-500">{r.description}</p><div className="mt-4 flex flex-wrap gap-3 text-[10px] text-slate-500"><span>{r.locationLabel}</span><span>{r.ward}</span></div></div><div className="flex items-end gap-2 lg:items-center"><Link className="inline-flex min-h-10 items-center rounded-xl border border-slate-200 px-4 text-[11px] font-extrabold hover:bg-white" to={`/app/requests/${r.id}`}>Review case</Link><button className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700" title="Approve"><CheckCircle2 size={18}/></button><button className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-blue-700" title="Request more info"><MessageSquareMore size={18}/></button><button className="grid h-10 w-10 place-items-center rounded-xl bg-rose-50 text-rose-700" title="Reject"><XCircle size={18}/></button></div></article>)}</div>
-  </div>
+  const [rows,setRows]=useState<Row[]>([])
+
+  async function load(){
+    try{
+      const result=await approvalsService.list({status:'PENDING',limit:100})
+      const detailed=await Promise.all(result.items.map(async approval=>({approval,request:await requestsService.get(approval.requestCode)})))
+      setRows(detailed)
+    }catch(error){console.error('Unable to load approvals',error);setRows([])}
+  }
+
+  useEffect(()=>{void load()},[])
+
+  async function decide(id:string,decision:'APPROVE'|'REJECT'|'REQUEST_INFO'){
+    const rationale=window.prompt(`${decision.replaceAll('_',' ')} rationale`)?.trim()
+    if(!rationale)return
+    try{await approvalsService.decide(id,decision,rationale);await load()}catch(error){window.alert(error instanceof ApiError?error.message:'Unable to record the decision.')}
+  }
+
+  const pending=rows
+  return <div className="page"><PageHeader eyebrow="Governance" title="Approval center" description="Review decisions with the request context, location and audit trail still attached."/><div className="metrics-grid metrics-grid--3"><MetricCard icon={FileCheck2} label="Awaiting decision" value={pending.length}/><MetricCard icon={Clock3} label="Oldest request" value={pending.length?`${Math.max(0,Math.floor((Date.now()-new Date(pending[pending.length-1].approval.createdAt).getTime())/3600000))}h`:'0h'} note="Current approval SLA: 24h"/><MetricCard icon={CheckCircle2} label="Approved this week" value="—" tone="mint"/></div><div className="approval-list">{pending.map(({approval,request:r})=><article key={approval.id} className="approval-card"><div className="approval-card__meta"><TypeBadge type={r.type}/><StatusBadge status={r.status}/></div><div className="approval-card__body"><small>{r.id} · {r.department}</small><h3>{r.title}</h3><p>{r.description}</p><div><span>{r.locationLabel}</span><span>{r.ward}</span></div></div><div className="approval-card__actions"><Link className="secondary-btn" to={`/app/requests/${r.id}`}>Review case</Link><button className="approve-icon" title="Approve" onClick={()=>void decide(approval.id,'APPROVE')}><CheckCircle2 size={18}/></button><button className="info-icon" title="Request more info" onClick={()=>void decide(approval.id,'REQUEST_INFO')}><MessageSquareMore size={18}/></button><button className="reject-icon" title="Reject" onClick={()=>void decide(approval.id,'REJECT')}><XCircle size={18}/></button></div></article>)}</div></div>
 }

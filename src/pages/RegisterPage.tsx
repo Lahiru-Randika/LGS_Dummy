@@ -1,6 +1,30 @@
 import { ArrowLeft, ArrowRight, ShieldCheck } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { FormEvent, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Brand } from '../components/Brand'
-import { FieldLabel, Input } from '../components/ui/Field'
+import { authService } from '../services/auth.service'
+import { ApiError } from '../services/http'
 
-export function RegisterPage(){return <div className="min-h-screen bg-slate-50 font-['DM_Sans']"><div className="mx-auto flex min-h-screen w-[min(760px,calc(100%-32px))] flex-col justify-center py-10"><div className="mb-8"><Brand/></div><div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(11,19,35,.08)] sm:p-9"><Link className="inline-flex items-center gap-2 text-[11px] font-bold text-slate-500" to="/"><ArrowLeft size={15}/>Back</Link><span className="mt-8 block text-[10px] font-extrabold uppercase tracking-[.15em] text-teal-700">Citizen account</span><h1 className="mt-3 font-['Manrope'] text-4xl font-extrabold tracking-[-.045em]">Create your LGS account</h1><p className="mt-3 text-sm leading-6 text-slate-500">Register to report issues, track requests and book eligible public facilities.</p><div className="mt-7 grid gap-4 sm:grid-cols-2"><FieldLabel label="First name"><Input placeholder="First name"/></FieldLabel><FieldLabel label="Last name"><Input placeholder="Last name"/></FieldLabel><FieldLabel label="Email" className="sm:col-span-2"><Input type="email" placeholder="you@example.com"/></FieldLabel><FieldLabel label="Password" className="sm:col-span-2"><Input type="password" placeholder="Create a secure password"/></FieldLabel></div><button className="mt-7 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 text-[12px] font-extrabold text-white hover:bg-slate-800">Create citizen account <ArrowRight size={16}/></button><div className="mt-5 flex items-center gap-2 rounded-xl bg-slate-50 p-4 text-[10px] text-slate-500"><ShieldCheck size={15}/>Government roles are not available through public registration.</div><small className="mt-6 block text-center text-[11px] text-slate-500">Already registered? <Link className="font-extrabold text-teal-700" to="/login">Sign in</Link></small></div></div></div>}
+export function RegisterPage(){
+  const [firstName,setFirstName]=useState('')
+  const [lastName,setLastName]=useState('')
+  const [email,setEmail]=useState('')
+  const [password,setPassword]=useState('')
+  const [error,setError]=useState('')
+  const [submitting,setSubmitting]=useState(false)
+  const navigate=useNavigate()
+
+  async function submit(event:FormEvent){
+    event.preventDefault()
+    setError('')
+    setSubmitting(true)
+    try{
+      await authService.register({firstName,lastName,email,password})
+      navigate('/login')
+    }catch(cause){
+      setError(cause instanceof ApiError?cause.message:'Unable to create the account.')
+    }finally{setSubmitting(false)}
+  }
+
+  return <div className="simple-auth"><div className="simple-auth__brand"><Brand/></div><div className="simple-auth__card"><Link className="back-link" to="/"><ArrowLeft size={15}/>Back</Link><span className="eyebrow">Citizen account</span><h1>Create your LGS account</h1><p>Register to report issues, track requests and book eligible public facilities.</p><form onSubmit={submit}><div className="form-grid"><label className="form-field"><span>First name</span><input placeholder="First name" value={firstName} onChange={e=>setFirstName(e.target.value)} required/></label><label className="form-field"><span>Last name</span><input placeholder="Last name" value={lastName} onChange={e=>setLastName(e.target.value)} required/></label><label className="form-field form-field--full"><span>Email</span><input type="email" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} required/></label><label className="form-field form-field--full"><span>Password</span><input type="password" placeholder="Create a secure password" value={password} onChange={e=>setPassword(e.target.value)} minLength={12} required/></label></div>{error&&<div className="auth-note"><ShieldCheck size={15}/><span>{error}</span></div>}<button className="primary-btn primary-btn--large full" disabled={submitting}>{submitting?'Creating account…':'Create citizen account'} <ArrowRight size={16}/></button></form><div className="auth-note"><ShieldCheck size={15}/><span>Government roles are not available through public registration.</span></div><small className="login-switch">Already registered? <Link to="/login">Sign in</Link></small></div></div>
+}

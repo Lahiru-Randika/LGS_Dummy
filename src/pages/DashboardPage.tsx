@@ -15,74 +15,713 @@ import {
   UserCheck,
   Users,
 } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Link } from 'react-router-dom'
 import { MetricCard } from '../components/MetricCard'
 import { RequestCard } from '../components/RequestCard'
-import { useAuth, roleLabel } from '../context/AuthContext'
-import { departmentData, requests, trendData } from '../data/mock'
-import { Panel, PanelHead } from '../components/ui/Panel'
+import { roleLabel, useAuth } from '../context/AuthContext'
+import { analyticsService } from '../services/analytics.service'
+import { approvalsService } from '../services/approvals.service'
+import { dashboardService } from '../services/dashboard.service'
+import { requestsService } from '../services/requests.service'
+import { usersService } from '../services/users.service'
+import type { ServiceRequest, User } from '../types'
+import {
+  DashboardMiniMap,
+} from '../components/DashboardMiniMap'
 
-const mapButton = 'inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 text-[12px] font-extrabold text-white shadow-[0_8px_22px_rgba(11,19,35,.15)] transition hover:-translate-y-0.5 hover:bg-slate-800'
-const textLink = 'inline-flex items-center gap-1.5 text-[11px] font-extrabold text-teal-700 transition hover:text-teal-900'
+type TrendPoint={day:string;opened:number;resolved:number}
+type DepartmentPoint={name:string;score:number;open:number}
 
-function Welcome({ eyebrow, title, body, action, executive = false }: { eyebrow: string; title: string; body: string; action?: React.ReactNode; executive?: boolean }) {
-  return <div className={`mb-7 flex flex-col justify-between gap-5 rounded-[22px] border p-6 sm:p-7 lg:flex-row lg:items-center ${executive ? 'border-slate-800 bg-slate-950 text-white' : 'border-slate-200 bg-white'}`}><div><span className={`text-[10px] font-extrabold uppercase tracking-[.15em] ${executive ? 'text-teal-300' : 'text-teal-700'}`}>{eyebrow}</span><h1 className="mt-3 font-['Manrope'] text-3xl font-extrabold tracking-[-.045em] sm:text-4xl lg:text-[46px] lg:leading-[1.02]">{title}</h1><p className={`mt-3 max-w-3xl text-sm leading-7 ${executive ? 'text-slate-300' : 'text-slate-500'}`}>{body}</p></div>{action}</div>
-}
-
-function Metrics({ children, cols = 4 }: { children: React.ReactNode; cols?: 3|4|6 }) {
-  const classes = cols === 6 ? 'xl:grid-cols-6 md:grid-cols-3 sm:grid-cols-2' : cols === 3 ? 'lg:grid-cols-3 sm:grid-cols-2' : 'xl:grid-cols-4 md:grid-cols-2'
-  return <div className={`mb-6 grid grid-cols-1 gap-4 ${classes}`}>{children}</div>
-}
-
-function CitizenDashboard() {
-  const mine = requests.filter((r) => r.createdBy === 'u-citizen')
+function CitizenDashboard({user,requests,dashboard}:{user:User;requests:ServiceRequest[];dashboard:any}) {
+  const mine = requests
+  const counts=dashboard?.requestCounts||{}
   return <>
-    <Welcome eyebrow="Citizen workspace" title="Good afternoon, Nadeesha." body="Your local services, requests and places—kept in one clear view." action={<Link className={mapButton} to="/app/map"><MapPin size={16}/>Open civic map</Link>} />
-    <Metrics><MetricCard icon={ClipboardCheck} label="My requests" value={mine.length} note="Across all service types"/><MetricCard icon={Clock3} label="Open" value={mine.filter(r => !['RESOLVED','CLOSED'].includes(r.status)).length} note="Currently being handled"/><MetricCard icon={CheckCircle2} label="Resolved" value={mine.filter(r => r.status === 'RESOLVED').length} note="Completed by the council"/><MetricCard icon={CalendarClock} label="Bookings" value={mine.filter(r => r.type === 'BOOKING').length} note="Public facilities" tone="mint"/></Metrics>
-    <div className="grid gap-5 xl:grid-cols-[1.6fr_.8fr]">
-      <Panel><PanelHead eyebrow="Recent activity" title="Your requests" right={<Link className={textLink} to="/app/requests">View all <ArrowRight size={14}/></Link>}/><div className="grid gap-3">{mine.slice(0,3).map(r => <RequestCard key={r.id} request={r} compact/>)}</div></Panel>
-      <Panel className="self-start"><span className="text-[9px] font-extrabold uppercase tracking-[.15em] text-teal-700">Around you</span><h2 className="mt-2 font-['Manrope'] text-2xl font-extrabold">Ward 04 pulse</h2><p className="mt-2 text-[12px] leading-6 text-slate-500">What the municipality is currently seeing around your area.</p><div className="mt-5 grid gap-1">{[['bg-amber-500','Environmental','12 active'],['bg-blue-500','Utilities','7 active'],['bg-violet-500','Planning','3 active']].map(([dot,n,v]) => <div className="flex items-center justify-between border-t border-slate-100 py-3 text-[11px]" key={n}><span className="flex items-center gap-2 text-slate-600"><i className={`h-2 w-2 rounded-full ${dot}`}/>{n}</span><strong>{v}</strong></div>)}</div><Link to="/app/map" className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-[11px] font-extrabold text-slate-700 transition hover:border-teal-200 hover:bg-teal-50"><Route size={16}/>Explore requests on map</Link></Panel>
-    </div>
+    <div className="welcome-band"><div><span className="eyebrow">Citizen workspace</span><h1>Good afternoon, {user.shortName}.</h1><p>Your local services, requests and places—kept in one clear view.</p></div><Link className="primary-btn" to="/app/map"><MapPin size={16}/>Open civic map</Link></div>
+    <div className="metrics-grid metrics-grid--4"><MetricCard icon={ClipboardCheck} label="My requests" value={Number(counts.total??mine.length)} note="Across all service types"/><MetricCard icon={Clock3} label="Open" value={Number(counts.openCount??mine.filter(r => !['RESOLVED','CLOSED'].includes(r.status)).length)} note="Currently being handled"/><MetricCard icon={CheckCircle2} label="Resolved" value={Number(counts.resolvedCount??mine.filter(r => r.status === 'RESOLVED').length)} note="Completed by the council"/><MetricCard icon={CalendarClock} label="Bookings" value={Number(counts.bookings??mine.filter(r => r.type === 'BOOKING').length)} note="Public facilities" tone="mint"/></div>
+    <div className="dashboard-grid dashboard-grid--citizen"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Recent activity</span><h2>Your requests</h2></div><Link className="text-button" to="/app/requests">View all <ArrowRight size={14}/></Link></div><div className="request-list compact-list">{mine.slice(0,3).map(r => <RequestCard key={r.id} request={r} compact/>)}</div></section><section className="panel place-pulse"><span className="eyebrow">Around you</span><h2>{user.wardId?`Ward ${user.wardId} pulse`:'Municipal pulse'}</h2><p>What the municipality is currently seeing around your area.</p><div className="pulse-row"><span><i className="pulse-dot pulse-dot--orange"/>Environmental</span><strong>—</strong></div><div className="pulse-row"><span><i className="pulse-dot pulse-dot--blue"/>Utilities</span><strong>—</strong></div><div className="pulse-row"><span><i className="pulse-dot pulse-dot--purple"/>Planning</span><strong>—</strong></div><Link to="/app/map" className="secondary-btn full"><Route size={16}/>Explore requests on map</Link></section></div>
   </>
 }
 
-function WorkerDashboard() {
-  const assigned = requests.filter((r) => r.assignedTo === 'u-worker')
+function WorkerDashboard({requests,dashboard}:{requests:ServiceRequest[];dashboard:any}) {
+  const assigned = requests
   return <>
-    <Welcome eyebrow="Field operations" title="Today’s field workload." body="Prioritized around what needs your attention on the ground." action={<Link className={mapButton} to="/app/map"><Route size={16}/>Open assigned map</Link>} />
-    <Metrics><MetricCard icon={ClipboardCheck} label="Assigned" value={assigned.length} note="Active cases in your queue"/><MetricCard icon={Target} label="Inspecting" value={assigned.filter(r => r.status === 'INSPECTING').length} note="Field inspection underway" tone="mint"/><MetricCard icon={AlertTriangle} label="Priority" value={assigned.filter(r => ['HIGH','URGENT'].includes(r.priority)).length} note="High attention required"/><MetricCard icon={Clock3} label="Overdue" value={2} note="Needs an update today" tone="dark"/></Metrics>
-    <div className="grid gap-5 xl:grid-cols-[1.6fr_.8fr]"><Panel><PanelHead eyebrow="Work queue" title="Assigned to you" right={<Link className={textLink} to="/app/requests">Full queue <ArrowRight size={14}/></Link>}/><div className="grid gap-3">{assigned.map(r => <RequestCard key={r.id} request={r} compact/>)}</div></Panel><Panel className="self-start"><span className="grid h-12 w-12 place-items-center rounded-2xl bg-teal-50 text-teal-700"><Sparkles size={22}/></span><span className="mt-5 block text-[9px] font-extrabold uppercase tracking-[.15em] text-teal-700">Field brief</span><h2 className="mt-2 font-['Manrope'] text-2xl font-extrabold">Temple Road cluster</h2><p className="mt-2 text-[12px] leading-6 text-slate-500">Two assigned issues are within a short walk of each other. Clear the waste inspection before moving to the streetlight case.</p><div className="my-6 grid grid-cols-[1fr_auto_1fr] items-center gap-3"><div className="rounded-2xl bg-slate-50 p-4"><span className="grid h-6 w-6 place-items-center rounded-full bg-slate-950 text-[9px] font-extrabold text-white">1</span><strong className="mt-3 block text-[11px]">#000182</strong><small className="mt-1 block text-[9px] text-slate-500">Waste inspection · 120m</small></div><i className="h-px w-8 bg-slate-300"/><div className="rounded-2xl bg-slate-50 p-4"><span className="grid h-6 w-6 place-items-center rounded-full bg-slate-950 text-[9px] font-extrabold text-white">2</span><strong className="mt-3 block text-[11px]">#000197</strong><small className="mt-1 block text-[9px] text-slate-500">Streetlight · 310m</small></div></div><Link className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 text-[11px] font-extrabold transition hover:bg-slate-50" to="/app/map"><MapPin size={16}/>View route context</Link></Panel></div>
+    <div className="welcome-band"><div><span className="eyebrow">Field operations</span><h1>Today’s field workload.</h1><p>Prioritized around what needs your attention on the ground.</p></div><Link className="primary-btn" to="/app/map"><Route size={16}/>Open assigned map</Link></div>
+    <div className="metrics-grid metrics-grid--4"><MetricCard icon={ClipboardCheck} label="Assigned" value={Number(dashboard?.assigned??assigned.length)} note="Active cases in your queue"/><MetricCard icon={Target} label="Inspecting" value={assigned.filter(r => r.status === 'INSPECTING').length} note="Field inspection underway" tone="mint"/><MetricCard icon={AlertTriangle} label="Priority" value={Number(dashboard?.highPriority??assigned.filter(r => ['HIGH','URGENT'].includes(r.priority)).length)} note="High attention required"/><MetricCard icon={Clock3} label="Overdue" value="—" note="No overdue endpoint configured" tone="dark"/></div>
+    <div className="dashboard-grid dashboard-grid--worker"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Work queue</span><h2>Assigned to you</h2></div><Link className="text-button" to="/app/requests">Full queue <ArrowRight size={14}/></Link></div><div className="request-list compact-list">{assigned.map(r => <RequestCard key={r.id} request={r} compact/>)}</div></section><section className="panel field-brief"><div className="field-brief__icon"><Sparkles size={22}/></div><span className="eyebrow">Field brief</span><h2>{assigned[0]?.locationLabel||'Assigned route'}</h2><p>Your queue is ordered by server-side priority and the most recently updated municipal work.</p><div className="field-route"><div><span>1</span><strong>{assigned[0]?.id||'—'}</strong><small>{assigned[0]?.title||'No active assignment'}</small></div><i/><div><span>2</span><strong>{assigned[1]?.id||'—'}</strong><small>{assigned[1]?.title||'No second assignment'}</small></div></div><Link className="secondary-btn full" to="/app/map"><MapPin size={16}/>View route context</Link></section></div>
   </>
 }
 
-function AdminDashboard() {
+function AdminDashboard({requests,dashboard,trendData}:{requests:ServiceRequest[];dashboard:any;trendData:TrendPoint[]}) {
+  const newCount=requests.filter(r=>r.status==='CREATED').length
+  const inProgress=requests.filter(r=>['ASSIGNED','INSPECTION_SCHEDULED','INSPECTING','ACTION_REQUIRED','IN_PROGRESS'].includes(r.status)).length
+  const unassigned=requests.filter(r=>!r.assignedTo&&!['RESOLVED','CLOSED','REJECTED','CANCELLED','DUPLICATE'].includes(r.status))
   return <>
-    <Welcome eyebrow="Municipal operations" title="Keep the service flow moving." body="See new demand, ownership gaps and the work most likely to stall." action={<Link className={mapButton} to="/app/requests"><UserCheck size={16}/>Open request queue</Link>} />
-    <Metrics cols={6}><MetricCard icon={ClipboardCheck} label="New" value={42}/><MetricCard icon={Users} label="Unassigned" value={11}/><MetricCard icon={Clock3} label="In progress" value={28}/><MetricCard icon={FileCheck2} label="Approval" value={7}/><MetricCard icon={CheckCircle2} label="Resolved" value={84}/><MetricCard icon={AlertTriangle} label="Overdue" value={5} tone="dark"/></Metrics>
-    <div className="grid gap-5 xl:grid-cols-[1.4fr_.8fr]"><Panel><PanelHead eyebrow="Request velocity" title="Opened vs resolved" right={<span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-extrabold text-emerald-700"><TrendingUp size={15}/>+8.2%</span>}/><div className="h-[320px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={trendData} margin={{top:10,right:10,left:-24,bottom:0}}><defs><linearGradient id="opened" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2563eb" stopOpacity="0.28"/><stop offset="1" stopColor="#2563eb" stopOpacity="0"/></linearGradient></defs><CartesianGrid vertical={false} stroke="#e7ecf2"/><XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#718096'}}/><YAxis axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#94a3b8'}}/><Tooltip/><Area type="monotone" dataKey="opened" stroke="#2563eb" strokeWidth={2.4} fill="url(#opened)"/><Area type="monotone" dataKey="resolved" stroke="#0f766e" strokeWidth={2.4} fillOpacity={0}/></AreaChart></ResponsiveContainer></div></Panel><Panel><PanelHead eyebrow="Attention queue" title="Needs ownership" right={<span className="grid h-8 min-w-8 place-items-center rounded-full bg-rose-50 px-2 text-[10px] font-extrabold text-rose-700">11</span>}/><div className="grid gap-1">{requests.filter(r => !r.assignedTo).slice(0,4).map(r => <Link className="flex items-center gap-3 rounded-xl px-2 py-3 transition hover:bg-slate-50" key={r.id} to={`/app/requests/${r.id}`}><span className={`h-2.5 w-2.5 shrink-0 rounded-full ${r.priority==='URGENT'?'bg-rose-600':r.priority==='HIGH'?'bg-orange-500':'bg-blue-500'}`}/><div className="min-w-0 flex-1"><strong className="block truncate text-[11px]">{r.title}</strong><small className="mt-1 block text-[9px] text-slate-500">{r.department} · {r.ward}</small></div><ArrowRight size={15} className="text-slate-400"/></Link>)}</div></Panel></div>
+    <div className="welcome-band"><div><span className="eyebrow">Municipal operations</span><h1>Keep the service flow moving.</h1><p>See new demand, ownership gaps and the work most likely to stall.</p></div><Link className="primary-btn" to="/app/requests"><UserCheck size={16}/>Open request queue</Link></div>
+    <div className="metrics-grid metrics-grid--6"><MetricCard icon={ClipboardCheck} label="New" value={newCount}/><MetricCard icon={Users} label="Unassigned" value={Number(dashboard?.unassigned??unassigned.length)}/><MetricCard icon={Clock3} label="In progress" value={inProgress}/><MetricCard icon={FileCheck2} label="Approval" value={Number(dashboard?.awaitingApproval??0)}/><MetricCard icon={CheckCircle2} label="Resolved" value={Number(dashboard?.resolvedRequests??0)}/><MetricCard icon={AlertTriangle} label="Overdue" value="—" tone="dark"/></div>
+    <div className="dashboard-grid dashboard-grid--admin"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Request velocity</span><h2>Opened vs resolved</h2></div><span className="trend-positive"><TrendingUp size={15}/>Live data</span></div><div className="chart-wrap"><ResponsiveContainer width="100%" height="100%"><AreaChart data={trendData} margin={{top:10,right:10,left:-24,bottom:0}}><defs><linearGradient id="opened" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2563eb" stopOpacity="0.28"/><stop offset="1" stopColor="#2563eb" stopOpacity="0"/></linearGradient></defs><CartesianGrid vertical={false} stroke="#e7ecf2"/><XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#718096'}}/><YAxis axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#94a3b8'}}/><Tooltip/><Area type="monotone" dataKey="opened" stroke="#2563eb" strokeWidth={2.4} fill="url(#opened)"/><Area type="monotone" dataKey="resolved" stroke="#0f766e" strokeWidth={2.4} fillOpacity={0}/></AreaChart></ResponsiveContainer></div></section><section className="panel"><div className="panel-head"><div><span className="eyebrow">Attention queue</span><h2>Needs ownership</h2></div><span className="queue-count">{unassigned.length}</span></div><div className="attention-list">{unassigned.slice(0,4).map(r => <Link key={r.id} to={`/app/requests/${r.id}`}><span className={`attention-dot attention-dot--${r.priority.toLowerCase()}`}/><div><strong>{r.title}</strong><small>{r.department} · {r.ward}</small></div><ArrowRight size={15}/></Link>)}</div></section></div>
   </>
 }
 
-function ApproverDashboard() {
+function ApproverDashboard({requests,dashboard,userCount}:{requests:ServiceRequest[];dashboard:any;userCount:number}) {
   const pending = requests.filter(r => r.status.includes('APPROVAL') || r.status === 'NEEDS_APPROVAL')
   return <>
-    <Welcome eyebrow="Approval center" title="Decisions with context." body="Review the case, place, supporting history and operational impact before acting." action={<Link className={mapButton} to="/app/approvals"><FileCheck2 size={16}/>Review approvals</Link>} />
-    <Metrics><MetricCard icon={FileCheck2} label="Awaiting decision" value={pending.length} note="Across active workflows"/><MetricCard icon={Clock3} label="Oldest waiting" value="18h" note="Within current SLA"/><MetricCard icon={CheckCircle2} label="Approved this week" value={17} note="89% decision rate" tone="mint"/><MetricCard icon={Users} label="Authorized users" value={34} note="Government accounts"/></Metrics>
-    <div className="grid gap-5 xl:grid-cols-[1.6fr_.8fr]"><Panel><PanelHead eyebrow="Priority decisions" title="Awaiting your review" right={<Link className={textLink} to="/app/approvals">View all <ArrowRight size={14}/></Link>}/><div className="grid gap-3">{pending.map(r => <RequestCard key={r.id} request={r} compact/>)}</div></Panel><Panel className="self-start"><span className="text-[9px] font-extrabold uppercase tracking-[.15em] text-teal-700">Decision quality</span><h2 className="mt-2 font-['Manrope'] text-2xl font-extrabold">Approval standards</h2><p className="mt-2 text-[12px] leading-6 text-slate-500">Every decision should retain its rationale, supporting documents and who approved it.</p><div className="mt-5 grid gap-2">{['Context verified','Impact assessed','Supporting evidence present','Decision rationale recorded'].map(item => <div className="flex items-center gap-2 rounded-xl bg-emerald-50/70 p-3 text-[11px] font-bold text-emerald-800" key={item}><CheckCircle2 size={17}/>{item}</div>)}</div></Panel></div>
+    <div className="welcome-band"><div><span className="eyebrow">Approval center</span><h1>Decisions with context.</h1><p>Review the case, place, supporting history and operational impact before acting.</p></div><Link className="primary-btn" to="/app/approvals"><FileCheck2 size={16}/>Review approvals</Link></div>
+    <div className="metrics-grid metrics-grid--4"><MetricCard icon={FileCheck2} label="Awaiting decision" value={Number(dashboard?.awaitingDecision??pending.length)} note="Across active workflows"/><MetricCard icon={Clock3} label="Oldest waiting" value={`${Number(dashboard?.oldestWaitingHours??0)}h`} note="Within current SLA"/><MetricCard icon={CheckCircle2} label="Approved this week" value={Number(dashboard?.approvedThisWeek??0)} note="Recorded by backend" tone="mint"/><MetricCard icon={Users} label="Authorized users" value={userCount} note="Government accounts"/></div>
+    <div className="dashboard-grid dashboard-grid--citizen"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Priority decisions</span><h2>Awaiting your review</h2></div><Link className="text-button" to="/app/approvals">View all <ArrowRight size={14}/></Link></div><div className="request-list compact-list">{pending.map(r => <RequestCard key={r.id} request={r} compact/>)}</div></section><section className="panel decision-standards"><span className="eyebrow">Decision quality</span><h2>Approval standards</h2><p>Every decision should retain its rationale, supporting documents and who approved it.</p>{['Context verified','Impact assessed','Supporting evidence present','Decision rationale recorded'].map(item => <div className="standard-row" key={item}><CheckCircle2 size={17}/>{item}</div>)}</section></div>
   </>
 }
 
-function SuperiorDashboard() {
-  return <>
-    <Welcome executive eyebrow="Municipal overview" title="Good afternoon, Director." body="What is happening across the municipality, and where leadership attention can have the most impact." action={<div className="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-[10px] font-extrabold uppercase tracking-[.12em] text-slate-300">28 AUG 2026</div>} />
-    <Metrics><MetricCard icon={ClipboardCheck} label="Total requests" value="2,481" note="+12.3% vs previous period"/><MetricCard icon={CheckCircle2} label="Resolution rate" value="86.4%" note="+4.2 percentage points" tone="mint"/><MetricCard icon={Clock3} label="Open requests" value="342" note="38 high-priority cases"/><MetricCard icon={BarChart3} label="Avg. resolution" value="2.8d" note="0.6d faster this quarter" tone="dark"/></Metrics>
-    <div className="grid gap-5 xl:grid-cols-[1.4fr_.8fr]"><Panel><PanelHead eyebrow="Municipal demand" title="Requests & resolutions" right={<span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-extrabold text-emerald-700"><TrendingUp size={15}/>Improving</span>}/><div className="h-[360px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={trendData} margin={{top:10,right:10,left:-24,bottom:0}}><defs><linearGradient id="exec" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0f766e" stopOpacity="0.25"/><stop offset="1" stopColor="#0f766e" stopOpacity="0"/></linearGradient></defs><CartesianGrid vertical={false} stroke="#e7ecf2"/><XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#718096'}}/><YAxis axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#94a3b8'}}/><Tooltip/><Area type="monotone" dataKey="resolved" stroke="#0f766e" strokeWidth={2.6} fill="url(#exec)"/></AreaChart></ResponsiveContainer></div></Panel><Panel><PanelHead eyebrow="Service health" title="Department performance" right={<Link className={textLink} to="/app/analytics">Analytics <ArrowRight size={14}/></Link>}/><div className="grid gap-5">{departmentData.map(d => <div key={d.name}><div className="flex justify-between text-[11px]"><strong>{d.name}</strong><span className="font-extrabold text-teal-700">{d.score}%</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100"><i className="block h-full rounded-full bg-teal-700" style={{width:`${d.score}%`}}/></div><small className="mt-1.5 block text-[9px] text-slate-400">{d.open} open requests</small></div>)}</div></Panel><Panel className="xl:col-span-2"><PanelHead eyebrow="Geographic attention" title="Most reported locations"/><div className="grid gap-2 md:grid-cols-2 xl:grid-cols-4">{[['Main Street','182'],['Market Area','153'],['Central Park','117'],['Station Road','94']].map(([name,count],i)=><Link className="flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition hover:-translate-y-0.5 hover:border-teal-200 hover:bg-teal-50" to="/app/map" key={name}><span className="text-[10px] font-extrabold text-slate-400">0{i+1}</span><strong className="flex-1 text-[12px]">{name}</strong><em className="not-italic text-[10px] text-slate-500">{count} reports</em><ArrowRight size={14}/></Link>)}</div></Panel></div>
-  </>
+function SuperiorDashboard({
+  dashboard,
+  summary,
+  trendData,
+  departmentData,
+  hotspots,
+}: {
+  dashboard:
+    any
+
+  summary:
+    any
+
+  trendData:
+    TrendPoint[]
+
+  departmentData:
+    DepartmentPoint[]
+
+  hotspots:
+    any[]
+
+}) {
+  const total =
+    Number(
+      dashboard?.totalRequests ??
+      summary?.total ??
+      0,
+    )
+
+  const resolved =
+    Number(
+      dashboard?.resolvedRequests ??
+      summary?.resolved ??
+      0,
+    )
+
+  const resolution =
+    total
+      ? `${(
+          resolved /
+          total *
+          100
+        ).toFixed(
+          1,
+        )}%`
+      : '0%'
+
+  const avgDays =
+    Number(
+      summary?.averageResolutionHours ||
+      0,
+    ) /
+    24
+
+  const date =
+    new Date()
+      .toLocaleDateString(
+        'en-US',
+        {
+          day:
+            '2-digit',
+
+          month:
+            'short',
+
+          year:
+            'numeric',
+        },
+      )
+      .toUpperCase()
+
+  return (
+    <>
+      {/* ===================================================
+          WELCOME
+      ==================================================== */}
+
+      <div
+        className="welcome-band welcome-band--executive"
+      >
+        <div>
+          <span
+            className="eyebrow"
+          >
+            Municipal overview
+          </span>
+
+          <h1>
+            Good afternoon, Director.
+          </h1>
+
+          <p>
+            What is happening across the municipality, and where leadership attention can have the most impact.
+          </p>
+        </div>
+
+        <div
+          className="executive-date"
+        >
+          {date}
+        </div>
+      </div>
+
+      {/* ===================================================
+          METRICS
+      ==================================================== */}
+
+      <div
+        className="metrics-grid metrics-grid--4"
+      >
+        <MetricCard
+          icon={
+            ClipboardCheck
+          }
+          label="Total requests"
+          value={
+            total.toLocaleString()
+          }
+          note="All recorded service requests"
+        />
+
+        <MetricCard
+          icon={
+            CheckCircle2
+          }
+          label="Resolution rate"
+          value={
+            resolution
+          }
+          note={`${resolved.toLocaleString()} resolved`}
+          tone="mint"
+        />
+
+        <MetricCard
+          icon={
+            Clock3
+          }
+          label="Open requests"
+          value={Number(
+            dashboard?.openRequests ??
+            summary?.open ??
+            0,
+          ).toLocaleString()}
+          note="Currently active cases"
+        />
+
+        <MetricCard
+          icon={
+            BarChart3
+          }
+          label="Avg. resolution"
+          value={
+            avgDays
+              ? `${avgDays.toFixed(
+                  1,
+                )}d`
+              : '—'
+          }
+          note="Based on resolved requests"
+          tone="dark"
+        />
+      </div>
+
+      {/* ===================================================
+          TOP ROW
+
+          MAP + DEPARTMENT PERFORMANCE
+      ==================================================== */}
+
+      <div
+        className="
+          mt-5
+          grid
+          grid-cols-1
+          gap-5
+
+          xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]
+        "
+      >
+        {/* MAP */}
+
+        <section
+          className="panel overflow-hidden"
+        >
+          <div
+            className="panel-head"
+          >
+            <div>
+              <span
+                className="eyebrow"
+              >
+                Municipal geography
+              </span>
+
+              <h2>
+                Live request map
+              </h2>
+            </div>
+
+            <span
+              className="trend-positive"
+            >
+              <MapPin
+                size={
+                  15
+                }
+              />
+
+              Live data
+            </span>
+          </div>
+
+          <div
+            className="mt-3"
+          >
+            <DashboardMiniMap />
+          </div>
+        </section>
+
+        {/* DEPARTMENT PERFORMANCE */}
+
+        <section
+          className="panel"
+        >
+          <div
+            className="panel-head"
+          >
+            <div>
+              <span
+                className="eyebrow"
+              >
+                Service health
+              </span>
+
+              <h2>
+                Department performance
+              </h2>
+            </div>
+
+            <Link
+              className="text-button"
+              to="/app/analytics"
+            >
+              Analytics
+
+              <ArrowRight
+                size={
+                  14
+                }
+              />
+            </Link>
+          </div>
+
+          <div
+            className="department-list"
+          >
+            {departmentData.map(
+              (
+                department,
+              ) => (
+                <div
+                  key={
+                    department.name
+                  }
+                >
+                  <div>
+                    <strong>
+                      {
+                        department.name
+                      }
+                    </strong>
+
+                    <span>
+                      {
+                        department.score
+                      }
+                      %
+                    </span>
+                  </div>
+
+                  <div
+                    className="progress"
+                  >
+                    <i
+                      style={{
+                        width:
+                          `${department.score}%`,
+                      }}
+                    />
+                  </div>
+
+                  <small>
+                    {
+                      department.open
+                    }{' '}
+                    open requests
+                  </small>
+                </div>
+              ),
+            )}
+          </div>
+        </section>
+      </div>
+
+      {/* ===================================================
+          BOTTOM ROW
+
+          REQUESTS & RESOLUTIONS
+          +
+          MOST REPORTED LOCATIONS
+      ==================================================== */}
+
+      <div
+        className="
+          mt-5
+          grid
+          grid-cols-1
+          gap-5
+
+          xl:grid-cols-2
+        "
+      >
+        {/* REQUESTS & RESOLUTIONS */}
+
+        <section
+          className="panel"
+        >
+          <div
+            className="panel-head"
+          >
+            <div>
+              <span
+                className="eyebrow"
+              >
+                Municipal demand
+              </span>
+
+              <h2>
+                Requests & resolutions
+              </h2>
+            </div>
+
+            <span
+              className="trend-positive"
+            >
+              <TrendingUp
+                size={
+                  15
+                }
+              />
+
+              Live data
+            </span>
+          </div>
+
+          <div
+            className="chart-wrap"
+          >
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+            >
+              <AreaChart
+                data={
+                  trendData
+                }
+                margin={{
+                  top:
+                    10,
+
+                  right:
+                    10,
+
+                  left:
+                    -24,
+
+                  bottom:
+                    0,
+                }}
+              >
+                <defs>
+                  <linearGradient
+                    id="exec"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="0"
+                      stopColor="#0f766e"
+                      stopOpacity={
+                        0.25
+                      }
+                    />
+
+                    <stop
+                      offset="1"
+                      stopColor="#0f766e"
+                      stopOpacity={
+                        0
+                      }
+                    />
+                  </linearGradient>
+                </defs>
+
+                <CartesianGrid
+                  vertical={
+                    false
+                  }
+                  stroke="#e7ecf2"
+                />
+
+                <XAxis
+                  dataKey="day"
+                  axisLine={
+                    false
+                  }
+                  tickLine={
+                    false
+                  }
+                  tick={{
+                    fontSize:
+                      11,
+
+                    fill:
+                      '#718096',
+                  }}
+                />
+
+                <YAxis
+                  axisLine={
+                    false
+                  }
+                  tickLine={
+                    false
+                  }
+                  tick={{
+                    fontSize:
+                      11,
+
+                    fill:
+                      '#94a3b8',
+                  }}
+                />
+
+                <Tooltip />
+
+                <Area
+                  type="monotone"
+                  dataKey="resolved"
+                  stroke="#0f766e"
+                  strokeWidth={
+                    2.6
+                  }
+                  fill="url(#exec)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+
+        {/* MOST REPORTED LOCATIONS */}
+
+        <section className="panel">
+          <div className="panel-head">
+            <div>
+              <span className="eyebrow">
+                Geographic attention
+              </span>
+
+              <h2>
+                Most reported locations
+              </h2>
+            </div>
+
+            <Link
+              to="/app/map"
+              className="text-button"
+            >
+              View map
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div className="mt-4 flex flex-col gap-2">
+            {hotspots
+              .slice(0, 4)
+              .map((item, index) => {
+                const reports = Number(item.reports || 0)
+
+                return (
+                  <Link
+                    to="/app/map"
+                    key={`${item.location}-${index}`}
+                    className="
+                      group
+                      grid
+                      grid-cols-[42px_minmax(0,1fr)_auto]
+                      items-center
+                      gap-3
+                      rounded-xl
+                      border
+                      border-slate-100
+                      bg-slate-50/70
+                      px-3.5
+                      py-3
+                      transition
+                      hover:border-teal-200
+                      hover:bg-teal-50/50
+                    "
+                  >
+                    <span
+                      className="
+                        grid
+                        h-9
+                        w-9
+                        place-items-center
+                        rounded-lg
+                        bg-white
+                        text-[10px]
+                        font-extrabold
+                        text-slate-400
+                        shadow-sm
+                      "
+                    >
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+
+                    <div className="min-w-0">
+                      <strong
+                        className="
+                          block
+                          truncate
+                          text-[11px]
+                          font-extrabold
+                          text-slate-800
+                        "
+                      >
+                        {String(item.location || 'Unknown location')}
+                      </strong>
+
+                      <span className="mt-0.5 block text-[9px] text-slate-400">
+                        {reports} {reports === 1 ? 'report' : 'reports'}
+                      </span>
+                    </div>
+
+                    <span
+                      className="
+                        grid
+                        h-8
+                        w-8
+                        place-items-center
+                        rounded-lg
+                        text-slate-400
+                        transition
+                        group-hover:bg-white
+                        group-hover:text-teal-700
+                      "
+                    >
+                      <ArrowRight size={14} />
+                    </span>
+                  </Link>
+                )
+              })}
+
+            {hotspots.length === 0 && (
+              <div
+                className="
+                  flex
+                  min-h-[150px]
+                  flex-col
+                  items-center
+                  justify-center
+                  rounded-xl
+                  border
+                  border-dashed
+                  border-slate-200
+                  text-center
+                "
+              >
+                <MapPin
+                  size={20}
+                  className="text-slate-300"
+                />
+
+                <strong className="mt-2 text-[10px] text-slate-600">
+                  No hotspot data yet
+                </strong>
+
+                <span className="mt-1 text-[9px] text-slate-400">
+                  Reported locations will appear here.
+                </span>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </>
+  )
 }
 
 export function DashboardPage() {
   const { user } = useAuth()
+  const [dashboard,setDashboard]=useState<any>({})
+  const [requests,setRequests]=useState<ServiceRequest[]>([])
+  const [trendRaw,setTrendRaw]=useState<any[]>([])
+  const [departmentRaw,setDepartmentRaw]=useState<any[]>([])
+  const [hotspots,setHotspots]=useState<any[]>([])
+  const [summary,setSummary]=useState<any>({})
+  const [userCount,setUserCount]=useState(0)
+
+  useEffect(()=>{
+    if(!user)return
+    dashboardService.get().then(setDashboard).catch(error=>console.error('Dashboard API failed',error))
+    requestsService.list({limit:100}).then(result=>setRequests(result.items)).catch(error=>console.error('Request list failed',error))
+    if(['GOV_ADMIN','SUPERIOR'].includes(user.role)){
+      analyticsService.trend({bucket:'day'}).then(setTrendRaw).catch(()=>setTrendRaw([]))
+      analyticsService.departments().then(setDepartmentRaw).catch(()=>setDepartmentRaw([]))
+      analyticsService.hotspots().then(setHotspots).catch(()=>setHotspots([]))
+      analyticsService.summary().then(setSummary).catch(()=>setSummary({}))
+    }
+    if(user.role==='APPROVER'){
+      approvalsService.list({status:'PENDING',limit:100}).catch(()=>({items:[]}))
+      usersService.list({limit:1}).then(result=>setUserCount(result.meta?.total??result.items.length)).catch(()=>setUserCount(0))
+    }
+  },[user?.id,user?.role])
+
+  const trendData=useMemo(()=>trendRaw.map(item=>({day:String(item.period||''),opened:Number(item.created||0),resolved:Number(item.resolved||0)})),[trendRaw])
+  const departmentData=useMemo(()=>departmentRaw.slice(0,6).map(item=>({name:String(item.name||'Department'),open:Number(item.open||0),score:Number(item.total||0)>0?Math.round(Number(item.resolved||0)/Number(item.total||1)*100):0})),[departmentRaw])
+
   if (!user) return null
-  return <div className="mx-auto w-full max-w-[1540px]"><div className="mb-4"><span className="text-[9px] font-extrabold uppercase tracking-[.14em] text-slate-400">{roleLabel(user.role)}</span></div>{user.role === 'CITIZEN' ? <CitizenDashboard/> : user.role === 'GOV_WORKER' ? <WorkerDashboard/> : user.role === 'GOV_ADMIN' ? <AdminDashboard/> : user.role === 'APPROVER' ? <ApproverDashboard/> : <SuperiorDashboard/>}</div>
+  return <div className="page dashboard-page"><div className="page-role-strip"><span className="eyebrow">{roleLabel(user.role)}</span></div>{user.role === 'CITIZEN' ? <CitizenDashboard user={user} requests={requests} dashboard={dashboard}/> : user.role === 'GOV_WORKER' ? <WorkerDashboard requests={requests} dashboard={dashboard}/> : user.role === 'GOV_ADMIN' ? <AdminDashboard requests={requests} dashboard={dashboard} trendData={trendData}/> : user.role === 'APPROVER' ? <ApproverDashboard requests={requests} dashboard={dashboard} userCount={userCount}/> : 
+  <SuperiorDashboard
+    dashboard={
+      dashboard
+    }
+    summary={
+      summary
+    }
+    trendData={
+      trendData
+    }
+    departmentData={
+      departmentData
+    }
+    hotspots={
+      hotspots
+    }
+  />}</div>
 }

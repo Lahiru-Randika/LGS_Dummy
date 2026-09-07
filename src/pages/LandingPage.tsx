@@ -28,30 +28,30 @@ import { ParallaxSection } from '../components/ParallaxSection'
 const serviceCards = [
   {
     icon: MessageSquareWarning,
-    eyebrow: 'Report',
-    title: 'Complaints',
-    body: 'Pin an issue to a building, road or exact location and follow every status change.',
+    eyebrow: 'Land',
+    title: 'Land & Spatial Intelligence',
+    body: 'Connect property and parcel records, boundaries, zoning and spatial intelligence to one verified map.',
     tone: 'hover:border-rose-200 hover:bg-rose-50/40',
   },
   {
     icon: Sparkles,
-    eyebrow: 'Improve',
-    title: 'Suggestions',
-    body: 'Share ideas for public spaces, roads, facilities and neighborhood improvements.',
+    eyebrow: 'Permits',
+    title: 'Permits, Certificates & Licensing',
+    body: 'Track applications, approvals, certificates and licensing workflows from submission to final decision.',
     tone: 'hover:border-emerald-200 hover:bg-emerald-50/40',
   },
   {
     icon: CircleHelp,
-    eyebrow: 'Ask',
-    title: 'Inquiries',
-    body: 'Send location-aware questions to the municipality without guessing the department.',
+    eyebrow: 'Revenue',
+    title: 'Tax, Revenue & Payments',
+    body: 'Manage assessments, bills, collections and arrears with every record tied to a real, mapped property.',
     tone: 'hover:border-blue-200 hover:bg-blue-50/40',
   },
   {
     icon: CalendarCheck2,
-    eyebrow: 'Reserve',
-    title: 'Bookings',
-    body: 'Request eligible parks, grounds, halls and other public facilities from the map.',
+    eyebrow: 'Engage',
+    title: 'Citizen Engagement & Command Center',
+    body: 'Bring citizen services, complaints, public participation and executive visibility into one connected system.',
     tone: 'hover:border-violet-200 hover:bg-violet-50/40',
   },
 ]
@@ -59,39 +59,39 @@ const serviceCards = [
 const featureCards = [
   {
     image: '/lgs-media/ExploreYourArea.png',
-    kicker: 'Spatial services',
-    title: 'Explore your area',
-    body: 'See drone imagery, buildings, municipal boundaries and local services in geographic context.',
+    kicker: 'Spatial foundation',
+    title: 'Land Information System (LIS)',
+    body: 'Manage municipal assets and infrastructure with real location intelligence instead of guesswork.',
   },
   {
     image: '/lgs-media/FindCivicPlaces.png',
-    kicker: 'Public facilities',
-    title: 'Find civic places',
-    body: 'Discover facilities and public spaces, then open the relevant service directly from the map.',
+    kicker: 'Planning intelligence',
+    title: 'City Planning',
+    body: 'Bring land records, ownership and boundaries together clearly so planning starts from facts, not files.',
   },
   {
     image: '/lgs-media/FollowLocalAction.png',
-    kicker: 'Connected operations',
-    title: 'Follow local action',
-    body: 'Requests move through assignment, inspection and resolution while remaining tied to place.',
+    kicker: 'Infrastructure intelligence',
+    title: 'Underground Utility Management',
+    body: 'Map and manage water, sewerage, electricity and telecom networks before anyone breaks ground.',
   },
 ]
 
 const news = [
   [
-    'Service notice',
-    'Road maintenance coordination moves into LGS',
-    'See how mapped requests help teams group nearby work and reduce repeat site visits.',
+    'Spatial intelligence',
+    'Every layer of the city, finally in one place',
+    'From what is underground to what is being planned next, council information can be captured, mapped and ready to use.',
   ],
   [
-    'Community',
-    'Public-facility booking workflows are now map-first',
-    'Residents can identify eligible spaces visually before beginning a booking request.',
+    'Connected operations',
+    'One map. Every department. Every answer.',
+    'Land records, permits, tax data, certificates and citizen services connect back to the same verified council map.',
   ],
   [
-    'Platform',
-    'A shared spatial view for residents and municipal teams',
-    'The same geographic foundation supports different levels of access without exposing private information.',
+    'Decision support',
+    'A stronger, smarter path to local governance',
+    'Live spatial data, connected workflows and executive dashboards help councils act from one shared picture.',
   ],
 ]
 
@@ -134,27 +134,25 @@ export function LandingPage() {
               className="max-w-4xl"
             >
               <span className="text-[10px] font-extrabold uppercase tracking-[.18em] text-teal-200">
-                Local Government Systems
+                Spatio LGS
               </span>
 
               <h1 className="mt-6 font-['Manrope'] text-[clamp(58px,7vw,112px)] font-extrabold leading-[.88] tracking-[-.055em]">
-                Your community
+                Location Meets Intelligence.
                 <br />
                 <em className="not-italic text-teal-300">
-                  connected
+                  Governance Evolves.
                 </em>
               </h1>
 
               <p className="mt-7 max-w-2xl text-[15px] leading-7 text-slate-200 sm:text-[17px]">
-                One geographic platform for public services,
-                local requests, municipal action and community
-                information.
+                Public Services. Local Requests. Municipal Action. One Connected Map. Spatio LGS is a geospatial decision-support platform built for Municipal and Urban Councils managing real complexity.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Link
                   to="/map"
-                  className="inline-flex min-h-[54px] min-w-[190px] items-center justify-center gap-2 rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.06em] text-slate-950 shadow-lg shadow-black/10 transition duration-300 hover:-translate-y-0.5 hover:bg-teal-200 hover:shadow-xl"
+                  className="inline-flex min-h-[54px] min-w-[190px] items-center justify-center gap-2 rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.06em] !text-slate-950 shadow-lg shadow-black/10 transition duration-300 hover:-translate-y-0.5 hover:bg-teal-200 hover:shadow-xl"
                 >
                   <Compass size={17} />
                   Explore the map
@@ -162,7 +160,7 @@ export function LandingPage() {
 
                 <Link
                   to="/login"
-                  className="inline-flex min-h-[54px] min-w-[190px] items-center justify-center gap-2 rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.06em] text-slate-950 shadow-lg shadow-black/10 transition duration-300 hover:-translate-y-0.5 hover:bg-teal-200 hover:shadow-xl"
+                  className="inline-flex min-h-[54px] min-w-[190px] items-center justify-center gap-2 rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.06em] !text-slate-950 shadow-lg shadow-black/10 transition duration-300 hover:-translate-y-0.5 hover:bg-teal-200 hover:shadow-xl"
                 >
                   Sign in
                   <ArrowRight size={16} />
@@ -172,8 +170,10 @@ export function LandingPage() {
           </div>
 
           <div className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-3 text-[9px] font-extrabold uppercase tracking-[.16em] text-white/60 lg:flex">
-            <i className="h-10 w-px bg-white/40" />
-            Scroll
+            <div className="flex animate-[scrollFloat_2s_ease-in-out_infinite] items-center gap-3">
+              <i className="h-10 w-px bg-white/40" />
+              <span>Scroll</span>
+            </div>
           </div>
         </section>
 
@@ -227,22 +227,22 @@ export function LandingPage() {
             {[
               [
                 LocateFixed,
-                'Location-first',
-                'Every request begins with a real place, building, road or facility.',
+                'One Connected Council',
+                'A spatially accurate digital foundation where requests, records and revenue do not get lost between departments.',
                 'from-cyan-500/15 via-teal-500/10 to-transparent',
                 'group-hover:text-cyan-600',
               ],
               [
                 Layers3,
-                'Mapped information',
-                'Drone imagery and municipal GIS layers create one shared spatial view.',
+                'One Map. Every Department.',
+                'Land records, permits, tax and revenue, certificates and citizen services work from the same verified geographic picture.',
                 'from-emerald-500/15 via-teal-500/10 to-transparent',
                 'group-hover:text-emerald-600',
               ],
               [
                 ShieldCheck,
-                'Role-aware access',
-                'Citizens see public-safe information while officers access operational data.',
+                'One Platform. Every Council Function.',
+                'Land and spatial intelligence, permits and licensing, revenue and citizen engagement come together in one connected system.',
                 'from-violet-500/15 via-indigo-500/10 to-transparent',
                 'group-hover:text-violet-600',
               ],
@@ -377,18 +377,15 @@ export function LandingPage() {
             <ScrollReveal>
               <div className="mb-12 max-w-4xl">
                 <span className={kicker}>
-                  Municipal services
+                  One connected platform
                 </span>
 
                 <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold leading-[.96] tracking-[-.045em]">
-                  Public services should feel simple, visible
-                  and close to home.
+                  One Platform. Every Council Function.
                 </h2>
 
                 <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-500">
-                  LGS organizes common interactions around
-                  geography rather than counters, phone numbers
-                  and disconnected forms.
+                  Spatio LGS connects land and spatial intelligence, permits and licensing, tax and revenue, and citizen engagement through one verified geographic foundation.
                 </p>
               </div>
             </ScrollReveal>
@@ -489,11 +486,11 @@ export function LandingPage() {
             <ScrollReveal>
               <div className="mb-12 text-center">
                 <span className={kicker}>
-                  Explore the municipality
+                  Strong geospatial foundation
                 </span>
 
                 <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold leading-[.96] tracking-[-.045em]">
-                  See local government through place.
+                  Every Layer of the City, Finally in One Place.
                 </h2>
               </div>
             </ScrollReveal>
@@ -556,11 +553,11 @@ export function LandingPage() {
             >
               <ScrollReveal>
                 <span className="text-[10px] font-extrabold uppercase tracking-[.17em] text-teal-200">
-                  Connected local government
+                  Why Spatio LGS?
                 </span>
 
                 <h2 className="mt-4 font-['Manrope'] text-[clamp(50px,5.5vw,84px)] font-extrabold tracking-[-.045em]">
-                  Why LGS?
+                  One Filing Cabinet Away From Chaos
                 </h2>
               </ScrollReveal>
 
@@ -568,18 +565,18 @@ export function LandingPage() {
                 {[
                   [
                     MapPin,
-                    'Easy access',
-                    'Start with the place you know instead of searching for the right office.',
+                    'From Filing to Finishing',
+                    'Real-time spatial data and automated workflows can turn long approval chains into faster, more accountable decisions.',
                   ],
                   [
                     Users2,
-                    'Faster coordination',
-                    'Requests can be reviewed and assigned with location, workload and evidence together.',
+                    'Nothing Hidden, Nothing Lost',
+                    'Every department sees the same data, while citizens can follow their own request instead of wondering where it went.',
                   ],
                   [
                     CheckCircle2,
-                    'Visible progress',
-                    'Status history makes the path from report to resolution understandable.',
+                    'Decisions Grounded in Reality',
+                    'Dashboards built on live field data help councils plan from what is actually there, not from assumptions.',
                   ],
                 ].map(([Icon, title, body], index) => {
                   const C = Icon as typeof MapPin
@@ -667,16 +664,14 @@ export function LandingPage() {
                     </span>
 
                     <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold leading-[.96] tracking-[-.045em] text-slate-950">
-                      Report. Assign. Inspect.
+                      From a Location to a Decision
                       <br />
-                      Resolve.
+                      - in Four Steps.
                     </h2>
                   </div>
 
                   <p className="max-w-xl text-sm leading-7 text-slate-600">
-                    A request remains connected to its location
-                    and history from the resident’s first report
-                    to the final municipal action.
+                    Four steps. One system. A council that finally moves as fast as its city does.
                   </p>
                 </div>
               </ScrollReveal>
@@ -698,23 +693,23 @@ export function LandingPage() {
                 {[
                   [
                     Crosshair,
-                    'Report',
-                    'Choose a mapped location and submit the issue.',
+                    'Map It',
+                    'Every parcel, road, building and utility line becomes part of one accurate digital map of the council area.',
                   ],
                   [
                     Building2,
-                    'Assign',
-                    'The request reaches the right municipal team.',
+                    'Connect It',
+                    'Land records, permits, tax data and citizen services all link back to the same map.',
                   ],
                   [
                     FileText,
-                    'Inspect',
-                    'Field evidence and notes are added on site.',
+                    'Act On It',
+                    'Citizens access properties, applications, permits, tax dues, complaints, certificates and notifications from one dashboard.',
                   ],
                   [
                     ShieldCheck,
-                    'Resolve',
-                    'The outcome is recorded and communicated.',
+                    'Track It',
+                    'Commissioners and division heads can watch revenue, complaints and projects unfold in real time from one dashboard.',
                   ],
                 ].map(([Icon, title, body], index) => {
                   const C = Icon as typeof Crosshair
@@ -829,19 +824,17 @@ export function LandingPage() {
                 className="max-w-3xl"
               >
                 <span className="text-[10px] font-extrabold uppercase tracking-[.17em] text-teal-200">
-                  Geographic intelligence
+                  Geospatial foundation
                 </span>
 
                 <h2 className="mt-5 font-['Manrope'] text-[clamp(52px,6vw,90px)] font-extrabold leading-[.9] tracking-[-.05em]">
-                  Your municipality,
+                  Every Layer of the City,
                   <br />
-                  digitally mapped.
+                  Finally in One Place.
                 </h2>
 
                 <p className="mt-6 max-w-xl text-sm leading-7 text-slate-300">
-                  Buildings, roads, fields, public facilities,
-                  service locations and requests can share the
-                  same geographic foundation.
+                  From what’s underground to what’s being planned next — captured, mapped and ready to use.
                 </p>
 
                 <Link
@@ -860,7 +853,7 @@ export function LandingPage() {
                     font-extrabold
                     uppercase
                     tracking-[.05em]
-                    text-slate-950
+                    !text-slate-950
                     shadow-xl
                     transition-all
                     duration-300
@@ -892,11 +885,11 @@ export function LandingPage() {
             <ScrollReveal>
               <div className="mb-12 text-center">
                 <span className={kicker}>
-                  A shared spatial view
+                  Connected spatial intelligence
                 </span>
 
                 <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold tracking-[-.045em]">
-                  One municipality. Many layers.
+                  One Map. Every Department. Every Answer.
                 </h2>
               </div>
             </ScrollReveal>
@@ -943,22 +936,21 @@ export function LandingPage() {
           >
             <ScrollReveal>
               <span className="text-[10px] font-extrabold uppercase tracking-[.17em] text-teal-200">
-                Stay connected
+                Ready to transform your council?
               </span>
 
               <h2 className="mt-4 max-w-3xl font-['Manrope'] text-[clamp(48px,5vw,78px)] font-extrabold leading-[.95] tracking-[-.045em]">
-                Make local government easier to reach.
+                Request a demo and meet our team.
               </h2>
 
               <p className="mt-5 max-w-xl text-sm leading-7 text-slate-300">
-                Explore the public map now, or sign in to
-                submit and track your own requests.
+                See how Spatio LGS can bring land records, permits, revenue, assets and citizen services into one connected geospatial platform.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-6">
                 <Link
                   to="/map"
-                  className="inline-flex min-h-[52px] items-center rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.05em] text-slate-950"
+                  className="inline-flex min-h-[52px] items-center rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.05em] !text-slate-950"
                 >
                   Explore map
                 </Link>
@@ -967,7 +959,7 @@ export function LandingPage() {
                   to="/contact"
                   className="inline-flex items-center gap-2 border-b border-white/40 pb-2 text-[12px] font-extrabold"
                 >
-                  Contact LGS
+                  Request a demo
                   <ArrowRight size={16} />
                 </Link>
               </div>
@@ -981,18 +973,18 @@ export function LandingPage() {
                 {[
                   [
                     Landmark,
-                    'Municipal office',
-                    'Weddemulla Demo Council',
+                    'Platform',
+                    'Spatio LGS',
                   ],
                   [
                     MapPin,
-                    'Region',
-                    'Sri Lanka',
+                    'Designed for',
+                    'Municipal & Urban Councils',
                   ],
                   [
                     ShieldCheck,
-                    'Platform',
-                    'Public + government access',
+                    'Purpose',
+                    'Geospatial decision support',
                   ],
                 ].map(([Icon, label, value]) => {
                   const C = Icon as typeof Landmark

@@ -1,21 +1,468 @@
-import { Building2, Clock3, Mail, MapPin, Phone, Send } from 'lucide-react'
-import { CivicMap } from '../components/CivicMap'
-import { PublicFooter } from '../components/PublicFooter'
-import { PublicHeader } from '../components/PublicHeader'
-import { PublicInnerHero } from '../components/PublicInnerHero'
-import { ScrollReveal } from '../components/ScrollReveal'
-import { Input, Textarea } from '../components/ui/Field'
+import {
+  Building2,
+  Clock3,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+} from 'lucide-react'
+
+import {
+  FormEvent,
+  useState,
+} from 'react'
+
+import {
+  ContactLocationMap,
+} from '../components/ContactLocationMap'
+
+import {
+  PublicFooter,
+} from '../components/PublicFooter'
+
+import {
+  PublicHeader,
+} from '../components/PublicHeader'
+
+import {
+  ScrollReveal,
+} from '../components/ScrollReveal'
+
+import {
+  ApiError,
+} from '../services/http'
+
+import {
+  publicService,
+} from '../services/public.service'
 
 export function ContactPage() {
-  return <div className="min-h-screen bg-white pt-[88px] font-['DM_Sans'] text-slate-950 max-[860px]:pt-[70px]"><PublicHeader/><main>
-    <PublicInnerHero image="/lgs-media/map-south.jpg" kicker="Contact" title={<>Get in touch<br/>with your municipality.</>} body="Use LGS online when possible, or reach the municipal team directly for support, partnerships and service information."/>
-    <section className="py-24 sm:py-28"><div className="mx-auto grid w-[min(1500px,calc(100%-80px))] gap-14 max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-32px)] lg:grid-cols-[.8fr_1.2fr] lg:gap-20">
-      <ScrollReveal direction="left"><div><span className="text-[10px] font-extrabold uppercase tracking-[.17em] text-teal-700">Municipal office</span><h2 className="mt-5 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold leading-[.95] tracking-[-.045em]">Talk to the LGS team.</h2><p className="mt-5 text-sm leading-7 text-slate-500">For platform support, civic partnerships or municipal implementation questions, send us a message.</p><div className="mt-8 grid gap-5">{[[MapPin,'Address','Weddemulla Demo Council, Sri Lanka'],[Phone,'Phone','+94 11 000 0000'],[Mail,'Email','hello@lgs.example'],[Clock3,'Office hours','Mon–Fri · 8:30 AM–4:15 PM']].map(([Icon,label,value])=>{const C=Icon as typeof MapPin;return <div className="flex items-start gap-4" key={String(label)}><C size={20} className="mt-0.5 text-teal-700"/><span><small className="block text-[9px] font-extrabold uppercase tracking-[.13em] text-slate-400">{String(label)}</small><strong className="mt-1 block text-[12px]">{String(value)}</strong></span></div>})}</div></div></ScrollReveal>
-      <ScrollReveal direction="right"><form className="grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:p-8"><Input placeholder="Your name"/><div className="grid gap-4 sm:grid-cols-2"><Input type="email" placeholder="you@example.com"/><Input placeholder="How can we help?"/></div><Textarea rows={7} placeholder="Tell us what you would like to discuss…"/><button type="button" className="inline-flex min-h-[52px] w-fit items-center gap-2 rounded-md bg-slate-950 px-6 text-[11px] font-extrabold uppercase tracking-[.06em] text-white hover:bg-slate-800"><Send size={16}/>Send message</button></form></ScrollReveal>
-    </div></section>
-    <section className="pb-24"><div className="mx-auto grid w-[min(1500px,calc(100%-80px))] gap-5 max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-32px)] lg:grid-cols-3">{[[Building2,'Municipal headquarters','Weddemulla Demo Council','Primary administration and public service desk'],[MapPin,'Field services','Municipal operations','Inspections, site work and service coordination'],[ShieldIcon,'Digital services','LGS support','Map, account and online request assistance']].map(([Icon,title,sub,body],i)=>{const C=Icon as typeof Building2;return <ScrollReveal key={String(title)} delay={i*100}><article className="min-h-[290px] rounded-2xl border border-slate-200 p-8 text-center transition hover:-translate-y-1 hover:border-teal-200 hover:bg-teal-50/40 hover:shadow-xl"><span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-teal-700"><C/></span><h3 className="mt-6 font-['Manrope'] text-xl font-extrabold uppercase">{String(title)}</h3><strong className="mt-2 block text-[12px]">{String(sub)}</strong><p className="mt-3 text-[11px] leading-6 text-slate-500">{String(body)}</p></article></ScrollReveal>})}</div></section>
-    <section className="relative h-[620px] overflow-hidden"><CivicMap mode="preview"/><div className="absolute bottom-8 left-1/2 z-[1000] flex -translate-x-1/2 items-center gap-4 bg-white px-6 py-3 shadow-xl"><span className="text-[9px] font-extrabold uppercase tracking-[.13em] text-slate-400">Municipal map</span><strong className="text-[12px]">Weddemulla Estate</strong></div></section>
-  </main><PublicFooter/></div>
+  const [
+    name,
+    setName,
+  ] = useState('')
+
+  const [
+    email,
+    setEmail,
+  ] = useState('')
+
+  const [
+    subject,
+    setSubject,
+  ] = useState('')
+
+  const [
+    message,
+    setMessage,
+  ] = useState('')
+
+  const [
+    status,
+    setStatus,
+  ] = useState('')
+
+  const [
+    sending,
+    setSending,
+  ] = useState(false)
+
+  async function submit(
+    event:
+      FormEvent,
+  ) {
+    event.preventDefault()
+
+    setStatus('')
+    setSending(true)
+
+    try {
+      await publicService.contact({
+        name,
+        email,
+        subject,
+        message,
+      })
+
+      setStatus(
+        'Demo request received. Our team will get in touch with you.',
+      )
+
+      setName('')
+      setEmail('')
+      setSubject('')
+      setMessage('')
+    } catch (
+      error
+    ) {
+      setStatus(
+        error instanceof
+          ApiError
+          ? error.message
+          : 'Unable to send the request.',
+      )
+    } finally {
+      setSending(false)
+    }
+  }
+
+  return (
+    <div className="public-site public-inner-page">
+      <PublicHeader />
+
+      <main>
+        {/* =====================================================
+            HERO
+        ====================================================== */}
+
+        <section className="inner-hero inner-hero--contact">
+          <div className="section-shell">
+            <ScrollReveal>
+              <span className="editorial-kicker">
+                Contact
+              </span>
+
+              <h1>
+                Let’s put your council
+                <br />
+                on the map.
+              </h1>
+
+              <p>
+                Talk to the Spatio LGS team about your council’s
+                needs, existing challenges and how a connected
+                geospatial platform can support better local
+                government operations.
+              </p>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* =====================================================
+            CONTACT
+        ====================================================== */}
+
+        <section className="section-pad contact-editorial">
+          <div className="section-shell contact-editorial__grid">
+            <ScrollReveal direction="left">
+              <div className="contact-editorial__info">
+                <span className="editorial-kicker editorial-kicker--dark">
+                  Prefer to reach us directly?
+                </span>
+
+                <h2>
+                  Talk to an expert.
+                </h2>
+
+                <p>
+                  Tell us about your council, the services you
+                  want to improve and the problems you are
+                  hoping to solve. Our team can walk you through
+                  how Spatio LGS can work in your own council
+                  area.
+                </p>
+
+                <div className="contact-detail">
+                  <MapPin />
+
+                  <span>
+                    <small>
+                      Office
+                    </small>
+
+                    <strong>
+                      No. 44, Beddagana South Road,
+                      Pitakotte
+                    </strong>
+                  </span>
+                </div>
+
+                <div className="contact-detail">
+                  <Phone />
+
+                  <span>
+                    <small>
+                      Phone
+                    </small>
+
+                    <strong>
+                      +94 77 330 1274
+                    </strong>
+                  </span>
+                </div>
+
+                <div className="contact-detail">
+                  <Mail />
+
+                  <span>
+                    <small>
+                      Email
+                    </small>
+
+                    <strong>
+                      info@spatiosds.com
+                    </strong>
+                  </span>
+                </div>
+
+                <div className="contact-detail">
+                  <Clock3 />
+
+                  <span>
+                    <small>
+                      Purpose
+                    </small>
+
+                    <strong>
+                      Platform demos, council implementation
+                      and solution discussions
+                    </strong>
+                  </span>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal direction="right">
+              <form
+                className="contact-editorial__form"
+                onSubmit={
+                  submit
+                }
+              >
+                <label>
+                  <span>
+                    Full name
+                  </span>
+
+                  <input
+                    placeholder="Your full name"
+                    value={
+                      name
+                    }
+                    onChange={(
+                      event,
+                    ) =>
+                      setName(
+                        event.target.value,
+                      )
+                    }
+                    required
+                  />
+                </label>
+
+                <div>
+                  <label>
+                    <span>
+                      Email address
+                    </span>
+
+                    <input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={
+                        email
+                      }
+                      onChange={(
+                        event,
+                      ) =>
+                        setEmail(
+                          event.target.value,
+                        )
+                      }
+                      required
+                    />
+                  </label>
+
+                  <label>
+                    <span>
+                      Primary service need
+                    </span>
+
+                    <input
+                      placeholder="Land, tax, permits, complaints..."
+                      value={
+                        subject
+                      }
+                      onChange={(
+                        event,
+                      ) =>
+                        setSubject(
+                          event.target.value,
+                        )
+                      }
+                      required
+                    />
+                  </label>
+                </div>
+
+                <label>
+                  <span>
+                    What are you hoping to solve?
+                  </span>
+
+                  <textarea
+                    rows={
+                      7
+                    }
+                    placeholder="Tell us about your council, current challenges and what you would like to improve…"
+                    value={
+                      message
+                    }
+                    onChange={(
+                      event,
+                    ) =>
+                      setMessage(
+                        event.target.value,
+                      )
+                    }
+                    required
+                  />
+                </label>
+
+                {status && (
+                  <small>
+                    {status}
+                  </small>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={
+                    sending
+                  }
+                >
+                  <Send
+                    size={
+                      16
+                    }
+                  />
+
+                  {sending
+                    ? 'Sending…'
+                    : 'Request a demo'}
+                </button>
+              </form>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* =====================================================
+            INFORMATION CARDS
+        ====================================================== */}
+
+        <section className="office-card-section">
+          <div className="section-shell office-card-grid">
+            {[
+              [
+                Building2,
+                'Council implementation',
+                'Spatio LGS',
+                'A connected platform for Municipal and Urban Council operations.',
+              ],
+
+              [
+                MapPin,
+                'Geospatial foundation',
+                'One verified map',
+                'Bring land, infrastructure, services and operational information together spatially.',
+              ],
+
+              [
+                ShieldIcon,
+                'Decision support',
+                'Connected governance',
+                'Support council teams with secure, role-based information and shared operational visibility.',
+              ],
+            ].map(
+              (
+                [
+                  Icon,
+                  title,
+                  sub,
+                  body,
+                ],
+                index,
+              ) => {
+                const C =
+                  Icon as typeof Building2
+
+                return (
+                  <ScrollReveal
+                    key={String(
+                      title,
+                    )}
+                    delay={
+                      index *
+                      100
+                    }
+                  >
+                    <article>
+                      <span>
+                        <C />
+                      </span>
+
+                      <h3>
+                        {String(
+                          title,
+                        )}
+                      </h3>
+
+                      <strong>
+                        {String(
+                          sub,
+                        )}
+                      </strong>
+
+                      <p>
+                        {String(
+                          body,
+                        )}
+                      </p>
+                    </article>
+                  </ScrollReveal>
+                )
+              },
+            )}
+          </div>
+        </section>
+
+        {/* =====================================================
+            MAP
+        ====================================================== */}
+
+        <section className="contact-map-live">
+          <ContactLocationMap />
+
+          <div className="contact-map-live__label">
+            <span>
+              Head office
+            </span>
+
+            <strong>
+              No. 44, Beddagana South Road, Pitakotte
+            </strong>
+          </div>
+        </section>
+      </main>
+
+      <PublicFooter />
+    </div>
+  )
 }
 
-function ShieldIcon(){return <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>}
+function ShieldIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="24"
+      height="24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  )
+}

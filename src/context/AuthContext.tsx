@@ -1,41 +1,67 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { demoUsers } from '../data/mock'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { authService } from '../services/auth.service'
+import { ApiError } from '../services/http'
 import type { User, UserRole } from '../types'
 
 type AuthValue = {
   user: User | null
-  loginAs: (id: string) => void
-  logout: () => void
+  permissions: string[]
+  loading: boolean
+  login: (email: string, password: string) => Promise<void>
+  logout: () => Promise<void>
+  refreshSession: () => Promise<void>
   can: (capability: string) => boolean
-}
-
-const permissionMap: Record<UserRole, string[]> = {
-  CITIZEN: ['map.public', 'request.create', 'request.own', 'booking.create'],
-  GOV_WORKER: ['map.worker', 'request.assigned', 'request.update', 'inspection.update'],
-  GOV_ADMIN: ['map.admin', 'request.all', 'request.assign', 'building.sensitive', 'department.view'],
-  APPROVER: ['map.admin', 'request.all', 'approval.manage', 'users.view', 'building.sensitive'],
-  SUPERIOR: ['map.executive', 'request.all', 'analytics.view', 'tax.view', 'users.view', 'building.sensitive'],
 }
 
 const AuthContext = createContext<AuthValue | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    const id = localStorage.getItem('lgs-demo-user')
-    return demoUsers.find((item) => item.id === id) ?? null
-  })
+  const [user, setUser] = useState<User | null>(null)
+  const [permissions, setPermissions] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const refreshSession = useCallback(async () => {
+    try {
+      const session = await authService.me()
+      setUser(session.user)
+      setPermissions(session.permissions)
+    } catch (error) {
+      if (!(error instanceof ApiError) || error.status !== 401) {
+        console.error('Unable to restore LGS session', error)
+      }
+      setUser(null)
+      setPermissions([])
+    }
+  }, [])
 
   useEffect(() => {
-    if (user) localStorage.setItem('lgs-demo-user', user.id)
-    else localStorage.removeItem('lgs-demo-user')
-  }, [user])
+    refreshSession().finally(() => setLoading(false))
+  }, [refreshSession])
+
+  const login = useCallback(async (email: string, password: string) => {
+    const session = await authService.login(email, password)
+    setUser(session.user)
+    setPermissions(session.permissions)
+  }, [])
+
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout()
+    } finally {
+      setUser(null)
+      setPermissions([])
+    }
+  }, [])
 
   const value = useMemo<AuthValue>(() => ({
     user,
-    loginAs: (id) => setUser(demoUsers.find((item) => item.id === id) ?? null),
-    logout: () => setUser(null),
-    can: (capability) => Boolean(user && permissionMap[user.role].includes(capability)),
-  }), [user])
+    permissions,
+    loading,
+    login,
+    logout,
+    refreshSession,
+    can: (capability) => permissions.includes(capability),
+  }), [user, permissions, loading, login, logout, refreshSession])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

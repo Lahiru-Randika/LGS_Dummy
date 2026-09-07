@@ -1,1 +1,7 @@
-@import "tailwindcss";
+/*
+  Tailwind CSS v4 is enabled without Preflight so the existing LGS visual
+  design remains unchanged. New components can use Tailwind utility classes
+  immediately without resetting the current project CSS.
+*/
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);

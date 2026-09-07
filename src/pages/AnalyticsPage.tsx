@@ -1,17 +1,34 @@
 import { Activity, BarChart3, MapPinned, Timer, TrendingUp } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { MetricCard } from '../components/MetricCard'
 import { PageHeader } from '../components/PageHeader'
-import { departmentData, trendData } from '../data/mock'
-import { Panel, PanelHead } from '../components/ui/Panel'
+import { analyticsService } from '../services/analytics.service'
 
 export function AnalyticsPage(){
-  return <div className="mx-auto w-full max-w-[1540px]"><PageHeader eyebrow="Executive intelligence" title="Municipal analytics" description="High-level service patterns, geographic pressure and operational performance."/>
-    <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4"><MetricCard icon={Activity} label="Resolution rate" value="86.4%" note="+4.2 pp vs last month" tone="mint"/><MetricCard icon={Timer} label="Median resolution" value="2.8d" note="0.6d faster"/><MetricCard icon={MapPinned} label="Hotspot wards" value="3" note="Ward 04 leads demand"/><MetricCard icon={TrendingUp} label="Demand change" value="+12.3%" note="Month-over-month" tone="dark"/></div>
-    <div className="grid gap-5 xl:grid-cols-[1.35fr_.65fr]"><Panel><PanelHead eyebrow="Weekly throughput" title="Opened and resolved requests"/><div className="h-[380px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={trendData}><CartesianGrid vertical={false} stroke="#e8edf3"/><XAxis dataKey="day" axisLine={false} tickLine={false}/><YAxis axisLine={false} tickLine={false}/><Tooltip/><Bar dataKey="opened" fill="#cbd5e1" radius={[5,5,0,0]}/><Bar dataKey="resolved" fill="#0f766e" radius={[5,5,0,0]}/></BarChart></ResponsiveContainer></div></Panel>
-      <Panel><PanelHead eyebrow="Department score" title="Service health"/><div className="grid gap-3">{departmentData.map((d,i)=><div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4" key={d.name}><span className="text-[9px] font-extrabold text-slate-400">0{i+1}</span><div className="min-w-0 flex-1"><strong className="block text-[11px]">{d.name}</strong><small className="mt-1 block text-[9px] text-slate-500">{d.open} open cases</small></div><em className="not-italic text-[12px] font-extrabold text-teal-700">{d.score}%</em></div>)}</div></Panel>
-      <Panel className="relative overflow-hidden bg-slate-950 text-white"><span className="text-[9px] font-extrabold uppercase tracking-[.15em] text-teal-300">Geographic pressure</span><h2 className="mt-2 max-w-xl font-['Manrope'] text-3xl font-extrabold tracking-[-.04em]">Ward 04 is the clearest concentration.</h2><p className="mt-3 max-w-xl text-[12px] leading-6 text-slate-300">Environmental and road-service reports account for most of the current demand cluster.</p><div className="relative mt-8 h-44 overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-teal-950"><span className="absolute left-[22%] top-[24%] h-16 w-16 rounded-full bg-orange-500/35 blur-xl"/><span className="absolute right-[18%] top-[38%] h-24 w-24 rounded-full bg-teal-400/25 blur-2xl"/><span className="absolute bottom-[15%] left-[45%] h-14 w-14 rounded-full bg-rose-500/30 blur-xl"/><i className="absolute left-6 right-6 top-1/2 h-px -rotate-6 bg-white/15"/><b className="absolute bottom-5 left-5 text-[10px] tracking-[.16em] text-white/70">WARD 04</b></div></Panel>
-      <Panel><PanelHead eyebrow="Request mix" title="By service type" right={<BarChart3 size={20} className="text-slate-400"/>}/><div className="grid gap-4">{[['Complaints','62%'],['Inquiries','17%'],['Suggestions','12%'],['Bookings','9%']].map(([n,v])=><div key={n} className="grid grid-cols-[90px_1fr_42px] items-center gap-3 text-[10px]"><span>{n}</span><div className="h-2 overflow-hidden rounded-full bg-slate-100"><i className="block h-full rounded-full bg-teal-700" style={{width:v}}/></div><strong className="text-right">{v}</strong></div>)}</div></Panel>
-    </div>
-  </div>
+  const [summary,setSummary]=useState<any>({})
+  const [trend,setTrend]=useState<any[]>([])
+  const [departments,setDepartments]=useState<any[]>([])
+  const [types,setTypes]=useState<any[]>([])
+  const [hotspots,setHotspots]=useState<any[]>([])
+
+  useEffect(()=>{
+    Promise.all([
+      analyticsService.summary(),
+      analyticsService.trend({bucket:'day'}),
+      analyticsService.departments(),
+      analyticsService.byType(),
+      analyticsService.hotspots(),
+    ]).then(([s,t,d,bt,h])=>{setSummary(s);setTrend(t);setDepartments(d);setTypes(bt);setHotspots(h)}).catch(error=>console.error('Unable to load analytics',error))
+  },[])
+
+  const trendData=useMemo(()=>trend.map(item=>({day:String(item.period||''),opened:Number(item.created||0),resolved:Number(item.resolved||0)})),[trend])
+  const departmentData=useMemo(()=>departments.slice(0,4).map(item=>({name:String(item.name||'Department'),open:Number(item.open||0),score:Number(item.total||0)>0?Math.round(Number(item.resolved||0)/Number(item.total||1)*100):0})),[departments])
+  const totalTypes=types.reduce((sum,item)=>sum+Number(item.count||0),0)
+  const distribution=types.map(item=>[String(item.type||''),totalTypes?`${Math.round(Number(item.count||0)/totalTypes*100)}%`:'0%'] as [string,string])
+  const resolutionRate=Number(summary.total||0)>0?`${(Number(summary.resolved||0)/Number(summary.total||1)*100).toFixed(1)}%`:'0%'
+  const avgDays=Number(summary.averageResolutionHours||0)/24
+  const hotspot=hotspots[0]?.location||'No active hotspot'
+
+  return <div className="page"><PageHeader eyebrow="Executive intelligence" title="Municipal analytics" description="High-level service patterns, geographic pressure and operational performance."/><div className="metrics-grid metrics-grid--4"><MetricCard icon={Activity} label="Resolution rate" value={resolutionRate} note={`${Number(summary.resolved||0)} resolved requests`} tone="mint"/><MetricCard icon={Timer} label="Median resolution" value={avgDays?`${avgDays.toFixed(1)}d`:'—'} note="Backend average resolution time"/><MetricCard icon={MapPinned} label="Hotspot wards" value={Math.min(hotspots.length,3)} note={String(hotspot)}/><MetricCard icon={TrendingUp} label="Demand change" value={trendData.length?`${trendData[trendData.length-1]?.opened||0}`:'0'} note="Requests in latest period" tone="dark"/></div><div className="analytics-layout"><section className="panel panel--wide"><div className="panel-head"><div><span className="eyebrow">Weekly throughput</span><h2>Opened and resolved requests</h2></div></div><div className="chart-wrap chart-wrap--xlarge"><ResponsiveContainer width="100%" height="100%"><BarChart data={trendData}><CartesianGrid vertical={false} stroke="#e8edf3"/><XAxis dataKey="day" axisLine={false} tickLine={false}/><YAxis axisLine={false} tickLine={false}/><Tooltip/><Bar dataKey="opened" fill="#cbd5e1" radius={[5,5,0,0]}/><Bar dataKey="resolved" fill="#0f766e" radius={[5,5,0,0]}/></BarChart></ResponsiveContainer></div></section><section className="panel"><div className="panel-head"><div><span className="eyebrow">Department score</span><h2>Service health</h2></div></div><div className="score-cards">{departmentData.map((d,i)=><div key={d.name}><span>0{i+1}</span><div><strong>{d.name}</strong><small>{d.open} open cases</small></div><em>{d.score}%</em></div>)}</div></section><section className="panel geo-insight"><span className="eyebrow">Geographic pressure</span><h2>{String(hotspot)} is the clearest concentration.</h2><p>{hotspots[0]?`${hotspots[0].reports} reports currently identify this location as the strongest demand cluster.`:'No request hotspot data has been recorded yet.'}</p><div className="heat-art"><span className="heat heat--1"/><span className="heat heat--2"/><span className="heat heat--3"/><i className="heat-road heat-road--1"/><i className="heat-road heat-road--2"/><b>{String(hotspot).toUpperCase()}</b></div></section><section className="panel"><div className="panel-head"><div><span className="eyebrow">Request mix</span><h2>By service type</h2></div><BarChart3 size={20}/></div><div className="distribution-list">{distribution.map(([n,v])=><div key={n}><span>{n[0]+n.slice(1).toLowerCase()}</span><div><i style={{width:v}}/></div><strong>{v}</strong></div>)}</div></section></div></div>
 }
