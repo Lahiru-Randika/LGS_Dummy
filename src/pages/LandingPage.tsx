@@ -99,7 +99,7 @@ const sectionShell =
   'mx-auto w-[min(1500px,calc(100%-80px))] max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-32px)]'
 
 const kicker =
-  'text-[10px] font-extrabold uppercase tracking-[.17em] text-teal-700'
+  'text-[10px] font-semibold uppercase tracking-[.17em] text-teal-700'
 
 export function LandingPage() {
   const navigate = useNavigate()
@@ -123,55 +123,40 @@ export function LandingPage() {
         {/* =====================================================
             HERO
         ====================================================== */}
-        <section className="relative min-h-[760px] overflow-hidden text-white sm:min-h-[820px] lg:h-screen lg:min-h-[760px]">
+        <section className="relative -mb-px min-h-[620px] overflow-hidden text-white sm:min-h-[660px] lg:h-[calc(100vh-119px)] lg:min-h-[580px]">
           <HeroMedia />
 
           <div
-            className={`${sectionShell} relative z-10 flex h-full min-h-[760px] items-center pt-24 sm:min-h-[820px] lg:min-h-[760px] lg:-translate-y-10`}
+            className={`${sectionShell} relative z-10 flex h-full min-h-[620px] items-center sm:min-h-[660px] lg:min-h-0 lg:translate-y-10`}
           >
             <ScrollReveal
               direction="fade"
               className="max-w-4xl"
             >
-              <span className="text-[10px] font-extrabold uppercase tracking-[.18em] text-teal-200">
+              <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-teal-200">
                 Spatio LGS
               </span>
 
-              <h1 className="mt-6 font-['Manrope'] text-[clamp(58px,7vw,112px)] font-extrabold leading-[.88] tracking-[-.055em]">
-                Location Meets Intelligence.
+              <h1 className="mt-6 font-['Manrope'] text-[clamp(46px,5.8vw,88px)] font-semibold leading-[.95] tracking-[-.055em]">
+                Location Drives Insight
                 <br />
+
                 <em className="not-italic text-teal-300">
-                  Governance Evolves.
+                  Governance Evolves
                 </em>
               </h1>
 
-              <p className="mt-7 max-w-2xl text-[15px] leading-7 text-slate-200 sm:text-[17px]">
-                Public Services. Local Requests. Municipal Action. One Connected Map. Spatio LGS is a geospatial decision-support platform built for Municipal and Urban Councils managing real complexity.
+              <p className="mt-6 max-w-2xl text-[13px] font-normal leading-6 text-slate-200 sm:text-[15px] sm:leading-7">
+                Public Services. Local Requests. Municipal Action. One Connected Map.
+                Spatio LGS is a geospatial decision-support platform built for Municipal
+                and Urban Councils managing real complexity.
               </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link
-                  to="/map"
-                  className="inline-flex min-h-[54px] min-w-[190px] items-center justify-center gap-2 rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.06em] !text-slate-950 shadow-lg shadow-black/10 transition duration-300 hover:-translate-y-0.5 hover:bg-teal-200 hover:shadow-xl"
-                >
-                  <Compass size={17} />
-                  Explore the map
-                </Link>
-
-                <Link
-                  to="/login"
-                  className="inline-flex min-h-[54px] min-w-[190px] items-center justify-center gap-2 rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.06em] !text-slate-950 shadow-lg shadow-black/10 transition duration-300 hover:-translate-y-0.5 hover:bg-teal-200 hover:shadow-xl"
-                >
-                  Sign in
-                  <ArrowRight size={16} />
-                </Link>
-              </div>
             </ScrollReveal>
           </div>
 
-          <div className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-3 text-[9px] font-extrabold uppercase tracking-[.16em] text-white/60 lg:flex">
+          <div className="absolute bottom-4 left-1/2 z-20 hidden -translate-x-1/2 items-center text-[9px] font-semibold uppercase tracking-[.16em] text-white/60 lg:flex">
             <div className="flex animate-[scrollFloat_2s_ease-in-out_infinite] items-center gap-3">
-              <i className="h-10 w-px bg-white/40" />
+              <i className="h-12 w-px bg-white/40" />
               <span>Scroll</span>
             </div>
           </div>
@@ -205,7 +190,7 @@ export function LandingPage() {
 
               <button
                 type="submit"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-slate-950 px-6 text-[11px] font-extrabold uppercase tracking-[.06em] text-white transition hover:bg-slate-800 max-sm:col-span-2"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-slate-950 px-6 text-[11px] font-semibold uppercase tracking-[.06em] text-white transition hover:bg-slate-800 max-sm:col-span-2"
               >
                 Search map
                 <ArrowRight size={16} />
@@ -221,8 +206,20 @@ export function LandingPage() {
           {/* subtle decorative glow */}
           <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-100/30 blur-3xl" />
 
+          <div className="mb-12 text-center">
+            <span className={kicker}>
+              WHERE WE’RE HEADED
+            </span>
+
+            <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
+              One Direction
+              <br />
+              Two Ways to Say It
+            </h2>
+          </div>
+
           <div
-            className={`${sectionShell} relative z-10 grid gap-5 md:grid-cols-3`}
+            className={`${sectionShell} relative z-10 grid gap-5 md:grid-cols-2`}
           >
             {[
               [
@@ -238,13 +235,6 @@ export function LandingPage() {
                 'Land records, permits, tax and revenue, certificates and citizen services work from the same verified geographic picture.',
                 'from-emerald-500/15 via-teal-500/10 to-transparent',
                 'group-hover:text-emerald-600',
-              ],
-              [
-                ShieldCheck,
-                'One Platform. Every Council Function.',
-                'Land and spatial intelligence, permits and licensing, revenue and citizen engagement come together in one connected system.',
-                'from-violet-500/15 via-indigo-500/10 to-transparent',
-                'group-hover:text-violet-600',
               ],
             ].map(
               (
@@ -321,7 +311,7 @@ export function LandingPage() {
                         <div className="mt-10">
                           <h3
                             className="
-                              font-['Manrope'] text-xl font-extrabold
+                              font-['Manrope'] text-xl font-semibold
                               tracking-[-.02em] text-slate-900
                             "
                           >
@@ -343,7 +333,7 @@ export function LandingPage() {
                         <div
                           className="
                             mt-8 flex items-center gap-2
-                            text-[10px] font-extrabold uppercase
+                            text-[10px] font-semibold uppercase
                             tracking-[.12em] text-teal-700
                             opacity-0 translate-y-2
                             transition-all duration-500
@@ -380,7 +370,7 @@ export function LandingPage() {
                   One connected platform
                 </span>
 
-                <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold leading-[.96] tracking-[-.045em]">
+                <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
                   One Platform. Every Council Function.
                 </h2>
 
@@ -438,11 +428,11 @@ export function LandingPage() {
                         />
                       </span>
 
-                      <small className="mt-12 block text-[9px] font-extrabold uppercase tracking-[.15em] text-slate-400">
+                      <small className="mt-12 block text-[9px] font-semibold uppercase tracking-[.15em] text-slate-400">
                         {eyebrow}
                       </small>
 
-                      <h3 className="mt-3 font-['Manrope'] text-3xl font-extrabold uppercase tracking-[-.03em] text-slate-950 transition-colors duration-300">
+                      <h3 className="mt-3 font-['Manrope'] text-3xl font-semibold uppercase tracking-[-.03em] text-slate-950 transition-colors duration-300">
                         {title}
                       </h3>
 
@@ -453,7 +443,7 @@ export function LandingPage() {
                       <Link
                         className="
                           mt-auto inline-flex items-center gap-2 pt-10
-                          text-[10px] font-extrabold uppercase
+                          text-[10px] font-semibold uppercase
                           tracking-[.08em] text-slate-800
                           transition-colors duration-300
                           group-hover:text-teal-700
@@ -489,7 +479,7 @@ export function LandingPage() {
                   Strong geospatial foundation
                 </span>
 
-                <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold leading-[.96] tracking-[-.045em]">
+                <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
                   Every Layer of the City, Finally in One Place.
                 </h2>
               </div>
@@ -510,11 +500,11 @@ export function LandingPage() {
                       />
                     </div>
 
-                    <small className="mt-6 block text-[9px] font-extrabold uppercase tracking-[.15em] text-teal-700">
+                    <small className="mt-6 block text-[9px] font-semibold uppercase tracking-[.15em] text-teal-700">
                       {card.kicker}
                     </small>
 
-                    <h3 className="mt-2 font-['Manrope'] text-2xl font-extrabold">
+                    <h3 className="mt-2 font-['Manrope'] text-2xl font-semibold">
                       {card.title}
                     </h3>
 
@@ -552,11 +542,11 @@ export function LandingPage() {
               className={`${sectionShell} relative z-10`}
             >
               <ScrollReveal>
-                <span className="text-[10px] font-extrabold uppercase tracking-[.17em] text-teal-200">
+                <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-200">
                   Why Spatio LGS?
                 </span>
 
-                <h2 className="mt-4 font-['Manrope'] text-[clamp(50px,5.5vw,84px)] font-extrabold tracking-[-.045em]">
+                <h2 className="mt-4 font-['Manrope'] text-[clamp(50px,5.5vw,84px)] font-semibold tracking-[-.045em]">
                   One Filing Cabinet Away From Chaos
                 </h2>
               </ScrollReveal>
@@ -627,7 +617,7 @@ export function LandingPage() {
                             mt-6
                             font-['Manrope']
                             text-2xl
-                            font-extrabold
+                            font-semibold
                             transition-colors
                             duration-300
                             group-hover:text-teal-200
@@ -663,7 +653,7 @@ export function LandingPage() {
                       How it works
                     </span>
 
-                    <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold leading-[.96] tracking-[-.045em] text-slate-950">
+                    <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em] text-slate-950">
                       From a Location to a Decision
                       <br />
                       - in Four Steps.
@@ -777,7 +767,7 @@ export function LandingPage() {
                           <C size={21} />
                         </span>
 
-                        <h3 className="mt-7 font-['Manrope'] text-2xl font-extrabold text-slate-950">
+                        <h3 className="mt-7 font-['Manrope'] text-2xl font-semibold text-slate-950">
                           {String(title)}
                         </h3>
 
@@ -823,11 +813,11 @@ export function LandingPage() {
                 direction="left"
                 className="max-w-3xl"
               >
-                <span className="text-[10px] font-extrabold uppercase tracking-[.17em] text-teal-200">
+                <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-200">
                   Geospatial foundation
                 </span>
 
-                <h2 className="mt-5 font-['Manrope'] text-[clamp(52px,6vw,90px)] font-extrabold leading-[.9] tracking-[-.05em]">
+                <h2 className="mt-5 font-['Manrope'] text-[clamp(52px,6vw,90px)] font-semibold leading-[.9] tracking-[-.05em]">
                   Every Layer of the City,
                   <br />
                   Finally in One Place.
@@ -850,7 +840,7 @@ export function LandingPage() {
                     bg-white
                     px-6
                     text-[11px]
-                    font-extrabold
+                    font-semibold
                     uppercase
                     tracking-[.05em]
                     !text-slate-950
@@ -888,7 +878,7 @@ export function LandingPage() {
                   Connected spatial intelligence
                 </span>
 
-                <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-extrabold tracking-[-.045em]">
+                <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold tracking-[-.045em]">
                   One Map. Every Department. Every Answer.
                 </h2>
               </div>
@@ -935,11 +925,11 @@ export function LandingPage() {
             className={`${sectionShell} relative z-10 grid gap-16 lg:grid-cols-[1.1fr_.9fr] lg:items-center`}
           >
             <ScrollReveal>
-              <span className="text-[10px] font-extrabold uppercase tracking-[.17em] text-teal-200">
+              <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-200">
                 Ready to transform your council?
               </span>
 
-              <h2 className="mt-4 max-w-3xl font-['Manrope'] text-[clamp(48px,5vw,78px)] font-extrabold leading-[.95] tracking-[-.045em]">
+              <h2 className="mt-4 max-w-3xl font-['Manrope'] text-[clamp(48px,5vw,78px)] font-semibold leading-[.95] tracking-[-.045em]">
                 Request a demo and meet our team.
               </h2>
 
@@ -950,14 +940,14 @@ export function LandingPage() {
               <div className="mt-8 flex flex-wrap items-center gap-6">
                 <Link
                   to="/map"
-                  className="inline-flex min-h-[52px] items-center rounded-md bg-white px-6 text-[11px] font-extrabold uppercase tracking-[.05em] !text-slate-950"
+                  className="inline-flex min-h-[52px] items-center rounded-md bg-white px-6 text-[11px] font-semibold uppercase tracking-[.05em] !text-slate-950"
                 >
                   Explore map
                 </Link>
 
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border-b border-white/40 pb-2 text-[12px] font-extrabold"
+                  className="inline-flex items-center gap-2 border-b border-white/40 pb-2 text-[12px] font-semibold"
                 >
                   Request a demo
                   <ArrowRight size={16} />

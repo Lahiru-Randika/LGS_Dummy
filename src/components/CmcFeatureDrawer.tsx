@@ -9,11 +9,10 @@ import type {
 } from '../lib/cmcLayers'
 
 function readablePropertyEntries(
-  properties:
-    Record<
-      string,
-      unknown
-    >,
+  properties: Record<
+    string,
+    unknown
+  >,
 ) {
   return Object.entries(
     properties,
@@ -21,9 +20,7 @@ function readablePropertyEntries(
     ([, value]) =>
       value !== null &&
       value !== undefined &&
-      String(
-        value,
-      ).trim() !== '',
+      String(value).trim() !== '',
   )
 }
 
@@ -33,20 +30,15 @@ export function CmcFeatureDrawer({
   onClose,
   onCreateRequest,
 }: {
-  feature:
-    CmcFeatureSelection
+  feature: CmcFeatureSelection
 
-  canCreateRequest:
-    boolean
+  canCreateRequest: boolean
 
-  onClose:
-    () => void
+  onClose: () => void
 
-  onCreateRequest:
-    (
-      feature:
-        CmcFeatureSelection,
-    ) => void
+  onCreateRequest: (
+    feature: CmcFeatureSelection,
+  ) => void
 }) {
   const properties =
     readablePropertyEntries(
@@ -58,12 +50,17 @@ export function CmcFeatureDrawer({
       className="
         civic-enter-right
         absolute
+
         right-3
         top-3
+
         z-[1800]
 
-        h-[min(620px,calc(100vh-130px))]
+        flex
+        h-[calc(100dvh-118px)]
+        max-h-[calc(100%-24px)]
         w-[min(360px,calc(100%-24px))]
+        flex-col
 
         overflow-hidden
 
@@ -77,7 +74,9 @@ export function CmcFeatureDrawer({
 
         max-sm:left-3
         max-sm:right-3
-        max-sm:h-[calc(100vh-110px)]
+        max-sm:top-3
+        max-sm:h-[calc(100dvh-90px)]
+        max-sm:max-h-[calc(100%-24px)]
         max-sm:w-auto
       "
       aria-label={`${feature.layerLabel} details`}
@@ -100,8 +99,8 @@ export function CmcFeatureDrawer({
             border-b
             border-slate-100
             px-4
-            pb-3.5
-            pt-4
+            pb-3
+            pt-3.5
           "
         >
           <div
@@ -129,39 +128,35 @@ export function CmcFeatureDrawer({
 
               <h2
                 className="
-                  mt-1.5
+                  mt-1
                   break-words
                   font-['Manrope']
-                  text-[18px]
+                  text-[17px]
                   font-extrabold
                   leading-[1.15]
                   tracking-[-.025em]
                   text-slate-950
                 "
               >
-                {
-                  feature.title
-                }
+                {feature.title}
               </h2>
 
               {feature.subtitle && (
                 <p
                   className="
-                    mt-1.5
+                    mt-1
                     text-[9px]
                     leading-4
                     text-slate-500
                   "
                 >
-                  {
-                    feature.subtitle
-                  }
+                  {feature.subtitle}
                 </p>
               )}
 
               <div
                 className="
-                  mt-2.5
+                  mt-2
                   flex
                   items-start
                   gap-1.5
@@ -171,9 +166,7 @@ export function CmcFeatureDrawer({
                 "
               >
                 <MapPin
-                  size={
-                    12
-                  }
+                  size={12}
                   className="
                     mt-0.5
                     shrink-0
@@ -182,13 +175,8 @@ export function CmcFeatureDrawer({
                 />
 
                 <span>
-                  {
-                    feature.latitude
-                  }
-                  ,{' '}
-                  {
-                    feature.longitude
-                  }
+                  {feature.latitude},{' '}
+                  {feature.longitude}
                 </span>
               </div>
             </div>
@@ -196,9 +184,7 @@ export function CmcFeatureDrawer({
             <button
               type="button"
               aria-label="Close CMC feature details"
-              onClick={
-                onClose
-              }
+              onClick={onClose}
               className="
                 civic-map-control
                 grid
@@ -219,11 +205,7 @@ export function CmcFeatureDrawer({
                 hover:text-slate-800
               "
             >
-              <X
-                size={
-                  14
-                }
-              />
+              <X size={14} />
             </button>
           </div>
         </div>
@@ -241,7 +223,7 @@ export function CmcFeatureDrawer({
             overflow-y-auto
             overscroll-contain
             px-4
-            py-3
+            py-2.5
 
             [scrollbar-width:thin]
           "
@@ -263,7 +245,7 @@ export function CmcFeatureDrawer({
                 border
                 border-slate-100
                 bg-slate-50/80
-                p-3
+                p-2.5
               "
             >
               <small
@@ -287,9 +269,7 @@ export function CmcFeatureDrawer({
                   text-slate-800
                 "
               >
-                {
-                  feature.layerLabel
-                }
+                {feature.layerLabel}
               </strong>
             </div>
 
@@ -299,7 +279,7 @@ export function CmcFeatureDrawer({
                 border
                 border-slate-100
                 bg-slate-50/80
-                p-3
+                p-2.5
               "
             >
               <small
@@ -323,10 +303,7 @@ export function CmcFeatureDrawer({
                   text-slate-800
                 "
               >
-                {
-                  feature.featureId ||
-                  '—'
-                }
+                {feature.featureId || '—'}
               </strong>
             </div>
           </div>
@@ -339,7 +316,7 @@ export function CmcFeatureDrawer({
 
           <div
             className="
-              mt-3
+              mt-2.5
               overflow-hidden
               rounded-xl
               border
@@ -350,8 +327,8 @@ export function CmcFeatureDrawer({
               className="
                 block
                 bg-slate-50
-                px-3.5
-                py-2
+                px-3
+                py-1.5
 
                 text-[7px]
                 font-extrabold
@@ -365,16 +342,9 @@ export function CmcFeatureDrawer({
 
             {properties.length ? (
               properties.map(
-                (
-                  [
-                    key,
-                    value,
-                  ],
-                ) => (
+                ([key, value]) => (
                   <div
-                    key={
-                      key
-                    }
+                    key={key}
                     className="
                       flex
                       justify-between
@@ -383,8 +353,8 @@ export function CmcFeatureDrawer({
                       border-t
                       border-slate-100
 
-                      px-3.5
-                      py-2.5
+                      px-3
+                      py-2
 
                       text-[9px]
                     "
@@ -396,9 +366,7 @@ export function CmcFeatureDrawer({
                         text-slate-500
                       "
                     >
-                      {
-                        key
-                      }
+                      {key}
                     </span>
 
                     <strong
@@ -410,11 +378,7 @@ export function CmcFeatureDrawer({
                         text-slate-800
                       "
                     >
-                      {
-                        String(
-                          value,
-                        )
-                      }
+                      {String(value)}
                     </strong>
                   </div>
                 ),
@@ -422,13 +386,14 @@ export function CmcFeatureDrawer({
             ) : (
               <p
                 className="
-                  p-3.5
+                  p-3
                   text-[9px]
                   leading-4
                   text-slate-500
                 "
               >
-                No additional attributes are stored for this feature.
+                No additional attributes are
+                stored for this feature.
               </p>
             )}
           </div>
@@ -436,6 +401,8 @@ export function CmcFeatureDrawer({
 
         {/* =================================================
             FIXED BOTTOM ACTION
+
+            Always visible. Only the middle content scrolls.
         ================================================== */}
 
         {canCreateRequest && (
@@ -444,8 +411,8 @@ export function CmcFeatureDrawer({
               shrink-0
               border-t
               border-slate-100
-              bg-white/95
-              p-3
+              bg-white
+              p-2.5
             "
           >
             <button
@@ -478,11 +445,7 @@ export function CmcFeatureDrawer({
                 hover:bg-slate-800
               "
             >
-              <Plus
-                size={
-                  15
-                }
-              />
+              <Plus size={15} />
 
               Create request here
             </button>
