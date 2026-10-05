@@ -16,7 +16,7 @@ export function MapLegend({
   showRequests,
 }: MapLegendProps) {
   return (
-    <div className="civic-enter-up absolute bottom-3 left-3 z-[1100] flex flex-wrap items-center gap-2.5 rounded-xl border border-white/75 bg-white/95 px-2.5 py-2 text-[7px] font-semibold text-slate-500 shadow-[0_6px_18px_rgba(15,23,42,.09)] backdrop-blur-xl max-sm:hidden">
+    <div className="civic-enter-up absolute bottom-3 left-1/2 z-[1100] flex -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-xl border border-white/70 bg-white/90 px-2.5 py-1.5 text-[7px] font-semibold text-slate-500 shadow-[0_5px_16px_rgba(15,23,42,.08)] backdrop-blur-xl max-sm:hidden">
       <span className="flex items-center gap-1.5">
         <i
           className="h-2.5 w-2.5 rounded-sm border border-black/10"

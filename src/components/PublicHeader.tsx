@@ -24,7 +24,7 @@ export function PublicHeader({ overlay = false }: { overlay?: boolean }) {
           <NavLink to="/" end onClick={close}>Home</NavLink>
           <NavLink to="/about" onClick={close}>About</NavLink>
           <NavLink to="/services" onClick={close}>Services</NavLink>
-          <NavLink to="/news" onClick={close}>News</NavLink>
+          {/* <NavLink to="/news" onClick={close}>News</NavLink> */}
           <NavLink to="/contact" onClick={close}>Contact</NavLink>
         </nav>
         <div className="public-header__actions">

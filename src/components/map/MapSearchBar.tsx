@@ -41,7 +41,7 @@ export function MapSearchBar<T extends BaseSearchResult>({
   return (
     <div
       ref={wrapRef}
-      className="civic-enter-top absolute left-3.5 top-3.5 z-[1600] flex h-[44px] w-[min(520px,calc(100%-112px))] items-center rounded-[14px] border border-white/80 bg-white/95 px-3.5 shadow-[0_8px_24px_rgba(15,23,42,.11)] backdrop-blur-xl max-lg:w-[min(480px,calc(100%-100px))] max-sm:left-2.5 max-sm:top-2.5 max-sm:h-[42px] max-sm:w-[calc(100%-64px)] max-sm:px-3"
+      className="civic-enter-top absolute left-4 top-4 z-[1600] flex h-[44px] w-[min(520px,calc(100%-96px))] items-center rounded-[14px] border border-white/80 bg-white/95 px-3.5 shadow-[0_8px_24px_rgba(15,23,42,.11)] backdrop-blur-xl max-lg:w-[min(480px,calc(100%-92px))] max-sm:left-3 max-sm:top-3 max-sm:h-[42px] max-sm:w-[calc(100%-62px)] max-sm:px-3"
     >
       <Search
         size={17}

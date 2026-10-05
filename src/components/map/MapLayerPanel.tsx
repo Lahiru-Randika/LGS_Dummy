@@ -36,10 +36,37 @@ export function MapLayerPanel<K extends string>({
   return (
     <div
       ref={panelRef}
-      className="civic-enter-up absolute left-3.5 top-[156px] z-[1800] flex max-h-[365px] w-[min(285px,calc(100%-28px))] flex-col overflow-hidden rounded-[16px] border border-slate-200/90 bg-white/98 shadow-[0_18px_50px_rgba(11,19,35,.18)] backdrop-blur-xl max-sm:left-2.5 max-sm:top-[152px] max-sm:max-h-[365px] max-sm:w-[calc(100%-20px)]"
+      className="
+        civic-enter-up
+        absolute
+
+        bottom-[164px]
+        right-4
+        z-[1800]
+
+        flex
+        max-h-[min(330px,calc(100%-185px))]
+        w-[min(285px,calc(100%-28px))]
+        flex-col
+
+        overflow-hidden
+
+        rounded-[16px]
+        border
+        border-slate-200/90
+        bg-white/98
+
+        shadow-[0_18px_50px_rgba(11,19,35,.18)]
+        backdrop-blur-xl
+
+        max-sm:bottom-[158px]
+        max-sm:right-3
+        max-sm:max-h-[min(300px,calc(100%-175px))]
+        max-sm:w-[min(275px,calc(100%-24px))]
+      "
     >
       {/* Header */}
-      <div className="flex shrink-0 items-start justify-between border-b border-slate-100 px-4 py-3">
+      <div className="flex shrink-0 items-start justify-between border-b border-slate-100 px-4 pb-1 pt-1">
         <div>
           <span className="text-[8px] font-extrabold uppercase tracking-[.15em] text-teal-700">
             CMC GIS
@@ -48,10 +75,6 @@ export function MapLayerPanel<K extends string>({
           <h3 className="mt-0.5 font-['Manrope'] text-[13px] font-extrabold text-slate-950">
             Map layers
           </h3>
-
-          <p className="mt-0.5 text-[8px] text-slate-400">
-            Choose what appears on the map.
-          </p>
         </div>
 
         <button
@@ -65,7 +88,7 @@ export function MapLayerPanel<K extends string>({
       </div>
 
       {/* Search */}
-      <div className="shrink-0 border-b border-slate-100 px-3 py-2">
+      <div className="shrink-0 border-b border-slate-100 px-3 pb-2 pt-1.5">
         <div className="flex h-8 items-center rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 transition focus-within:border-teal-300 focus-within:bg-white focus-within:ring-2 focus-within:ring-teal-100">
           <Search
             size={13}
@@ -182,23 +205,8 @@ export function MapLayerPanel<K extends string>({
         )}
       </div>
 
-      {/* Fixed footer */}
+      {/* Fixed status footer */}
       <div className="flex shrink-0 items-center gap-2 border-t border-slate-100 bg-slate-50/80 px-3 py-1.5 text-[7px] font-semibold text-slate-500">
-        <span
-          className={`civic-live-dot h-2 w-2 shrink-0 rounded-full ${
-            failedCount
-              ? 'bg-amber-500'
-              : 'bg-emerald-500'
-          }`}
-        />
-
-        <span className="min-w-0 truncate">
-          {statusText} · zoom{' '}
-          {zoom.toFixed(1)}
-          {failedCount
-            ? ` · ${failedCount} failed`
-            : ''}
-        </span>
       </div>
     </div>
   )

@@ -27,12 +27,12 @@ export function MapTopControls({
   onReport,
 }: MapTopControlsProps) {
   return (
-    <div className="civic-enter-up absolute left-3.5 top-[110px] z-[1200] flex items-center gap-2 max-sm:left-2.5 max-sm:top-[106px]">
+    <div className="civic-enter-up absolute bottom-4 right-4 z-[1400] flex flex-col items-stretch gap-2 max-sm:bottom-3 max-sm:right-3">
       <button
         ref={layerButtonRef}
         type="button"
         onClick={onToggleLayers}
-        className={`civic-map-control flex h-[40px] cursor-pointer items-center justify-center gap-1.5 rounded-xl border px-3 text-[10px] font-bold shadow-[0_6px_18px_rgba(15,23,42,.10)] backdrop-blur-xl outline-none max-sm:h-[38px] max-sm:px-2.5 max-sm:text-[9px] ${
+        className={`civic-map-control flex h-[40px] min-w-[116px] cursor-pointer items-center justify-start gap-2 rounded-xl border px-3 text-[10px] font-bold shadow-[0_7px_20px_rgba(15,23,42,.12)] backdrop-blur-xl outline-none max-sm:h-[38px] max-sm:min-w-[108px] max-sm:px-2.5 max-sm:text-[9px] ${
           layerPanelOpen
             ? 'border-teal-200 bg-teal-700 text-white'
             : 'border-white/80 bg-white/95 text-slate-600 hover:bg-white hover:text-teal-700'
@@ -49,7 +49,7 @@ export function MapTopControls({
       <button
         type="button"
         onClick={onShowAll}
-        className="civic-map-control flex h-[40px] cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-white/80 bg-white/95 px-3 text-[10px] font-bold text-slate-600 shadow-[0_6px_18px_rgba(15,23,42,.10)] backdrop-blur-xl outline-none hover:bg-white hover:text-teal-700 max-sm:h-[38px] max-sm:px-2.5 max-sm:text-[9px]"
+        className="civic-map-control flex h-[40px] min-w-[116px] cursor-pointer items-center justify-start gap-2 rounded-xl border border-white/80 bg-white/95 px-3 text-[10px] font-bold text-slate-600 shadow-[0_7px_20px_rgba(15,23,42,.12)] backdrop-blur-xl outline-none hover:bg-white hover:text-teal-700 max-sm:h-[38px] max-sm:min-w-[108px] max-sm:px-2.5 max-sm:text-[9px]"
       >
         <Crosshair
           size={16}
@@ -63,7 +63,7 @@ export function MapTopControls({
         <button
           type="button"
           onClick={onReport}
-          className="civic-map-control flex h-[40px] cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-900 bg-slate-950 px-3 text-[10px] font-extrabold text-white shadow-[0_7px_20px_rgba(15,23,42,.18)] outline-none hover:bg-slate-800 max-sm:h-[38px] max-sm:px-2.5 max-sm:text-[9px]"
+          className="civic-map-control flex h-[40px] min-w-[116px] cursor-pointer items-center justify-start gap-2 rounded-xl border border-slate-900 bg-slate-950 px-3 text-[10px] font-extrabold text-white shadow-[0_8px_22px_rgba(15,23,42,.20)] outline-none hover:bg-slate-800 max-sm:h-[38px] max-sm:min-w-[108px] max-sm:px-2.5 max-sm:text-[9px]"
         >
           <Plus
             size={15}

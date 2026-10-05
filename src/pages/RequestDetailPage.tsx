@@ -216,17 +216,15 @@ export function RequestDetailPage() {
 
     try {
       /*
-        GPS permission is requested only here.
+        GPS permission is requested only when the officer explicitly
+        presses "Check in at site".
       */
-      const position =
-        await browserPosition()
+      const position = await browserPosition()
 
-      let inspectionId =
-        request.inspection?.id
+      let inspectionId = request.inspection?.id
 
       /*
-        If the officer has not started an inspection yet,
-        checking in can create one automatically.
+        If there is no active inspection, create/schedule one first.
       */
       if (
         !inspectionId ||
@@ -234,25 +232,27 @@ export function RequestDetailPage() {
         request.inspection?.status === 'CANCELLED'
       ) {
         inspectionId = (
-          await inspectionsService.create(
-            request.id,
-          )
+          await inspectionsService.create(request.id)
         ).id
       }
 
       /*
-        Save officer's actual current location.
+        One PATCH can both start the inspection and perform the GPS check-in.
 
-        Also move inspection to IN_PROGRESS if needed.
+        Backend behavior after the replacement inspections.routes.ts:
+        - inspection -> IN_PROGRESS
+        - service request -> INSPECTING (when starting)
+        - latest GPS coordinates are stored
+        - checked_in_at is recorded on the first successful check-in
+        - GOV_ADMIN and SUPERIOR receive a notification on first check-in
+        - duplicate/repeated check-ins do not spam notifications
       */
       await inspectionsService.update(
         inspectionId,
         {
           status: 'IN_PROGRESS',
-          latitude:
-            position.latitude,
-          longitude:
-            position.longitude,
+          latitude: position.latitude,
+          longitude: position.longitude,
         },
       )
 

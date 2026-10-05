@@ -44,7 +44,7 @@ export function CivicMap({
   }
 
   return (
-    <div className="civic-map-shell relative h-full min-h-[620px] w-full min-w-0 overflow-hidden bg-[#dbe7ef]">
+    <div className="civic-map-shell relative h-full min-h-0 w-full min-w-0 overflow-hidden bg-[#dbe7ef]">
       <CivicMapStyles />
 
       <div

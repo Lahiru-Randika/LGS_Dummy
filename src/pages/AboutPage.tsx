@@ -60,7 +60,7 @@ export function AboutPage() {
             <ScrollReveal direction="left">
               <div className="about-editorial__image">
                 <img
-                  src="/lgs-media/map-center.jpg"
+                  src="/lgs-media/ExploreYourArea.png"
                   alt="Mapped municipal landscape"
                 />
               </div>

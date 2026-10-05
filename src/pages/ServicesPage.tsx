@@ -176,7 +176,7 @@ export function ServicesPage() {
 
         <section className="map-feature-banner map-feature-banner--short">
           <img
-            src="/lgs-media/map-full.jpg"
+            src="/lgs-media/FindCivicPlaces.png"
             alt=""
           />
 
