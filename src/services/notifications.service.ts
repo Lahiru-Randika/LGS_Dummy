@@ -4,6 +4,8 @@ import type {
 
 import {
   apiData,
+  apiDataCached,
+  invalidateApiCache,
 } from './http'
 
 /*
@@ -204,10 +206,11 @@ export const notificationsService =
   {
     async list() {
       const raw =
-        await apiData<
+        await apiDataCached<
           any[]
         >(
           '/notifications',
+          5_000,
         )
 
       return raw.map(
@@ -281,11 +284,12 @@ export const notificationsService =
 
     unreadCount:
       () =>
-        apiData<{
+        apiDataCached<{
           count:
             number
         }>(
           '/notifications/unread-count',
+          5_000,
         ),
 
     async markRead(
@@ -306,6 +310,7 @@ export const notificationsService =
           },
         )
 
+      invalidateApiCache('/notifications')
       notifyNotificationChanged()
 
       return result
@@ -324,6 +329,7 @@ export const notificationsService =
           },
         )
 
+      invalidateApiCache('/notifications')
       notifyNotificationChanged()
 
       return result

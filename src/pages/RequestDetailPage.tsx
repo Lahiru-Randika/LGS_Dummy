@@ -98,6 +98,24 @@ export function RequestDetailPage() {
   const [assigning, setAssigning] = useState(false)
   const [assignError, setAssignError] = useState('')
 
+  const [noteOpen, setNoteOpen] = useState(false)
+  const [inspectionNote, setInspectionNote] = useState('')
+  const [savingNote, setSavingNote] = useState(false)
+
+  const [finishOpen, setFinishOpen] = useState(false)
+  const [finishSummary, setFinishSummary] = useState('')
+  const [finishAction, setFinishAction] = useState('')
+  const [finishRecommendation, setFinishRecommendation] = useState('')
+  const [finishFiles, setFinishFiles] = useState<File[]>([])
+  const [finishing, setFinishing] = useState(false)
+
+  const [resolveOpen, setResolveOpen] = useState(false)
+  const [resolutionReport, setResolutionReport] = useState('')
+  const [resolving, setResolving] = useState(false)
+
+  const [openingAttachment, setOpeningAttachment] =
+    useState<string | null>(null)
+    
   const evidenceInput = useRef<HTMLInputElement>(null)
   const workerSearchInput = useRef<HTMLInputElement>(null)
 
@@ -262,17 +280,35 @@ export function RequestDetailPage() {
     }
   }
 
-  async function addInspectionNote() {
+  function addInspectionNote() {
+    setInspectionNote('')
+    setNoteOpen(true)
+  }
+
+  async function saveInspectionNote() {
     if (!request) return
 
-    const note = window.prompt('Inspection note')?.trim()
+    const note = inspectionNote.trim()
+
     if (!note) return
 
+    setSavingNote(true)
+
     try {
-      await requestsService.addNote(request.id, note, 'INTERNAL')
+      await requestsService.addNote(
+        request.id,
+        note,
+        'INTERNAL',
+      )
+
+      setNoteOpen(false)
+      setInspectionNote('')
+
       await load()
     } catch (error) {
       explain(error)
+    } finally {
+      setSavingNote(false)
     }
   }
 
@@ -392,13 +428,57 @@ export function RequestDetailPage() {
       await requestsService.addAttachments(
         request.id,
         Array.from(files).slice(0, 5),
-        'EVIDENCE',
-        user?.role === 'CITIZEN' ? 'CITIZEN_VISIBLE' : 'INTERNAL',
+        'INSPECTION_EVIDENCE',
+        'INTERNAL',
       )
 
       await load()
     } catch (error) {
       explain(error)
+    }
+  }
+
+  async function openAttachment(
+    attachmentId: string,
+    filename: string,
+  ) {
+    if (!request) return
+
+    setOpeningAttachment(attachmentId)
+
+    try {
+      const result =
+        await requestsService.downloadAttachment(
+          request.id,
+          attachmentId,
+          filename,
+        )
+
+      const newWindow = window.open(
+        result.url,
+        '_blank',
+        'noopener,noreferrer',
+      )
+
+      if (!newWindow) {
+        const link = document.createElement('a')
+
+        link.href = result.url
+        link.download = filename
+
+        document.body.appendChild(link)
+
+        link.click()
+        link.remove()
+      }
+
+      window.setTimeout(() => {
+        URL.revokeObjectURL(result.url)
+      }, 60_000)
+    } catch (error) {
+      explain(error)
+    } finally {
+      setOpeningAttachment(null)
     }
   }
 
@@ -444,6 +524,27 @@ export function RequestDetailPage() {
     )
   }
 
+  // Safe evidence collections. ServiceRequest.attachments is optional.
+  const attachments = request.attachments ?? []
+
+  const complaintEvidence = attachments.filter(
+    (attachment) => attachment.category === 'INITIAL_EVIDENCE',
+  )
+
+  const officerEvidence = attachments.filter(
+    (attachment) =>
+      attachment.category === 'INSPECTION_EVIDENCE' ||
+      attachment.category === 'RESOLUTION_EVIDENCE',
+  )
+
+  const inspectionEvidence = officerEvidence.filter(
+    (attachment) => attachment.category === 'INSPECTION_EVIDENCE',
+  )
+
+  const completionEvidence = officerEvidence.filter(
+    (attachment) => attachment.category === 'RESOLUTION_EVIDENCE',
+  )
+
   const canOperate =
     user.role === 'GOV_WORKER' ||
     user.role === 'GOV_ADMIN'
@@ -455,6 +556,88 @@ export function RequestDetailPage() {
   const selectedWorker = workers.find(
     (worker) => worker.id === selectedWorkerId,
   )
+
+  function openFinishCase() {
+    setFinishSummary('')
+    setFinishAction('')
+    setFinishRecommendation('')
+    setFinishFiles([])
+    setFinishOpen(true)
+  }
+
+  async function submitFieldCompletion() {
+    if (!request) return
+
+    const summary = finishSummary.trim()
+
+    if (!summary) {
+      window.alert(
+        'Please enter the inspection summary.',
+      )
+      return
+    }
+
+    setFinishing(true)
+
+    try {
+      await requestsService.completeFieldWork(
+        request.id,
+        {
+          summary,
+          actionTaken: finishAction.trim(),
+          recommendation:
+            finishRecommendation.trim(),
+        },
+        finishFiles.slice(0, 5),
+      )
+
+      setFinishOpen(false)
+
+      await load()
+    } catch (error) {
+      explain(error)
+    } finally {
+      setFinishing(false)
+    }
+  }
+
+
+  function openResolveCase() {
+    setResolutionReport('')
+    setResolveOpen(true)
+  }
+
+  async function confirmResolveCase() {
+    if (!request) return
+
+    const report = resolutionReport.trim()
+
+    if (!report) {
+      window.alert(
+        'Please enter the final resolution report.',
+      )
+      return
+    }
+
+    setResolving(true)
+
+    try {
+      await requestsService.resolveCase(
+        request.id,
+        {
+          report,
+        },
+      )
+
+      setResolveOpen(false)
+
+      await load()
+    } catch (error) {
+      explain(error)
+    } finally {
+      setResolving(false)
+    }
+  }
 
   return (
     <>
@@ -542,30 +725,340 @@ export function RequestDetailPage() {
                 </div>
               </div>
 
-              <div className="evidence-grid">
-                {request.photos.length ? (
-                  request.photos.map((photo, index) => (
-                    <div
-                      className="evidence-card"
-                      key={`${photo}-${index}`}
-                    >
-                      <Camera size={22} />
+              {/* ==========================================
+                  COMPLAINT / USER EVIDENCE
+              =========================================== */}
+
+              <div>
+                <div className="mb-3 flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/70 px-3.5 py-3">
+                  <div>
+                    <h3 className="text-[13px] font-extrabold text-slate-800">
+                      Complaint evidence
+                    </h3>
+
+                    <p className="mt-0.5 text-[10px] text-slate-400">
+                      Evidence submitted with the original complaint
+                    </p>
+                  </div>
+
+                  <span
+                    className="
+                      rounded-full bg-slate-100
+                      px-2.5 py-1
+                      text-[9px] font-bold text-slate-500
+                    "
+                  >
+                    {
+                      complaintEvidence.length
+                    }
+                  </span>
+                </div>
+
+                <div className="evidence-grid">
+                  {attachments.filter(
+                    (attachment) =>
+                      attachment.category === 'INITIAL_EVIDENCE',
+                  ).length ? (
+                    complaintEvidence.map((attachment, index) => {
+                        const isImage =
+                          attachment.mimeType.startsWith('image/')
+
+                        const busy =
+                          openingAttachment === attachment.id
+
+                        return (
+                          <button
+                            type="button"
+                            className="evidence-card"
+                            key={attachment.id}
+                            disabled={busy}
+                            onClick={() =>
+                              void openAttachment(
+                                attachment.id,
+                                attachment.filename,
+                              )
+                            }
+                            style={{
+                              textAlign: 'left',
+                              cursor: busy ? 'wait' : 'pointer',
+                            }}
+                          >
+                            {busy ? (
+                              <LoaderCircle
+                                size={22}
+                                className="animate-spin"
+                              />
+                            ) : isImage ? (
+                              <Camera size={22} />
+                            ) : (
+                              <FileText size={22} />
+                            )}
+
+                            <span>
+                              <strong>
+                                {attachment.filename}
+                              </strong>
+
+                              <small>
+                                Submitted by complainant
+                                {' · '}
+                                File {index + 1}
+                              </small>
+                            </span>
+                          </button>
+                        )
+                      })
+                  ) : (
+                    <div className="empty-evidence">
+                      <FileText size={20} />
 
                       <span>
-                        <strong>{photo}</strong>
-                        <small>
-                          Evidence file {index + 1}
-                        </small>
+                        No complaint evidence attached
                       </span>
                     </div>
-                  ))
-                ) : (
-                  <div className="empty-evidence">
-                    <FileText size={22} />
-                    <span>No evidence files attached</span>
+                  )}
+                </div>
+              </div>
+
+              {/* DIVIDER */}
+
+              <div className="my-5 border-t border-slate-100" />
+
+              {/* ==========================================
+                  FIELD OFFICER EVIDENCE
+              =========================================== */}
+
+              <div>
+                <div className="mb-3 flex items-center justify-between rounded-xl border border-teal-100 bg-teal-50/50 px-3.5 py-3">
+                  <div>
+                    <h3 className="text-[13px] font-extrabold text-slate-800">
+                      Field officer evidence
+                    </h3>
+
+                    <p className="mt-0.5 text-[10px] text-slate-400">
+                      Evidence collected during inspection and field work
+                    </p>
+                  </div>
+
+                  <span
+                    className="
+                      rounded-full bg-teal-50
+                      px-2.5 py-1
+                      text-[9px] font-bold text-teal-700
+                    "
+                  >
+                    {
+                      officerEvidence.length
+                    }
+                  </span>
+                </div>
+
+                {officerEvidence.length > 0 && (
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-[8px] font-bold text-slate-600">
+                      <Camera size={11} /> Inspection {inspectionEvidence.length}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[8px] font-bold text-emerald-700">
+                      <CheckCircle2 size={11} /> Completion {completionEvidence.length}
+                    </span>
                   </div>
                 )}
+
+                <div className="evidence-grid">
+                  {officerEvidence.length ? (
+                    officerEvidence.map((attachment, index) => {
+                        const isImage =
+                          attachment.mimeType.startsWith('image/')
+
+                        const busy =
+                          openingAttachment === attachment.id
+
+                        const completionEvidence =
+                          attachment.category === 'RESOLUTION_EVIDENCE'
+
+                        return (
+                          <button
+                            type="button"
+                            className="evidence-card"
+                            key={attachment.id}
+                            disabled={busy}
+                            onClick={() =>
+                              void openAttachment(
+                                attachment.id,
+                                attachment.filename,
+                              )
+                            }
+                            style={{
+                              textAlign: 'left',
+                              cursor: busy ? 'wait' : 'pointer',
+                            }}
+                          >
+                            {busy ? (
+                              <LoaderCircle
+                                size={22}
+                                className="animate-spin"
+                              />
+                            ) : isImage ? (
+                              <Camera size={22} />
+                            ) : (
+                              <FileText size={22} />
+                            )}
+
+                            <span>
+                              <strong>
+                                {attachment.filename}
+                              </strong>
+
+                              <small>
+                                {completionEvidence
+                                  ? 'Field completion evidence'
+                                  : 'Inspection evidence'}
+                                {' · '}
+                                File {index + 1}
+                              </small>
+                            </span>
+                          </button>
+                        )
+                      })
+                  ) : (
+                    <div className="empty-evidence">
+                      <Camera size={20} />
+
+                      <span>
+                        No field officer evidence uploaded yet
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
+            </section>
+
+            <section className="panel">
+              <div className="panel-head">
+                <div>
+                  <span className="eyebrow">
+                    Inspection
+                  </span>
+
+                  <h2>Inspection notes</h2>
+                </div>
+
+                {request.notes?.length ? (
+                  <span
+                    className="
+                      rounded-full
+                      bg-slate-100
+                      px-2.5 py-1
+                      text-[10px]
+                      font-bold
+                      text-slate-500
+                    "
+                  >
+                    {request.notes.length}
+                  </span>
+                ) : null}
+              </div>
+
+              {request.notes?.length ? (
+                <div className="space-y-3">
+                  {request.notes.map((note) => (
+                    <div
+                      key={note.id}
+                      className="
+                        rounded-xl
+                        border border-slate-200
+                        bg-slate-50/70
+                        px-4 py-3.5
+                      "
+                    >
+                      <div
+                        className="
+                          flex items-start
+                          gap-3
+                        "
+                      >
+                        <span
+                          className="
+                            mt-0.5
+                            grid h-8 w-8
+                            shrink-0
+                            place-items-center
+                            rounded-lg
+                            bg-white
+                            text-teal-700
+                            shadow-sm
+                          "
+                        >
+                          <MessageSquarePlus size={15} />
+                        </span>
+
+                        <div className="min-w-0 flex-1">
+                          <div
+                            className="
+                              flex flex-wrap
+                              items-center
+                              justify-between
+                              gap-2
+                            "
+                          >
+                            <strong
+                              className="
+                                text-[12px]
+                                font-bold
+                                text-slate-800
+                              "
+                            >
+                              {note.author || 'Field officer'}
+                            </strong>
+
+                            <small
+                              className="
+                                text-[9px]
+                                font-medium
+                                text-slate-400
+                              "
+                            >
+                              {new Date(
+                                note.createdAt,
+                              ).toLocaleString()}
+                            </small>
+                          </div>
+
+                          <p
+                            className="
+                              mt-2
+                              whitespace-pre-wrap
+                              text-[12px]
+                              leading-5
+                              text-slate-600
+                            "
+                          >
+                            {note.body}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div
+                  className="
+                    flex items-center
+                    gap-3
+                    rounded-xl
+                    border border-dashed
+                    border-slate-200
+                    px-4 py-4
+                    text-slate-400
+                  "
+                >
+                  <MessageSquarePlus size={18} />
+
+                  <span className="text-[11px] font-medium">
+                    No inspection notes added yet.
+                  </span>
+                </div>
+              )}
             </section>
           </main>
 
@@ -792,6 +1285,20 @@ export function RequestDetailPage() {
 
                       Add inspection note
                     </button>
+
+                    <button
+                      type="button"
+                      className="primary-btn full"
+                      disabled={
+                        request.inspection?.status !==
+                        'IN_PROGRESS'
+                      }
+                      onClick={openFinishCase}
+                    >
+                      <CheckCircle2 size={16} />
+
+                      Finish field work
+                    </button>
                   </>
                 )}
 
@@ -828,6 +1335,21 @@ export function RequestDetailPage() {
 
                       Escalate for approval
                     </button>
+
+                    {request.inspection?.status ===
+                      'COMPLETED' &&
+                      request.status !== 'RESOLVED' &&
+                      request.status !== 'CLOSED' && (
+                        <button
+                          type="button"
+                          className="primary-btn full"
+                          onClick={openResolveCase}
+                        >
+                          <CheckCircle2 size={16} />
+
+                          Mark case as finished
+                        </button>
+                      )}
                   </>
                 )}
               </section>
@@ -871,6 +1393,566 @@ export function RequestDetailPage() {
           </aside>
         </div>
       </div>
+
+      {noteOpen && (
+        <div
+          className="
+            fixed inset-0 z-[9999]
+            flex items-center justify-center
+            bg-slate-950/55 p-4
+            backdrop-blur-[5px]
+          "
+        >
+          <div
+            className="
+              w-full max-w-[560px]
+              rounded-[24px]
+              border border-slate-200
+              bg-white
+              shadow-[0_32px_100px_rgba(15,23,42,.28)]
+            "
+          >
+            <div className="border-b border-slate-100 px-6 py-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className="eyebrow">
+                    Inspection
+                  </span>
+
+                  <h2 className="mt-1 text-xl font-extrabold text-slate-950">
+                    Add inspection note
+                  </h2>
+
+                  <p className="mt-2 text-xs text-slate-500">
+                    This note is for internal municipal use.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={savingNote}
+                  onClick={() => setNoteOpen(false)}
+                  className="
+                    grid h-10 w-10 place-items-center
+                    rounded-xl border border-slate-200
+                    bg-white text-slate-500
+                  "
+                >
+                  <X size={17} />
+                </button>
+              </div>
+            </div>
+
+            <div className="px-6 py-5">
+              <label className="block text-xs font-bold text-slate-700">
+                Inspection note
+              </label>
+
+              <textarea
+                autoFocus
+                rows={6}
+                maxLength={5000}
+                value={inspectionNote}
+                onChange={(event) =>
+                  setInspectionNote(
+                    event.target.value,
+                  )
+                }
+                placeholder="Enter observations from the inspection..."
+                className="
+                  mt-2 w-full resize-none
+                  rounded-xl border border-slate-200
+                  p-4 text-sm
+                  outline-none
+                  focus:border-teal-500
+                  focus:ring-4
+                  focus:ring-teal-500/10
+                  placeholder:text-[12px]
+                  placeholder:font-medium
+                  placeholder:text-slate-400
+                "
+              />
+
+              <div className="mt-2 text-right text-[10px] text-slate-400">
+                {inspectionNote.length}/5000
+              </div>
+            </div>
+
+            <div
+              className="
+                flex justify-end gap-3
+                border-t border-slate-100
+                px-6 py-4
+              "
+            >
+              <button
+                type="button"
+                className="secondary-btn"
+                disabled={savingNote}
+                onClick={() => setNoteOpen(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="primary-btn"
+                disabled={
+                  !inspectionNote.trim() ||
+                  savingNote
+                }
+                onClick={() =>
+                  void saveInspectionNote()
+                }
+              >
+                {savingNote ? (
+                  <LoaderCircle
+                    size={15}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <MessageSquarePlus size={15} />
+                )}
+
+                Save note
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {finishOpen && (
+        <div
+          className="
+            fixed inset-0 z-[9999]
+            flex items-center justify-center
+            overflow-y-auto
+            bg-slate-950/55 p-4
+            backdrop-blur-[5px]
+          "
+        >
+          <div
+            className="
+              my-3
+              flex
+              w-full
+              max-w-[520px]
+              max-h-[calc(100vh-24px)]
+              flex-col
+              overflow-hidden
+              rounded-[22px]
+              border border-slate-200
+              bg-white
+              shadow-[0_32px_100px_rgba(15,23,42,.28)]
+            "
+          >
+            {/* HEADER */}
+            <div className="shrink-0 border-b border-slate-100 px-5 py-3">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className="eyebrow">
+                    Field completion
+                  </span>
+
+                  <h2 className="mt-1 text-lg font-extrabold text-slate-950">
+                    Finish field work
+                  </h2>
+
+                  <p className="mt-1 text-[11px] leading-4 text-slate-500">
+                    Submit your findings to the government administrator
+                    for final review.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={finishing}
+                  onClick={() => setFinishOpen(false)}
+                  className="
+                    grid h-9 w-9 shrink-0 place-items-center
+                    rounded-xl border border-slate-200
+                    bg-white text-slate-500
+                    transition hover:bg-slate-50
+                  "
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+
+            {/* SCROLLABLE FORM CONTENT */}
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-3">
+              <div className="space-y-3">
+
+                {/* INSPECTION SUMMARY */}
+                <div>
+                  <label className="text-[13px] font-bold text-slate-700">
+                    Inspection summary *
+                  </label>
+
+                  <textarea
+                    rows={2}
+                    maxLength={5000}
+                    value={finishSummary}
+                    onChange={(event) =>
+                      setFinishSummary(event.target.value)
+                    }
+                    placeholder="Describe what you found during the inspection..."
+                    className="
+                      mt-1.5
+                      !h-[68px]
+                      !min-h-[68px]
+                      w-full
+                      resize-none
+                      rounded-xl
+                      border border-slate-200
+                      !px-3
+                      !py-2.5
+                      text-[12px]
+                      leading-5
+                      outline-none
+                      focus:border-teal-500
+                      focus:ring-4
+                      focus:ring-teal-500/10
+                      placeholder:text-[10px]
+                      placeholder:font-medium
+                      placeholder:text-slate-400
+                    "
+                  />
+                </div>
+
+                {/* ACTION TAKEN */}
+                <div>
+                  <label className="text-[13px] font-bold text-slate-700">
+                    Action taken
+                  </label>
+
+                  <textarea
+                    rows={2}
+                    maxLength={3000}
+                    value={finishAction}
+                    onChange={(event) =>
+                      setFinishAction(event.target.value)
+                    }
+                    placeholder="What action was taken at the site?"
+                    className="
+                      mt-1.5
+                      !h-[62px]
+                      !min-h-[62px]
+                      w-full
+                      resize-none
+                      rounded-xl
+                      border border-slate-200
+                      !px-3
+                      !py-2.5
+                      text-[12px]
+                      leading-5
+                      outline-none
+                      focus:border-teal-500
+                      focus:ring-4
+                      focus:ring-teal-500/10
+                      placeholder:text-[10px]
+                      placeholder:font-medium
+                      placeholder:text-slate-400
+                    "
+                  />
+                </div>
+
+                {/* RECOMMENDATION */}
+                <div>
+                  <label className="text-[13px] font-bold text-slate-700">
+                    Recommendation
+                  </label>
+
+                  <textarea
+                    rows={2}
+                    maxLength={3000}
+                    value={finishRecommendation}
+                    onChange={(event) =>
+                      setFinishRecommendation(event.target.value)
+                    }
+                    placeholder="Any recommendation for the administrator?"
+                    className="
+                      mt-1.5
+                      !h-[62px]
+                      !min-h-[62px]
+                      w-full
+                      resize-none
+                      rounded-xl
+                      border border-slate-200
+                      !px-3
+                      !py-2.5
+                      text-[12px]
+                      leading-5
+                      outline-none
+                      focus:border-teal-500
+                      focus:ring-4
+                      focus:ring-teal-500/10
+                      placeholder:text-[10px]
+                      placeholder:font-medium
+                      placeholder:text-slate-400  
+                    "
+                  />
+                </div>
+
+                {/* COMPLETION EVIDENCE */}
+                <div>
+                  <label className="text-[13px] font-bold text-slate-700">
+                    Completion evidence
+                  </label>
+
+                  <label
+                    className="
+                      mt-1.5
+                      flex cursor-pointer
+                      items-center gap-2.5
+                      rounded-xl
+                      border border-dashed border-slate-300
+                      px-3 py-2.5
+                      transition
+                      hover:border-teal-400
+                      hover:bg-teal-50/30
+                    "
+                  >
+                    <Camera
+                      size={17}
+                      className="shrink-0 text-slate-600"
+                    />
+
+                    <span className="text-[13px] font-semibold text-slate-600">
+                      Add photos or PDF
+                    </span>
+
+                    <input
+                      hidden
+                      type="file"
+                      multiple
+                      accept="image/png,image/jpeg,application/pdf"
+                      onChange={(event) =>
+                        setFinishFiles(
+                          Array.from(
+                            event.target.files ?? [],
+                          ).slice(0, 5),
+                        )
+                      }
+                    />
+                  </label>
+
+                  {/* SELECTED FILES */}
+                  {finishFiles.length > 0 && (
+                    <div className="mt-2 space-y-1.5">
+                      {finishFiles.map((file, index) => (
+                        <div
+                          key={`${file.name}-${index}`}
+                          className="
+                            flex items-center justify-between
+                            gap-3
+                            rounded-lg
+                            bg-slate-50
+                            px-3 py-2
+                            text-[10px]
+                            text-slate-600
+                          "
+                        >
+                          <span className="min-w-0 flex-1 truncate">
+                            {file.name}
+                          </span>
+
+                          <button
+                            type="button"
+                            className="
+                              grid h-6 w-6 shrink-0
+                              place-items-center
+                              rounded-md
+                              text-slate-400
+                              transition
+                              hover:bg-slate-200
+                              hover:text-slate-700
+                            "
+                            onClick={() =>
+                              setFinishFiles((current) =>
+                                current.filter(
+                                  (_, i) => i !== index,
+                                ),
+                              )
+                            }
+                          >
+                            <X size={13} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* FOOTER */}
+            <div
+              className="
+                flex shrink-0 justify-end gap-2
+                border-t border-slate-100
+                bg-white
+                px-5 py-3
+              "
+            >
+              <button
+                type="button"
+                className="secondary-btn"
+                disabled={finishing}
+                onClick={() => setFinishOpen(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="primary-btn"
+                disabled={
+                  !finishSummary.trim() ||
+                  finishing
+                }
+                onClick={() =>
+                  void submitFieldCompletion()
+                }
+              >
+                {finishing ? (
+                  <LoaderCircle
+                    size={14}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <CheckCircle2 size={14} />
+                )}
+
+                Submit field report
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {resolveOpen && (
+        <div
+          className="
+            fixed inset-0 z-[9999]
+            flex items-center justify-center
+            bg-slate-950/55 p-4
+            backdrop-blur-[5px]
+          "
+        >
+          <div
+            className="
+              w-full max-w-[600px]
+              rounded-[24px]
+              border border-slate-200
+              bg-white
+              shadow-[0_32px_100px_rgba(15,23,42,.28)]
+            "
+          >
+            <div className="border-b border-slate-100 px-6 py-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="eyebrow">
+                    Final review
+                  </span>
+
+                  <h2 className="mt-1 text-xl font-extrabold">
+                    Finish this case
+                  </h2>
+
+                  <p className="mt-2 text-xs text-slate-500">
+                    This report will be visible to the
+                    citizen who submitted the complaint.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={resolving}
+                  onClick={() =>
+                    setResolveOpen(false)
+                  }
+                  className="
+                    grid h-10 w-10 place-items-center
+                    rounded-xl border border-slate-200
+                  "
+                >
+                  <X size={17} />
+                </button>
+              </div>
+            </div>
+
+            <div className="px-6 py-5">
+              <label className="text-xs font-bold text-slate-700">
+                Resolution report *
+              </label>
+
+              <textarea
+                rows={7}
+                maxLength={5000}
+                value={resolutionReport}
+                onChange={(event) =>
+                  setResolutionReport(
+                    event.target.value,
+                  )
+                }
+                placeholder="Explain how the complaint was resolved..."
+                className="
+                  mt-2 w-full resize-none
+                  rounded-xl border border-slate-200
+                  p-4 text-sm outline-none
+                  focus:border-teal-500
+                  focus:ring-4
+                  focus:ring-teal-500/10
+                "
+              />
+            </div>
+
+            <div
+              className="
+                flex justify-end gap-3
+                border-t border-slate-100
+                px-6 py-4
+              "
+            >
+              <button
+                type="button"
+                className="secondary-btn"
+                disabled={resolving}
+                onClick={() =>
+                  setResolveOpen(false)
+                }
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="primary-btn"
+                disabled={
+                  !resolutionReport.trim() ||
+                  resolving
+                }
+                onClick={() =>
+                  void confirmResolveCase()
+                }
+              >
+                {resolving ? (
+                  <LoaderCircle
+                    size={15}
+                    className="animate-spin"
+                  />
+                ) : (
+                  <CheckCircle2 size={15} />
+                )}
+
+                Mark as finished
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* =====================================================
           ASSIGN / REASSIGN OFFICER MODAL

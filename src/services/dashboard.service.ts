@@ -1,2 +1,5 @@
-import { apiData } from './http'
-export const dashboardService = { get: () => apiData<any>('/dashboard') }
+import { apiDataCached } from './http'
+
+export const dashboardService = {
+  get: () => apiDataCached<any>('/dashboard', 10_000),
+}

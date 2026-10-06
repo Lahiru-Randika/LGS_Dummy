@@ -456,3 +456,10 @@ h1,h2,h3,p{margin-top:0}
   .visigeo-status-chip{display:none}
   .visigeo-map-legend{max-width:calc(100% - 36px);bottom:72px}
 }
+
+
+/* Language toggle */
+.language-toggle,.app-language-toggle{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(148,163,184,.28);border-radius:10px;padding:7px 9px;background:rgba(255,255,255,.07);font:700 10px/1 system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;transition:.2s;color:inherit}
+.language-toggle:hover,.app-language-toggle:hover{background:rgba(45,212,191,.12);border-color:rgba(45,212,191,.45)}
+.language-toggle span,.app-language-toggle span{opacity:.52}.language-toggle .is-active,.app-language-toggle .is-active{opacity:1;color:#2dd4bf}
+html[data-language="si"] body{font-family:"Noto Sans Sinhala","Nirmala UI","Iskoola Pota",system-ui,sans-serif}

@@ -11,7 +11,7 @@ import type {
   ServiceRequest,
   StatusEvent,
 } from '../types'
-import { apiData, apiRequest, queryString } from './http'
+import { apiData, apiDataCached, apiRequestCached, apiUrl, invalidateApiCache, queryString } from './http'
 
 function numberValue(value: unknown, fallback = 0) {
   const n = Number(value)
@@ -125,7 +125,7 @@ export type RequestCreateInput = {
 
 export const requestsService = {
   async list(query: RequestListQuery = {}) {
-    const response = await apiRequest<any[]>(`/requests${queryString(query as Record<string, unknown>)}`)
+    const response = await apiRequestCached<any[]>(`/requests${queryString(query as Record<string, unknown>)}`, 8_000)
     return {
       items: response.data.map(mapBackendRequest),
       meta: response.meta as PageMeta | undefined,
@@ -133,37 +133,49 @@ export const requestsService = {
   },
 
   async get(code: string) {
-    return mapBackendRequest(await apiData<any>(`/requests/${encodeURIComponent(code)}`))
+    return mapBackendRequest(await apiDataCached<any>(`/requests/${encodeURIComponent(code)}`, 5_000))
   },
 
   async create(input: RequestCreateInput, files: File[] = []) {
     const form = new FormData()
     form.append('payload', JSON.stringify(input))
     files.forEach((file) => form.append('files', file))
-    return apiData<{ requestCode: string; status: RequestStatus; version?: number; duplicateSubmission?: boolean }>('/requests', {
+    const result = await apiData<{ requestCode: string; status: RequestStatus; version?: number; duplicateSubmission?: boolean }>('/requests', {
       method: 'POST',
       body: form,
     })
+    invalidateApiCache('/requests')
+    return result
   },
 
-  update(code: string, input: { title?: string; description?: string; priority?: RequestPriority; contactPreference?: 'PORTAL' | 'EMAIL'; version: number }) {
-    return apiData<{ updated: boolean; version: number }>(`/requests/${encodeURIComponent(code)}`, { method: 'PATCH', json: input })
+  async update(code: string, input: { title?: string; description?: string; priority?: RequestPriority; contactPreference?: 'PORTAL' | 'EMAIL'; version: number }) {
+    const result = await apiData<{ updated: boolean; version: number }>(`/requests/${encodeURIComponent(code)}`, { method: 'PATCH', json: input })
+    invalidateApiCache('/requests')
+    return result
   },
 
-  assign(code: string, input: { assignedToUserId: string; departmentId?: number | null; note?: string; version: number }) {
-    return apiData<{ assigned: boolean; version: number }>(`/requests/${encodeURIComponent(code)}/assignment`, { method: 'PATCH', json: input })
+  async assign(code: string, input: { assignedToUserId: string; departmentId?: number | null; note?: string; version: number }) {
+    const result = await apiData<{ assigned: boolean; version: number }>(`/requests/${encodeURIComponent(code)}/assignment`, { method: 'PATCH', json: input })
+    invalidateApiCache('/requests')
+    return result
   },
 
-  transition(code: string, input: { toStatus: RequestStatus; note?: string; version: number }) {
-    return apiData<{ status: RequestStatus; version: number }>(`/requests/${encodeURIComponent(code)}/status-transitions`, { method: 'POST', json: input })
+  async transition(code: string, input: { toStatus: RequestStatus; note?: string; version: number }) {
+    const result = await apiData<{ status: RequestStatus; version: number }>(`/requests/${encodeURIComponent(code)}/status-transitions`, { method: 'POST', json: input })
+    invalidateApiCache('/requests')
+    return result
   },
 
-  cancel(code: string, version: number, note?: string) {
-    return apiData<{ cancelled: boolean; version: number }>(`/requests/${encodeURIComponent(code)}/cancel`, { method: 'POST', json: { version, note } })
+  async cancel(code: string, version: number, note?: string) {
+    const result = await apiData<{ cancelled: boolean; version: number }>(`/requests/${encodeURIComponent(code)}/cancel`, { method: 'POST', json: { version, note } })
+    invalidateApiCache('/requests')
+    return result
   },
 
-  addNote(code: string, body: string, visibility: 'PUBLIC' | 'CITIZEN_VISIBLE' | 'INTERNAL' = 'INTERNAL') {
-    return apiData<{ id: number }>(`/requests/${encodeURIComponent(code)}/notes`, { method: 'POST', json: { body, visibility } })
+  async addNote(code: string, body: string, visibility: 'PUBLIC' | 'CITIZEN_VISIBLE' | 'INTERNAL' = 'INTERNAL') {
+    const result = await apiData<{ id: number }>(`/requests/${encodeURIComponent(code)}/notes`, { method: 'POST', json: { body, visibility } })
+    invalidateApiCache('/requests')
+    return result
   },
 
   async addAttachments(code: string, files: File[], category = 'DOCUMENT', visibility = 'CITIZEN_VISIBLE') {
@@ -171,6 +183,101 @@ export const requestsService = {
     form.append('category', category)
     form.append('visibility', visibility)
     files.forEach((file) => form.append('files', file))
-    return apiData<{ attachmentIds: string[] }>(`/requests/${encodeURIComponent(code)}/attachments`, { method: 'POST', body: form })
+    const result = await apiData<{ attachmentIds: string[] }>(`/requests/${encodeURIComponent(code)}/attachments`, { method: 'POST', body: form })
+    invalidateApiCache('/requests')
+    return result
+  },
+
+    async downloadAttachment(
+    code: string,
+    attachmentId: string,
+    filename: string,
+  ) {
+    const response = await fetch(
+      apiUrl(
+        `/requests/${encodeURIComponent(code)}/attachments/${encodeURIComponent(
+          attachmentId,
+        )}/download`,
+      ),
+      {
+        credentials: 'include',
+      },
+    )
+
+    if (!response.ok) {
+      throw new ApiError(
+        response.status,
+        'ATTACHMENT_DOWNLOAD_FAILED',
+        'Unable to open this attachment.',
+      )
+    }
+
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+
+    return {
+      url,
+      filename,
+      mimeType: blob.type,
+    }
+  },
+
+  async completeFieldWork(
+    code: string,
+    input: {
+      summary: string
+      actionTaken?: string
+      recommendation?: string
+    },
+    files: File[] = [],
+  ) {
+    const form = new FormData()
+
+    form.append('summary', input.summary)
+
+    if (input.actionTaken) {
+      form.append('actionTaken', input.actionTaken)
+    }
+
+    if (input.recommendation) {
+      form.append('recommendation', input.recommendation)
+    }
+
+    files.forEach((file) => {
+      form.append('files', file)
+    })
+
+    const result = await apiData<{
+      completed: boolean
+      status: RequestStatus
+    }>(
+      `/requests/${encodeURIComponent(code)}/field-completion`,
+      {
+        method: 'POST',
+        body: form,
+      },
+    )
+    invalidateApiCache('/requests')
+    return result
+  },
+
+  async resolveCase(
+    code: string,
+    input: {
+      report: string
+    },
+  ) {
+    const result = await apiData<{
+      resolved: boolean
+      status: RequestStatus
+    }>(
+      `/requests/${encodeURIComponent(code)}/resolve`,
+      {
+        method: 'POST',
+        json: input,
+      },
+    )
+    invalidateApiCache('/requests')
+    return result
   },
 }

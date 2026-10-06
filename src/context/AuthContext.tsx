@@ -38,6 +38,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshSession().finally(() => setLoading(false))
   }, [refreshSession])
 
+
+
+  // Keep a valid server session alive while the user is actively using the app.
+  // Returning after screen lock/sleep triggers a silent refresh instead of logout.
+  useEffect(() => {
+    if (!user) return
+    let refreshing = false
+    const silentlyRefresh = async () => {
+      if (refreshing) return
+      refreshing = true
+      try {
+        const session = await authService.refresh()
+        setUser(session.user)
+        setPermissions(session.permissions)
+      } catch (error) {
+        // Do not force logout for temporary network/server failures.
+        if (error instanceof ApiError && error.status === 401) {
+          setUser(null)
+          setPermissions([])
+        }
+      } finally { refreshing = false }
+    }
+    const onVisible = () => { if (document.visibilityState === 'visible') void silentlyRefresh() }
+    window.addEventListener('focus', silentlyRefresh)
+    document.addEventListener('visibilitychange', onVisible)
+    const timer = window.setInterval(() => { if (document.visibilityState === 'visible') void silentlyRefresh() }, 6 * 60 * 60 * 1000)
+    return () => { window.removeEventListener('focus', silentlyRefresh); document.removeEventListener('visibilitychange', onVisible); window.clearInterval(timer) }
+  }, [user?.id])
+
   const login = useCallback(async (email: string, password: string) => {
     const session = await authService.login(email, password)
     setUser(session.user)

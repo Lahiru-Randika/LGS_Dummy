@@ -113,3 +113,68 @@ export async function fetchJsonResource<T>(url: string, signal?: AbortSignal): P
 
   return response.json() as Promise<T>
 }
+
+
+// =========================================================
+// SMALL IN-MEMORY GET CACHE + REQUEST DEDUPLICATION
+// =========================================================
+// This is intentionally process-local to the browser tab. It reduces
+// duplicate API calls without making workflow mutations depend on stale data.
+type CacheEntry = { expiresAt: number; value: unknown }
+const responseCache = new Map<string, CacheEntry>()
+const inFlightGets = new Map<string, Promise<unknown>>()
+
+export function invalidateApiCache(prefix = '') {
+  for (const key of responseCache.keys()) {
+    if (!prefix || key.startsWith(apiUrl(prefix)) || key.startsWith(`envelope:${apiUrl(prefix)}`)) responseCache.delete(key)
+  }
+}
+
+export async function apiDataCached<T>(
+  path: string,
+  ttlMs = 10_000,
+  options: RequestOptions = {},
+): Promise<T> {
+  const method = String(options.method || 'GET').toUpperCase()
+  if (method !== 'GET' || ttlMs <= 0) return apiData<T>(path, options)
+
+  const key = apiUrl(path)
+  const now = Date.now()
+  const cached = responseCache.get(key)
+  if (cached && cached.expiresAt > now) return cached.value as T
+
+  const existing = inFlightGets.get(key)
+  if (existing) return existing as Promise<T>
+
+  const request = apiData<T>(path, options)
+    .then((value) => {
+      responseCache.set(key, { expiresAt: Date.now() + ttlMs, value })
+      return value
+    })
+    .finally(() => {
+      inFlightGets.delete(key)
+    })
+
+  inFlightGets.set(key, request)
+  return request
+}
+
+export async function apiRequestCached<T>(
+  path: string,
+  ttlMs = 10_000,
+): Promise<{ data: T; meta?: any }> {
+  const key = `envelope:${apiUrl(path)}`
+  const now = Date.now()
+  const cached = responseCache.get(key)
+  if (cached && cached.expiresAt > now) return cached.value as { data: T; meta?: any }
+  const existing = inFlightGets.get(key)
+  if (existing) return existing as Promise<{ data: T; meta?: any }>
+  const request = apiRequest<T>(path)
+    .then((value) => {
+      responseCache.set(key, { expiresAt: Date.now() + ttlMs, value })
+      return value
+    })
+    .finally(() => inFlightGets.delete(key))
+  inFlightGets.set(key, request)
+  return request
+}

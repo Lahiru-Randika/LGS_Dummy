@@ -3,13 +3,16 @@ import {
   Bell,
   Building2,
   ChevronDown,
+  CalendarDays,
   ClipboardCheck,
   FileCheck2,
+  FileText,
   Home,
   LogOut,
   Map,
   Menu,
   ReceiptText,
+  WalletCards,
   Users,
   X,
 } from 'lucide-react'
@@ -47,6 +50,7 @@ import {
 import {
   NotificationsPopover,
 } from './NotificationsPopover'
+import { useLanguage } from '../context/LanguageContext'
 
 type Item = {
   label:
@@ -64,117 +68,22 @@ type Item = {
 
 const items:
   Item[] = [
-    {
-      label:
-        'Overview',
+    { label: 'Overview', to: '/app', icon: Home },
+    { label: 'Municipal map', to: '/app/map', icon: Map },
 
-      to:
-        '/app',
+    // Citizen navigation
+    { label: 'My requests', to: '/app/requests', icon: ClipboardCheck, roles: ['CITIZEN'] },
+    { label: 'My bookings', to: '/app/bookings', icon: CalendarDays, roles: ['CITIZEN'] },
+    { label: 'My tax payments', to: '/app/my-tax-payments', icon: WalletCards, roles: ['CITIZEN'] },
+    { label: 'Applications', to: '/app/applications', icon: FileText, roles: ['CITIZEN'] },
 
-      icon:
-        Home,
-    },
-
-    {
-      label:
-        'Municipal map',
-
-      to:
-        '/app/map',
-
-      icon:
-        Map,
-    },
-
-    {
-      label:
-        'Requests',
-
-      to:
-        '/app/requests',
-
-      icon:
-        ClipboardCheck,
-    },
-
-    {
-      label:
-        'Approvals',
-
-      to:
-        '/app/approvals',
-
-      icon:
-        FileCheck2,
-
-      roles: [
-        'APPROVER',
-        'SUPERIOR',
-      ],
-    },
-
-    {
-      label:
-        'Analytics',
-
-      to:
-        '/app/analytics',
-
-      icon:
-        BarChart3,
-
-      roles: [
-        'SUPERIOR',
-      ],
-    },
-
-    {
-      label:
-        'Tax',
-
-      to:
-        '/app/tax',
-
-      icon:
-        ReceiptText,
-
-      roles: [
-        'SUPERIOR',
-      ],
-    },
-
-    {
-      label:
-        'Buildings',
-
-      to:
-        '/app/buildings',
-
-      icon:
-        Building2,
-
-      roles: [
-        'GOV_ADMIN',
-        'APPROVER',
-        'SUPERIOR',
-      ],
-    },
-
-    {
-      label:
-        'Users',
-
-      to:
-        '/app/users',
-
-      icon:
-        Users,
-
-      roles: [
-        'APPROVER',
-        'SUPERIOR',
-      ],
-    },
+    // Government navigation
+    { label: 'Requests', to: '/app/requests', icon: ClipboardCheck, roles: ['GOV_WORKER', 'GOV_ADMIN', 'APPROVER', 'SUPERIOR'] },
+    { label: 'Approvals', to: '/app/approvals', icon: FileCheck2, roles: ['APPROVER', 'SUPERIOR'] },
+    { label: 'Analytics', to: '/app/analytics', icon: BarChart3, roles: ['SUPERIOR'] },
+    { label: 'Tax', to: '/app/tax', icon: ReceiptText, roles: ['SUPERIOR'] },
+    { label: 'Buildings', to: '/app/buildings', icon: Building2, roles: ['GOV_ADMIN', 'APPROVER', 'SUPERIOR'] },
+    { label: 'Users', to: '/app/users', icon: Users, roles: ['APPROVER', 'SUPERIOR'] },
   ]
 
 export function AppShell() {
@@ -183,6 +92,8 @@ export function AppShell() {
     logout,
   } =
     useAuth()
+
+  const { language, toggleLanguage } = useLanguage()
 
   const navigate =
     useNavigate()
@@ -589,6 +500,9 @@ export function AppShell() {
           <div
             className="topbar__right"
           >
+            <button type="button" className="app-language-toggle" onClick={toggleLanguage} aria-label="Change language" title="Change language">
+              <span className={language === 'en' ? 'is-active' : ''}>EN</span><span>/</span><span className={language === 'si' ? 'is-active' : ''}>සිං</span>
+            </button>
             {/* =========================================
                 NOTIFICATIONS
             ========================================== */}

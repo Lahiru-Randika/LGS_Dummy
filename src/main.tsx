@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { AuthProvider } from './context/AuthContext'
+import { LanguageProvider } from './context/LanguageContext'
 import './tailwind.css'
 import './styles.css'
 import './publicSite.css'
@@ -10,7 +11,7 @@ import './publicSite.css'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AuthProvider><App /></AuthProvider>
+      <LanguageProvider><AuthProvider><App /></AuthProvider></LanguageProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

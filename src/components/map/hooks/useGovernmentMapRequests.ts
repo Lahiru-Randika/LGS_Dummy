@@ -16,6 +16,27 @@ type MapUser = {
   role: string
 } | null | undefined
 
+/* =========================================================
+   MAP VISIBILITY RULES
+========================================================= */
+
+/*
+ * Completed requests are intentionally hidden from
+ * the operational municipal map.
+ *
+ * They still exist in the Requests module and database.
+ * They are simply not shown as map pins.
+ */
+const HIDDEN_MAP_STATUSES =
+  new Set<string>([
+    'RESOLVED',
+    'CLOSED',
+  ])
+
+/* =========================================================
+   GOVERNMENT MAP REQUESTS
+========================================================= */
+
 export function useGovernmentMapRequests(
   user: MapUser,
 ) {
@@ -26,11 +47,19 @@ export function useGovernmentMapRequests(
     ServiceRequest[]
   >([])
 
+  /* -------------------------------------------------------
+     LOAD REQUESTS
+  ------------------------------------------------------- */
+
   useEffect(() => {
     let cancelled = false
 
     const loadRequests =
       async () => {
+        /*
+         * Citizens do not receive the government
+         * request-marker layer.
+         */
         if (
           !user ||
           user.role === 'CITIZEN'
@@ -38,6 +67,7 @@ export function useGovernmentMapRequests(
           if (!cancelled) {
             setRequests([])
           }
+
           return
         }
 
@@ -74,6 +104,10 @@ export function useGovernmentMapRequests(
     user?.role,
   ])
 
+  /* -------------------------------------------------------
+     DETERMINE VISIBLE REQUESTS
+  ------------------------------------------------------- */
+
   const visibleRequests =
     useMemo(() => {
       if (
@@ -83,17 +117,36 @@ export function useGovernmentMapRequests(
         return []
       }
 
+      /*
+       * Remove requests that are already finished.
+       */
+      const activeRequests =
+        requests.filter(
+          (request) =>
+            !HIDDEN_MAP_STATUSES.has(
+              request.status,
+            ),
+        )
+
+      /*
+       * Government workers only see active requests
+       * assigned specifically to them.
+       */
       if (
         user.role === 'GOV_WORKER'
       ) {
-        return requests.filter(
+        return activeRequests.filter(
           (request) =>
             request.assignedTo ===
             user.id,
         )
       }
 
-      return requests
+      /*
+       * Admin / supervisor / other authorized
+       * government roles see all active requests.
+       */
+      return activeRequests
     }, [
       user,
       requests,

@@ -37,6 +37,10 @@ export const authService = {
     return normalizeSession(await apiData<any>('/auth/me'))
   },
 
+  async refresh() {
+    return normalizeSession(await apiData<any>('/auth/refresh', { method: 'POST' }))
+  },
+
   async logout() {
     return apiData<{ loggedOut: boolean }>('/auth/logout', { method: 'POST' })
   },

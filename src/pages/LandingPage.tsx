@@ -886,11 +886,11 @@ export function LandingPage() {
 
             <div className="grid auto-rows-[240px] gap-3 md:grid-cols-2 lg:grid-cols-4">
               {[
-                'map-west.jpg',
-                'map-center.jpg',
-                'map-east.jpg',
-                'map-south.jpg',
-                'map-full.jpg',
+                'BackgroundSole.png',
+                'ExploreYourArea.png',
+                'FindCivicPlaces.png',
+                'golden-hour-valley-town-aerial.png',
+                'FollowLocalAction.png',
               ].map((src, index) => (
                 <ScrollReveal
                   key={src}
@@ -920,40 +920,152 @@ export function LandingPage() {
         {/* =====================================================
             FINAL CTA
         ====================================================== */}
-        <section className="relative overflow-hidden bg-[url('/lgs-media/map-center.jpg')] bg-cover bg-center py-24 text-white before:absolute before:inset-0 before:bg-[#071522]/85 sm:py-28">
+        <section
+          className="
+            relative overflow-hidden
+            bg-[url('/lgs-media/Misty%20Tea%20Hills%20at%20Golden%20Sunrise.png')]
+            bg-cover bg-center
+            py-24 text-white
+            before:absolute before:inset-0
+            before:bg-gradient-to-r
+            before:from-[#071522]/95
+            before:via-[#071522]/78
+            before:to-[#071522]/45
+            sm:py-28
+          "
+        >
           <div
-            className={`${sectionShell} relative z-10 grid gap-16 lg:grid-cols-[1.1fr_.9fr] lg:items-center`}
+            className={`
+              ${sectionShell}
+              relative z-10 grid gap-16
+              lg:grid-cols-[1.1fr_.9fr]
+              lg:items-center
+            `}
           >
+            {/* =====================================================
+                LEFT CONTENT
+            ===================================================== */}
+
             <ScrollReveal>
-              <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-200">
+              <span
+                className="
+                  text-[10px] font-semibold uppercase
+                  tracking-[.17em] text-teal-200
+                "
+              >
                 Ready to transform your council?
               </span>
 
-              <h2 className="mt-4 max-w-3xl font-['Manrope'] text-[clamp(48px,5vw,78px)] font-semibold leading-[.95] tracking-[-.045em]">
+              <h2
+                className="
+                  mt-4 max-w-3xl
+                  font-['Manrope']
+                  text-[clamp(48px,5vw,78px)]
+                  font-semibold
+                  leading-[.95]
+                  tracking-[-.045em]
+                "
+              >
                 Request a demo and meet our team.
               </h2>
 
-              <p className="mt-5 max-w-xl text-sm leading-7 text-slate-300">
-                See how Spatio LGS can bring land records, permits, revenue, assets and citizen services into one connected geospatial platform.
+              <p
+                className="
+                  mt-5 max-w-xl
+                  text-sm leading-7
+                  text-slate-300
+                "
+              >
+                See how Spatio LGS can bring land records,
+                permits, revenue, assets and citizen services
+                into one connected geospatial platform.
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-6">
+              {/* ===================================================
+                  ACTION BUTTONS
+              =================================================== */}
+
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+
+                {/* Explore map */}
+
                 <Link
                   to="/map"
-                  className="inline-flex min-h-[52px] items-center rounded-md bg-white px-6 text-[11px] font-semibold uppercase tracking-[.05em] !text-slate-950"
+                  className="
+                    group
+                    inline-flex min-h-[52px]
+                    items-center justify-center gap-3
+                    rounded-lg
+                    bg-teal-500
+                    px-6
+                    text-[11px] font-bold uppercase
+                    tracking-[.07em]
+                    !text-white
+                    shadow-[0_10px_30px_rgba(20,184,166,.20)]
+                    transition-all duration-200
+                    hover:-translate-y-0.5
+                    hover:bg-teal-400
+                    hover:shadow-[0_14px_35px_rgba(20,184,166,.28)]
+                  "
                 >
-                  Explore map
+                  <MapPin
+                    size={16}
+                    strokeWidth={1.8}
+                  />
+
+                  <span>
+                    Explore map
+                  </span>
+
+                  <ArrowRight
+                    size={16}
+                    className="
+                      transition-transform duration-200
+                      group-hover:translate-x-1
+                    "
+                  />
                 </Link>
+
+                {/* Request demo */}
 
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 border-b border-white/40 pb-2 text-[12px] font-semibold"
+                  className="
+                    group
+                    inline-flex min-h-[52px]
+                    items-center justify-center gap-3
+                    rounded-lg
+                    border border-white/25
+                    bg-white/[.07]
+                    px-6
+                    text-[11px] font-bold uppercase
+                    tracking-[.07em]
+                    !text-white
+                    backdrop-blur-md
+                    transition-all duration-200
+                    hover:-translate-y-0.5
+                    hover:border-white/40
+                    hover:bg-white/[.12]
+                  "
                 >
-                  Request a demo
-                  <ArrowRight size={16} />
+                  <span>
+                    Request a demo
+                  </span>
+
+                  <ArrowRight
+                    size={16}
+                    className="
+                      transition-transform duration-200
+                      group-hover:translate-x-1
+                    "
+                  />
                 </Link>
               </div>
             </ScrollReveal>
+
+            {/* =====================================================
+                RIGHT INFORMATION CARDS
+            ===================================================== */}
 
             <ScrollReveal
               delay={140}
@@ -976,28 +1088,71 @@ export function LandingPage() {
                     'Purpose',
                     'Geospatial decision support',
                   ],
-                ].map(([Icon, label, value]) => {
-                  const C = Icon as typeof Landmark
+                ].map(
+                  ([Icon, label, value]) => {
+                    const C =
+                      Icon as typeof Landmark
 
-                  return (
-                    <div
-                      className="flex items-center gap-4 border border-white/15 bg-white/[.06] p-4 backdrop-blur-sm"
-                      key={String(label)}
-                    >
-                      <C className="text-teal-200" />
+                    return (
+                      <div
+                        key={String(label)}
+                        className="
+                          flex items-center gap-4
+                          rounded-xl
+                          border border-white/15
+                          bg-[#071522]/45
+                          p-4
+                          shadow-[0_12px_30px_rgba(0,0,0,.08)]
+                          backdrop-blur-md
+                          transition-all duration-200
+                          hover:border-white/25
+                          hover:bg-[#071522]/55
+                        "
+                      >
+                        <div
+                          className="
+                            grid h-10 w-10
+                            shrink-0 place-items-center
+                            rounded-lg
+                            border border-teal-300/15
+                            bg-teal-400/10
+                          "
+                        >
+                          <C
+                            size={19}
+                            strokeWidth={1.7}
+                            className="text-teal-200"
+                          />
+                        </div>
 
-                      <span>
-                        <small className="block text-[9px] uppercase tracking-[.13em] text-slate-400">
-                          {String(label)}
-                        </small>
+                        <span>
+                          <small
+                            className="
+                              block
+                              text-[9px]
+                              uppercase
+                              tracking-[.13em]
+                              text-slate-400
+                            "
+                          >
+                            {String(label)}
+                          </small>
 
-                        <strong className="mt-1 block text-[12px]">
-                          {String(value)}
-                        </strong>
-                      </span>
-                    </div>
-                  )
-                })}
+                          <strong
+                            className="
+                              mt-1 block
+                              text-[12px]
+                              font-semibold
+                              text-white
+                            "
+                          >
+                            {String(value)}
+                          </strong>
+                        </span>
+                      </div>
+                    )
+                  },
+                )}
               </div>
             </ScrollReveal>
           </div>

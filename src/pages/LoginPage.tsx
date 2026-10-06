@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   ArrowRight,
   Eye,
   EyeOff,
@@ -417,16 +418,36 @@ export function LoginPage() {
 
               {/* Compact trust row */}
 
-              <div
-                className="
-                  mt-9
+              <div className="mt-9">
+                <Link
+                  to="/"
+                  className="
+                    group
+                    inline-flex
+                    items-center
+                    gap-3
 
-                  flex
-                  items-center
-                  gap-6
-                "
-              >
-                <div className="flex items-center gap-2.5">
+                    rounded-xl
+                    border
+                    border-white/15
+
+                    bg-white/[.08]
+
+                    px-4
+                    py-3
+
+                    text-white
+
+                    backdrop-blur-md
+
+                    transition-all
+                    duration-200
+
+                    hover:-translate-y-0.5
+                    hover:border-white/25
+                    hover:bg-white/[.12]
+                  "
+                >
                   <span
                     className="
                       grid
@@ -434,67 +455,31 @@ export function LoginPage() {
                       w-9
                       place-items-center
 
-                      rounded-xl
-
-                      border
-                      border-white/15
+                      rounded-lg
 
                       bg-white/10
 
                       text-teal-200
 
-                      backdrop-blur-md
+                      transition-transform
+                      duration-200
+
+                      group-hover:-translate-x-0.5
                     "
                   >
-                    <ShieldCheck size={16} />
+                    <ArrowLeft size={16} />
                   </span>
 
                   <span>
-                    <strong className="block text-[10px] font-bold text-white/85">
-                      Secure access
+                    <strong className="block text-[10px] font-bold text-white/90">
+                      Back to Home
                     </strong>
 
                     <small className="mt-0.5 block text-[8px] text-white/45">
-                      Backend verified
+                      Return to the main website
                     </small>
                   </span>
-                </div>
-
-                <div className="h-8 w-px bg-white/15" />
-
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className="
-                      grid
-                      h-9
-                      w-9
-                      place-items-center
-
-                      rounded-xl
-
-                      border
-                      border-white/15
-
-                      bg-white/10
-
-                      text-white/70
-
-                      backdrop-blur-md
-                    "
-                  >
-                    <KeyRound size={15} />
-                  </span>
-
-                  <span>
-                    <strong className="block text-[10px] font-bold text-white/85">
-                      Protected roles
-                    </strong>
-
-                    <small className="mt-0.5 block text-[8px] text-white/45">
-                      Permission controlled
-                    </small>
-                  </span>
-                </div>
+                </Link>
               </div>
             </div>
           </section>
