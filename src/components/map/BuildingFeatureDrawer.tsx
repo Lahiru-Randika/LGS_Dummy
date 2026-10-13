@@ -8,6 +8,7 @@ import {
 import type {
   RefObject,
 } from 'react'
+import { useLanguage } from '../../context/LanguageContext'
 
 type BuildingFeature = {
   featureId?: string
@@ -59,6 +60,7 @@ export function BuildingFeatureDrawer({
   onClose,
   onCreateRequest,
 }: BuildingFeatureDrawerProps) {
+  const { t } = useLanguage()
   const propertyEntries =
     readablePropertyEntries(
       feature.properties,
@@ -97,7 +99,7 @@ export function BuildingFeatureDrawer({
         max-sm:max-h-[calc(100%-24px)]
         max-sm:w-auto
       "
-      aria-label="Building details"
+      aria-label={t('Building details')}
     >
       <div className="flex h-full min-h-0 flex-col">
         {/* =================================================
@@ -107,7 +109,7 @@ export function BuildingFeatureDrawer({
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <span className="text-[8px] font-extrabold uppercase tracking-[.15em] text-teal-700">
-                CMC GIS feature
+                {t('CMC GIS feature')}
               </span>
 
               {feature.isResolving ? (
@@ -121,11 +123,11 @@ export function BuildingFeatureDrawer({
 
                   <div>
                     <h2 className="font-['Manrope'] text-[17px] font-extrabold tracking-[-.025em] text-slate-950">
-                      Matching this building…
+                      {t('Matching this building…')}
                     </h2>
 
                     <p className="mt-0.5 text-[9px] leading-4 text-slate-400">
-                      Checking named OSM features inside the polygon.
+                      {t('Checking named OSM features inside the polygon.')}
                     </p>
                   </div>
                 </div>
@@ -136,24 +138,24 @@ export function BuildingFeatureDrawer({
                       feature.nativeName ||
                       (feature.featureId
                         ? `Building ${feature.featureId}`
-                        : 'Mapped building')}
+                        : t('Mapped building'))}
                   </h2>
 
                   <div className="mt-2.5 flex flex-wrap gap-1.5">
                     {feature.resolvedType && (
                       <span className="inline-flex rounded-full bg-teal-50 px-2.5 py-1 text-[7px] font-extrabold uppercase tracking-[.08em] text-teal-700">
-                        {feature.resolvedType}
+                        {t(feature.resolvedType)}
                       </span>
                     )}
 
                     {feature.polygonMatched ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[7px] font-extrabold uppercase tracking-[.06em] text-emerald-700">
                         <CheckCircle2 size={11} />
-                        Polygon verified
+                        {t('Polygon verified')}
                       </span>
                     ) : (
                       <span className="inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-[7px] font-extrabold uppercase tracking-[.06em] text-amber-700">
-                        Name not verified
+                        {t('Name not verified')}
                       </span>
                     )}
                   </div>
@@ -175,7 +177,7 @@ export function BuildingFeatureDrawer({
 
             <button
               type="button"
-              aria-label="Close building details"
+              aria-label={t('Close building details')}
               className="civic-map-control grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-800"
               onClick={onClose}
             >
@@ -193,7 +195,7 @@ export function BuildingFeatureDrawer({
           <div className="grid grid-cols-2 gap-2.5">
             <div className="rounded-2xl border border-slate-100 bg-slate-50/80 p-3.5">
               <small className="text-[7px] font-extrabold uppercase tracking-[.1em] text-slate-400">
-                CMC Building ID
+                {t('CMC Building ID')}
               </small>
               <strong className="mt-1 block break-all text-[11px] text-slate-800">
                 {feature.featureId || '—'}
@@ -202,7 +204,7 @@ export function BuildingFeatureDrawer({
 
             <div className="rounded-2xl border border-slate-100 bg-slate-50/80 p-3.5">
               <small className="text-[7px] font-extrabold uppercase tracking-[.1em] text-slate-400">
-                Name match
+                {t('Name match')}
               </small>
 
               <strong
@@ -213,8 +215,8 @@ export function BuildingFeatureDrawer({
                 }`}
               >
                 {feature.polygonMatched
-                  ? 'Polygon verified'
-                  : 'Not verified'}
+                  ? t('Polygon verified')
+                  : t('Not verified')}
               </strong>
             </div>
           </div>
@@ -222,7 +224,7 @@ export function BuildingFeatureDrawer({
           <div className="mt-2.5 grid grid-cols-2 gap-2.5">
             <div className="rounded-2xl border border-slate-100 bg-slate-50/80 p-3.5">
               <small className="text-[7px] font-extrabold uppercase tracking-[.1em] text-slate-400">
-                Latitude
+                {t('Latitude')}
               </small>
               <strong className="mt-1 block text-[11px] text-slate-800">
                 {feature.latitude}
@@ -231,7 +233,7 @@ export function BuildingFeatureDrawer({
 
             <div className="rounded-2xl border border-slate-100 bg-slate-50/80 p-3.5">
               <small className="text-[7px] font-extrabold uppercase tracking-[.1em] text-slate-400">
-                Longitude
+                {t('Longitude')}
               </small>
               <strong className="mt-1 block text-[11px] text-slate-800">
                 {feature.longitude}
@@ -241,7 +243,7 @@ export function BuildingFeatureDrawer({
 
           <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200/90">
             <span className="block bg-slate-50 px-4 py-2 text-[8px] font-extrabold uppercase tracking-[.12em] text-slate-500">
-              CMC feature properties
+              {t('CMC feature properties')}
             </span>
 
             {propertyEntries.length ? (
@@ -262,7 +264,7 @@ export function BuildingFeatureDrawer({
               )
             ) : (
               <p className="p-4 text-[10px] leading-5 text-slate-500">
-                No additional attributes are stored in the CMC building GeoJSON.
+                {t('No additional attributes are stored in the CMC building GeoJSON.')}
               </p>
             )}
           </div>
@@ -291,12 +293,12 @@ export function BuildingFeatureDrawer({
                     feature.resolvedAddress ||
                     (feature.featureId
                       ? `Building ${feature.featureId}`
-                      : 'Selected building'),
+                      : t('Selected building')),
                 })
               }
             >
               <Plus size={16} />
-              Create request here
+              {t('Create request here')}
             </button>
           </div>
         )}

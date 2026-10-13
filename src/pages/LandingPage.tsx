@@ -1,163 +1,118 @@
-import {
-  ArrowRight,
-  Building2,
-  CalendarCheck2,
-  CheckCircle2,
-  CircleHelp,
-  Compass,
-  Crosshair,
-  FileText,
-  Landmark,
-  Layers3,
-  LocateFixed,
-  MapPin,
-  MessageSquareWarning,
-  Search,
-  ShieldCheck,
-  Sparkles,
-  Users2,
-} from 'lucide-react'
-import { type FormEvent, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { HeroMedia } from '../components/HeroMedia'
-import { PublicFooter } from '../components/PublicFooter'
-import { PublicHeader } from '../components/PublicHeader'
-import { ScrollReveal } from '../components/ScrollReveal'
-import { ParallaxSection } from '../components/ParallaxSection'
-
+import { ArrowRight, Building2, CalendarCheck2, CheckCircle2, CircleHelp, Compass, Crosshair, FileText, Landmark, Layers3, LocateFixed, MapPin, MessageSquareWarning, Search, ShieldCheck, Sparkles, Users2, } from 'lucide-react';
+import { type FormEvent, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { HeroMedia } from '../components/HeroMedia';
+import { PublicFooter } from '../components/PublicFooter';
+import { PublicHeader } from '../components/PublicHeader';
+import { ScrollReveal } from '../components/ScrollReveal';
+import { ParallaxSection } from '../components/ParallaxSection';
+import { useLanguage } from '../context/LanguageContext';
 const serviceCards = [
-  {
-    icon: MessageSquareWarning,
-    eyebrow: 'Land',
-    title: 'Land & Spatial Intelligence',
-    body: 'Connect property and parcel records, boundaries, zoning and spatial intelligence to one verified map.',
-    tone: 'hover:border-rose-200 hover:bg-rose-50/40',
-  },
-  {
-    icon: Sparkles,
-    eyebrow: 'Permits',
-    title: 'Permits, Certificates & Licensing',
-    body: 'Track applications, approvals, certificates and licensing workflows from submission to final decision.',
-    tone: 'hover:border-emerald-200 hover:bg-emerald-50/40',
-  },
-  {
-    icon: CircleHelp,
-    eyebrow: 'Revenue',
-    title: 'Tax, Revenue & Payments',
-    body: 'Manage assessments, bills, collections and arrears with every record tied to a real, mapped property.',
-    tone: 'hover:border-blue-200 hover:bg-blue-50/40',
-  },
-  {
-    icon: CalendarCheck2,
-    eyebrow: 'Engage',
-    title: 'Citizen Engagement & Command Center',
-    body: 'Bring citizen services, complaints, public participation and executive visibility into one connected system.',
-    tone: 'hover:border-violet-200 hover:bg-violet-50/40',
-  },
-]
-
+    {
+        icon: MessageSquareWarning,
+        eyebrow: 'Land',
+        title: 'Land & Spatial Intelligence',
+        body: 'Connect property and parcel records, boundaries, zoning and spatial intelligence to one verified map.',
+        tone: 'hover:border-rose-200 hover:bg-rose-50/40',
+    },
+    {
+        icon: Sparkles,
+        eyebrow: 'Permits',
+        title: 'Permits, Certificates & Licensing',
+        body: 'Track applications, approvals, certificates and licensing workflows from submission to final decision.',
+        tone: 'hover:border-emerald-200 hover:bg-emerald-50/40',
+    },
+    {
+        icon: CircleHelp,
+        eyebrow: 'Revenue',
+        title: 'Tax, Revenue & Payments',
+        body: 'Manage assessments, bills, collections and arrears with every record tied to a real, mapped property.',
+        tone: 'hover:border-blue-200 hover:bg-blue-50/40',
+    },
+    {
+        icon: CalendarCheck2,
+        eyebrow: 'Engage',
+        title: 'Citizen Engagement & Command Center',
+        body: 'Bring citizen services, complaints, public participation and executive visibility into one connected system.',
+        tone: 'hover:border-violet-200 hover:bg-violet-50/40',
+    },
+];
 const featureCards = [
-  {
-    image: '/lgs-media/ExploreYourArea.png',
-    kicker: 'Spatial foundation',
-    title: 'Land Information System (LIS)',
-    body: 'Manage municipal assets and infrastructure with real location intelligence instead of guesswork.',
-  },
-  {
-    image: '/lgs-media/FindCivicPlaces.png',
-    kicker: 'Planning intelligence',
-    title: 'City Planning',
-    body: 'Bring land records, ownership and boundaries together clearly so planning starts from facts, not files.',
-  },
-  {
-    image: '/lgs-media/FollowLocalAction.png',
-    kicker: 'Infrastructure intelligence',
-    title: 'Underground Utility Management',
-    body: 'Map and manage water, sewerage, electricity and telecom networks before anyone breaks ground.',
-  },
-]
-
+    {
+        image: '/lgs-media/ExploreYourArea.png',
+        kicker: 'Spatial foundation',
+        title: 'Land Information System (LIS)',
+        body: 'Manage municipal assets and infrastructure with real location intelligence instead of guesswork.',
+    },
+    {
+        image: '/lgs-media/FindCivicPlaces.png',
+        kicker: 'Planning intelligence',
+        title: 'City Planning',
+        body: 'Bring land records, ownership and boundaries together clearly so planning starts from facts, not files.',
+    },
+    {
+        image: '/lgs-media/FollowLocalAction.png',
+        kicker: 'Infrastructure intelligence',
+        title: 'Underground Utility Management',
+        body: 'Map and manage water, sewerage, electricity and telecom networks before anyone breaks ground.',
+    },
+];
 const news = [
-  [
-    'Spatial intelligence',
-    'Every layer of the city, finally in one place',
-    'From what is underground to what is being planned next, council information can be captured, mapped and ready to use.',
-  ],
-  [
-    'Connected operations',
-    'One map. Every department. Every answer.',
-    'Land records, permits, tax data, certificates and citizen services connect back to the same verified council map.',
-  ],
-  [
-    'Decision support',
-    'A stronger, smarter path to local governance',
-    'Live spatial data, connected workflows and executive dashboards help councils act from one shared picture.',
-  ],
-]
-
-const sectionShell =
-  'mx-auto w-[min(1500px,calc(100%-80px))] max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-32px)]'
-
-const kicker =
-  'text-[10px] font-semibold uppercase tracking-[.17em] text-teal-700'
-
+    [
+        'Spatial intelligence',
+        'Every layer of the city, finally in one place',
+        'From what is underground to what is being planned next, council information can be captured, mapped and ready to use.',
+    ],
+    [
+        'Connected operations',
+        'One map. Every department. Every answer.',
+        'Land records, permits, tax data, certificates and citizen services connect back to the same verified council map.',
+    ],
+    [
+        'Decision support',
+        'A stronger, smarter path to local governance',
+        'Live spatial data, connected workflows and executive dashboards help councils act from one shared picture.',
+    ],
+];
+const sectionShell = 'mx-auto w-[min(1500px,calc(100%-80px))] max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-32px)]';
+const kicker = 'text-[10px] font-semibold uppercase tracking-[.17em] text-teal-700';
 export function LandingPage() {
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-
-  const submitSearch = (event: FormEvent) => {
-    event.preventDefault()
-
-    navigate(
-      search.trim()
-        ? `/map?q=${encodeURIComponent(search.trim())}`
-        : '/map',
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-white font-['DM_Sans'] text-slate-950">
-      <PublicHeader overlay />
+    const {  t  } = useLanguage();
+    const navigate = useNavigate();
+    const [search, setSearch] = useState('');
+    const submitSearch = (event: FormEvent) => {
+        event.preventDefault();
+        navigate(search.trim()
+            ? `/map?q=${encodeURIComponent(search.trim())}`
+            : '/map');
+    };
+    return (<div className="min-h-screen bg-white font-['DM_Sans'] text-slate-950">
+      <PublicHeader overlay/>
 
       <main>
         {/* =====================================================
             HERO
         ====================================================== */}
-        <section className="relative -mb-px min-h-[620px] overflow-hidden text-white sm:min-h-[660px] lg:h-[calc(100vh-119px)] lg:min-h-[580px]">
+        <section data-no-translate translate="no" className="relative -mb-px min-h-[620px] overflow-hidden text-white sm:min-h-[660px] lg:h-[calc(100vh-119px)] lg:min-h-[580px]">
           <HeroMedia />
 
-          <div
-            className={`${sectionShell} relative z-10 flex h-full min-h-[620px] items-center sm:min-h-[660px] lg:min-h-0 lg:translate-y-10`}
-          >
-            <ScrollReveal
-              direction="fade"
-              className="max-w-4xl"
-            >
-              <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-teal-200">
-                Spatio LGS
-              </span>
+          <div className={`${sectionShell} relative z-10 flex h-full min-h-[620px] items-center sm:min-h-[660px] lg:min-h-0 lg:translate-y-10`}>
+            <ScrollReveal direction="fade" className="max-w-4xl lgs-home-hero-copy">
+              <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-teal-200">{t("Spatio LGS")}</span>
 
-              <h1 className="mt-6 font-['Manrope'] text-[clamp(46px,5.8vw,88px)] font-semibold leading-[.95] tracking-[-.055em]">
-                Location Drives Insight
-                <br />
+              <h1 className="lgs-home-hero-title mt-6 font-['Manrope'] text-[clamp(46px,5.8vw,88px)] font-semibold leading-[.95] tracking-[-.055em]">{t("Location Drives Insight")}<br />
 
-                <em className="not-italic text-teal-300">
-                  Governance Evolves
-                </em>
+                <em className="not-italic text-teal-300">{t("Governance Evolves")}</em>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-[13px] font-normal leading-6 text-slate-200 sm:text-[15px] sm:leading-7">
-                Public Services. Local Requests. Municipal Action. One Connected Map.
-                Spatio LGS is a geospatial decision-support platform built for Municipal
-                and Urban Councils managing real complexity.
-              </p>
+              <p className="lgs-home-hero-description mt-6 max-w-2xl text-[13px] font-normal leading-6 text-slate-200 sm:text-[15px] sm:leading-7">{t("Public Services. Local Requests. Municipal Action. One Connected Map.\r\n                Spatio LGS is a geospatial decision-support platform built for Municipal\r\n                and Urban Councils managing real complexity.")}</p>
             </ScrollReveal>
           </div>
 
           <div className="absolute bottom-4 left-1/2 z-20 hidden -translate-x-1/2 items-center text-[9px] font-semibold uppercase tracking-[.16em] text-white/60 lg:flex">
             <div className="flex animate-[scrollFloat_2s_ease-in-out_infinite] items-center gap-3">
-              <i className="h-12 w-px bg-white/40" />
-              <span>Scroll</span>
+              <i className="h-12 w-px bg-white/40"/>
+              <span>{t("Scroll")}</span>
             </div>
           </div>
         </section>
@@ -204,58 +159,40 @@ export function LandingPage() {
         ====================================================== */}
         <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/70 to-white py-20 sm:py-24">
           {/* subtle decorative glow */}
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-100/30 blur-3xl" />
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-100/30 blur-3xl"/>
 
           <div className="mb-12 text-center">
             <span className={kicker}>
-              WHERE WE’RE HEADED
+              {t('WHERE WE’RE HEADED')}
             </span>
 
             <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
-              One Direction
+              {t('One Direction')}
               <br />
-              Two Ways to Say It
+              {t('Two Ways to Say It')}
             </h2>
           </div>
 
-          <div
-            className={`${sectionShell} relative z-10 grid gap-5 md:grid-cols-2`}
-          >
+          <div className={`${sectionShell} relative z-10 grid gap-5 md:grid-cols-2`}>
             {[
-              [
+            [
                 LocateFixed,
                 'One Connected Council',
                 'A spatially accurate digital foundation where requests, records and revenue do not get lost between departments.',
                 'from-cyan-500/15 via-teal-500/10 to-transparent',
                 'group-hover:text-cyan-600',
-              ],
-              [
+            ],
+            [
                 Layers3,
                 'One Map. Every Department.',
                 'Land records, permits, tax and revenue, certificates and citizen services work from the same verified geographic picture.',
                 'from-emerald-500/15 via-teal-500/10 to-transparent',
                 'group-hover:text-emerald-600',
-              ],
-            ].map(
-              (
-                [
-                  Icon,
-                  title,
-                  body,
-                  gradient,
-                  iconHover,
-                ],
-                index,
-              ) => {
-                const C = Icon as typeof LocateFixed
-
-                return (
-                  <ScrollReveal
-                    key={String(title)}
-                    delay={index * 120}
-                  >
-                    <article
-                      className="
+            ],
+        ].map(([Icon, title, body, gradient, iconHover,], index) => {
+            const C = Icon as typeof LocateFixed;
+            return (<ScrollReveal key={String(title)} delay={index * 120}>
+                    <article className="
                         group relative min-h-[250px] overflow-hidden
                         rounded-3xl border border-slate-200/80
                         bg-white/90 p-7
@@ -265,33 +202,27 @@ export function LandingPage() {
                         hover:-translate-y-2
                         hover:border-slate-300
                         hover:shadow-[0_24px_70px_rgba(15,23,42,0.12)]
-                      "
-                    >
+                      ">
                       {/* hover gradient */}
-                      <div
-                        className={`
+                      <div className={`
                           pointer-events-none absolute inset-0
                           bg-gradient-to-br ${String(gradient)}
                           opacity-0 transition-opacity duration-500
                           group-hover:opacity-100
-                        `}
-                      />
+                        `}/>
 
                       {/* top accent line */}
-                      <div
-                        className="
+                      <div className="
                           absolute left-7 right-7 top-0 h-px
                           bg-gradient-to-r from-transparent
                           via-teal-400/60 to-transparent
                           opacity-0 transition-opacity duration-500
                           group-hover:opacity-100
-                        "
-                      />
+                        "/>
 
                       <div className="relative z-10">
                         <div className="flex items-start justify-between">
-                          <span
-                            className={`
+                          <span className={`
                               grid h-14 w-14 place-items-center
                               rounded-2xl border border-slate-200
                               bg-slate-50 text-slate-700
@@ -302,36 +233,30 @@ export function LandingPage() {
                               group-hover:border-transparent
                               group-hover:bg-white
                               ${String(iconHover)}
-                            `}
-                          >
-                            <C size={24} strokeWidth={1.8} />
+                            `}>
+                            <C size={24} strokeWidth={1.8}/>
                           </span>
                         </div>
 
                         <div className="mt-10">
-                          <h3
-                            className="
+                          <h3 className="
                               font-['Manrope'] text-xl font-semibold
                               tracking-[-.02em] text-slate-900
-                            "
-                          >
-                            {String(title)}
+                            ">
+                            {t(String(title))}
                           </h3>
 
-                          <p
-                            className="
+                          <p className="
                               mt-3 max-w-sm text-[13px] leading-6
                               text-slate-500
                               transition-colors duration-300
                               group-hover:text-slate-600
-                            "
-                          >
-                            {String(body)}
+                            ">
+                            {t(String(body))}
                           </p>
                         </div>
 
-                        <div
-                          className="
+                        <div className="
                             mt-8 flex items-center gap-2
                             text-[10px] font-semibold uppercase
                             tracking-[.12em] text-teal-700
@@ -339,66 +264,41 @@ export function LandingPage() {
                             transition-all duration-500
                             group-hover:translate-y-0
                             group-hover:opacity-100
-                          "
-                        >
-                          Learn more
-                          <ArrowRight
-                            size={14}
-                            className="transition-transform duration-300 group-hover:translate-x-1"
-                          />
+                          ">
+                          {t('Learn more')}
+                          <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1"/>
                         </div>
                       </div>
                     </article>
-                  </ScrollReveal>
-                )
-              },
-            )}
+                  </ScrollReveal>);
+        })}
           </div>
         </section>
 
         {/* =====================================================
             SERVICES
         ====================================================== */}
-        <section
-          className="bg-[#f6f9fa] py-24 sm:py-28"
-          id="services"
-        >
+        <section className="bg-[#f6f9fa] py-24 sm:py-28" id="services">
           <div className={sectionShell}>
             <ScrollReveal>
               <div className="mb-12 max-w-4xl">
                 <span className={kicker}>
-                  One connected platform
+                  {t('One connected platform')}
                 </span>
 
                 <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
-                  One Platform. Every Council Function.
+                  {t('One Platform. Every Council Function.')}
                 </h2>
 
                 <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-500">
-                  Spatio LGS connects land and spatial intelligence, permits and licensing, tax and revenue, and citizen engagement through one verified geographic foundation.
+                  {t('Spatio LGS connects land and spatial intelligence, permits and licensing, tax and revenue, and citizen engagement through one verified geographic foundation.')}
                 </p>
               </div>
             </ScrollReveal>
 
             <div className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {serviceCards.map(
-                (
-                  {
-                    icon: Icon,
-                    eyebrow,
-                    title,
-                    body,
-                    tone,
-                  },
-                  index,
-                ) => (
-                  <ScrollReveal
-                    key={title}
-                    delay={index * 90}
-                    className="h-full"
-                  >
-                    <article
-                      className={`
+              {serviceCards.map(({ icon: Icon, eyebrow, title, body, tone, }, index) => (<ScrollReveal key={title} delay={index * 90} className="h-full">
+                    <article className={`
                         group flex h-full min-h-[430px] cursor-pointer flex-col
                         rounded-2xl border border-slate-200 bg-white p-9
                         shadow-[0_10px_30px_rgba(15,23,42,0.05)]
@@ -406,10 +306,8 @@ export function LandingPage() {
                         hover:-translate-y-2
                         hover:shadow-[0_24px_60px_rgba(15,23,42,0.12)]
                         ${tone}
-                      `}
-                    >
-                      <span
-                        className="
+                      `}>
+                      <span className="
                           grid h-16 w-16 place-items-center rounded-full
                           bg-teal-50 text-teal-700
                           transition-all duration-500 ease-out
@@ -417,53 +315,41 @@ export function LandingPage() {
                           group-hover:scale-110
                           group-hover:bg-white
                           group-hover:shadow-md
-                        "
-                      >
-                        <Icon
-                          size={26}
-                          className="
+                        ">
+                        <Icon size={26} className="
                             transition-transform duration-500
                             group-hover:rotate-6
-                          "
-                        />
+                          "/>
                       </span>
 
                       <small className="mt-12 block text-[9px] font-semibold uppercase tracking-[.15em] text-slate-400">
-                        {eyebrow}
+                        {t(eyebrow)}
                       </small>
 
                       <h3 className="mt-3 font-['Manrope'] text-3xl font-semibold uppercase tracking-[-.03em] text-slate-950 transition-colors duration-300">
-                        {title}
+                        {t(title)}
                       </h3>
 
                       <p className="mt-4 text-[12px] leading-6 text-slate-500">
-                        {body}
+                        {t(body)}
                       </p>
 
-                      <Link
-                        className="
+                      <Link className="
                           mt-auto inline-flex items-center gap-2 pt-10
                           text-[10px] font-semibold uppercase
                           tracking-[.08em] text-slate-800
                           transition-colors duration-300
                           group-hover:text-teal-700
-                        "
-                        to="/services"
-                      >
-                        View service
+                        " to="/services">
+                        {t('View service')}
 
-                        <ArrowRight
-                          size={15}
-                          className="
+                        <ArrowRight size={15} className="
                             transition-transform duration-300 ease-out
                             group-hover:translate-x-2
-                          "
-                        />
+                          "/>
                       </Link>
                     </article>
-                  </ScrollReveal>
-                ),
-              )}
+                  </ScrollReveal>))}
             </div>
           </div>
         </section>
@@ -476,44 +362,35 @@ export function LandingPage() {
             <ScrollReveal>
               <div className="mb-12 text-center">
                 <span className={kicker}>
-                  Strong geospatial foundation
+                  {t('Strong geospatial foundation')}
                 </span>
 
                 <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
-                  Every Layer of the City, Finally in One Place.
+                  {t('Every Layer of the City, Finally in One Place.')}
                 </h2>
               </div>
             </ScrollReveal>
 
             <div className="grid gap-6 lg:grid-cols-3">
-              {featureCards.map((card, index) => (
-                <ScrollReveal
-                  key={card.title}
-                  delay={index * 120}
-                >
+              {featureCards.map((card, index) => (<ScrollReveal key={card.title} delay={index * 120}>
                   <article className="group">
                     <div className="h-[360px] overflow-hidden rounded-2xl">
-                      <img
-                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                        src={card.image}
-                        alt=""
-                      />
+                      <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={card.image} alt=""/>
                     </div>
 
                     <small className="mt-6 block text-[9px] font-semibold uppercase tracking-[.15em] text-teal-700">
-                      {card.kicker}
+                      {t(card.kicker)}
                     </small>
 
                     <h3 className="mt-2 font-['Manrope'] text-2xl font-semibold">
-                      {card.title}
+                      {t(card.title)}
                     </h3>
 
                     <p className="mt-2 text-[12px] leading-6 text-slate-500">
-                      {card.body}
+                      {t(card.body)}
                     </p>
                   </article>
-                </ScrollReveal>
-              ))}
+                </ScrollReveal>))}
             </div>
           </div>
         </section>
@@ -521,65 +398,53 @@ export function LandingPage() {
         {/* =====================================================
             SHARED FIXED BACKGROUND FOR 3 SECTIONS
         ====================================================== */}
-        <div
-          className="
+        <div className="
             relative
             bg-[url('/lgs-media/BackgroundSole.png')]
             bg-cover
             bg-center
             bg-fixed
             bg-no-repeat
-          "
-        >
+          ">
           {/* =====================================================
-              WHY LGS
-          ====================================================== */}
+            WHY LGS
+        ====================================================== */}
           <section className="relative overflow-hidden py-28 text-white sm:py-36">
             {/* Dark overlay */}
-            <div className="absolute inset-0 bg-slate-950/75" />
+            <div className="absolute inset-0 bg-slate-950/75"/>
 
-            <div
-              className={`${sectionShell} relative z-10`}
-            >
+            <div className={`${sectionShell} relative z-10`}>
               <ScrollReveal>
                 <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-200">
-                  Why Spatio LGS?
+                  {t('Why Spatio LGS?')}
                 </span>
 
                 <h2 className="mt-4 font-['Manrope'] text-[clamp(50px,5.5vw,84px)] font-semibold tracking-[-.045em]">
-                  One Filing Cabinet Away From Chaos
+                  {t('One Filing Cabinet Away From Chaos')}
                 </h2>
               </ScrollReveal>
 
               <div className="mt-16 grid gap-10 md:grid-cols-3">
                 {[
-                  [
-                    MapPin,
-                    'From Filing to Finishing',
-                    'Real-time spatial data and automated workflows can turn long approval chains into faster, more accountable decisions.',
-                  ],
-                  [
-                    Users2,
-                    'Nothing Hidden, Nothing Lost',
-                    'Every department sees the same data, while citizens can follow their own request instead of wondering where it went.',
-                  ],
-                  [
-                    CheckCircle2,
-                    'Decisions Grounded in Reality',
-                    'Dashboards built on live field data help councils plan from what is actually there, not from assumptions.',
-                  ],
-                ].map(([Icon, title, body], index) => {
-                  const C = Icon as typeof MapPin
-
-                  return (
-                    <ScrollReveal
-                      key={String(title)}
-                      delay={index * 140}
-                      direction="scale"
-                      className="h-full"
-                    >
-                      <article
-                        className="
+            [
+                MapPin,
+                'From Filing to Finishing',
+                'Real-time spatial data and automated workflows can turn long approval chains into faster, more accountable decisions.',
+            ],
+            [
+                Users2,
+                'Nothing Hidden, Nothing Lost',
+                'Every department sees the same data, while citizens can follow their own request instead of wondering where it went.',
+            ],
+            [
+                CheckCircle2,
+                'Decisions Grounded in Reality',
+                'Dashboards built on live field data help councils plan from what is actually there, not from assumptions.',
+            ],
+        ].map(([Icon, title, body], index) => {
+            const C = Icon as typeof MapPin;
+            return (<ScrollReveal key={String(title)} delay={index * 140} direction="scale" className="h-full">
+                      <article className="
                           group
                           h-full
                           cursor-pointer
@@ -589,10 +454,8 @@ export function LandingPage() {
                           transition-all
                           duration-500
                           hover:border-teal-300
-                        "
-                      >
-                        <span
-                          className="
+                        ">
+                        <span className="
                             grid
                             h-14
                             w-14
@@ -607,13 +470,11 @@ export function LandingPage() {
                             group-hover:rotate-6
                             group-hover:scale-110
                             group-hover:bg-teal-300
-                          "
-                        >
+                          ">
                           <C />
                         </span>
 
-                        <h3
-                          className="
+                        <h3 className="
                             mt-6
                             font-['Manrope']
                             text-2xl
@@ -621,53 +482,50 @@ export function LandingPage() {
                             transition-colors
                             duration-300
                             group-hover:text-teal-200
-                          "
-                        >
-                          {String(title)}
+                          ">
+                          {t(String(title))}
                         </h3>
 
                         <p className="mt-3 max-w-sm text-[12px] leading-6 text-slate-300">
-                          {String(body)}
+                          {t(String(body))}
                         </p>
                       </article>
-                    </ScrollReveal>
-                  )
-                })}
+                    </ScrollReveal>);
+        })}
               </div>
             </div>
           </section>
 
           {/* =====================================================
-              HOW IT WORKS
-              Same background image stays behind this section too
-          ====================================================== */}
+            HOW IT WORKS
+            Same background image stays behind this section too
+        ====================================================== */}
           <section className="relative overflow-hidden py-24 sm:py-28">
             {/* Light translucent surface so the same image is visible */}
-            <div className="absolute inset-0 bg-white/[0.93] backdrop-blur-[1px]" />
+            <div className="absolute inset-0 bg-white/[0.93] backdrop-blur-[1px]"/>
 
             <div className={`${sectionShell} relative z-10`}>
               <ScrollReveal>
                 <div className="grid gap-7 lg:grid-cols-[1.15fr_.85fr] lg:items-end">
                   <div>
                     <span className={kicker}>
-                      How it works
+                      {t('How it works')}
                     </span>
 
                     <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em] text-slate-950">
-                      From a Location to a Decision
+                      {t('From a Location to a Decision')}
                       <br />
-                      - in Four Steps.
+                      {t('- in Four Steps.')}
                     </h2>
                   </div>
 
                   <p className="max-w-xl text-sm leading-7 text-slate-600">
-                    Four steps. One system. A council that finally moves as fast as its city does.
+                    {t('Four steps. One system. A council that finally moves as fast as its city does.')}
                   </p>
                 </div>
               </ScrollReveal>
 
-              <div
-                className="
+              <div className="
                   mt-14
                   grid
                   overflow-hidden
@@ -678,54 +536,44 @@ export function LandingPage() {
                   shadow-[0_25px_70px_rgba(15,23,42,.12)]
                   backdrop-blur-md
                   md:grid-cols-4
-                "
-              >
+                ">
                 {[
-                  [
-                    Crosshair,
-                    'Map It',
-                    'Every parcel, road, building and utility line becomes part of one accurate digital map of the council area.',
-                  ],
-                  [
-                    Building2,
-                    'Connect It',
-                    'Land records, permits, tax data and citizen services all link back to the same map.',
-                  ],
-                  [
-                    FileText,
-                    'Act On It',
-                    'Citizens access properties, applications, permits, tax dues, complaints, certificates and notifications from one dashboard.',
-                  ],
-                  [
-                    ShieldCheck,
-                    'Track It',
-                    'Commissioners and division heads can watch revenue, complaints and projects unfold in real time from one dashboard.',
-                  ],
-                ].map(([Icon, title, body], index) => {
-                  const C = Icon as typeof Crosshair
-
-                  const hoverColors = [
-                    'hover:bg-cyan-50/90',
-                    'hover:bg-blue-50/90',
-                    'hover:bg-violet-50/90',
-                    'hover:bg-emerald-50/90',
-                  ]
-
-                  const iconColors = [
-                    'group-hover:bg-cyan-600',
-                    'group-hover:bg-blue-600',
-                    'group-hover:bg-violet-600',
-                    'group-hover:bg-emerald-600',
-                  ]
-
-                  return (
-                    <ScrollReveal
-                      key={String(title)}
-                      delay={index * 100}
-                      className="h-full"
-                    >
-                      <article
-                        className={`
+            [
+                Crosshair,
+                'Map It',
+                'Every parcel, road, building and utility line becomes part of one accurate digital map of the council area.',
+            ],
+            [
+                Building2,
+                'Connect It',
+                'Land records, permits, tax data and citizen services all link back to the same map.',
+            ],
+            [
+                FileText,
+                'Act On It',
+                'Citizens access properties, applications, permits, tax dues, complaints, certificates and notifications from one dashboard.',
+            ],
+            [
+                ShieldCheck,
+                'Track It',
+                'Commissioners and division heads can watch revenue, complaints and projects unfold in real time from one dashboard.',
+            ],
+        ].map(([Icon, title, body], index) => {
+            const C = Icon as typeof Crosshair;
+            const hoverColors = [
+                'hover:bg-cyan-50/90',
+                'hover:bg-blue-50/90',
+                'hover:bg-violet-50/90',
+                'hover:bg-emerald-50/90',
+            ];
+            const iconColors = [
+                'group-hover:bg-cyan-600',
+                'group-hover:bg-blue-600',
+                'group-hover:bg-violet-600',
+                'group-hover:bg-emerald-600',
+            ];
+            return (<ScrollReveal key={String(title)} delay={index * 100} className="h-full">
+                      <article className={`
                           group
                           flex
                           h-full
@@ -742,12 +590,10 @@ export function LandingPage() {
                           md:border-b-0
                           md:border-r
                           md:last:border-r-0
-                        `}
-                      >
+                        `}>
                         
 
-                        <span
-                          className={`
+                        <span className={`
                             mt-10
                             grid
                             h-13
@@ -762,74 +608,63 @@ export function LandingPage() {
                             group-hover:scale-110
                             group-hover:text-white
                             ${iconColors[index]}
-                          `}
-                        >
-                          <C size={21} />
+                          `}>
+                          <C size={21}/>
                         </span>
 
                         <h3 className="mt-7 font-['Manrope'] text-2xl font-semibold text-slate-950">
-                          {String(title)}
+                          {t(String(title))}
                         </h3>
 
                         <p className="mt-3 text-[12px] leading-6 text-slate-500">
-                          {String(body)}
+                          {t(String(body))}
                         </p>
                       </article>
-                    </ScrollReveal>
-                  )
-                })}
+                    </ScrollReveal>);
+        })}
               </div>
             </div>
           </section>
 
           {/* =====================================================
-              GEOGRAPHIC INTELLIGENCE
-              SAME EXACT BACKGROUND CONTINUES
-          ====================================================== */}
+            GEOGRAPHIC INTELLIGENCE
+            SAME EXACT BACKGROUND CONTINUES
+        ====================================================== */}
           <section className="relative min-h-[650px] overflow-hidden text-white">
             {/* Gradient overlay only - background is still same parent image */}
-            <div
-              className="
+            <div className="
                 absolute
                 inset-0
                 bg-gradient-to-r
                 from-slate-950/95
                 via-slate-950/60
                 to-slate-950/20
-              "
-            />
+              "/>
 
-            <div
-              className={`
+            <div className={`
                 ${sectionShell}
                 relative
                 z-10
                 flex
                 min-h-[650px]
                 items-center
-              `}
-            >
-              <ScrollReveal
-                direction="left"
-                className="max-w-3xl"
-              >
+              `}>
+              <ScrollReveal direction="left" className="max-w-3xl">
                 <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-200">
-                  Geospatial foundation
+                  {t('Geospatial foundation')}
                 </span>
 
                 <h2 className="mt-5 font-['Manrope'] text-[clamp(52px,6vw,90px)] font-semibold leading-[.9] tracking-[-.05em]">
-                  Every Layer of the City,
+                  {t('Every Layer of the City,')}
                   <br />
-                  Finally in One Place.
+                  {t('Finally in One Place.')}
                 </h2>
 
                 <p className="mt-6 max-w-xl text-sm leading-7 text-slate-300">
-                  From what’s underground to what’s being planned next — captured, mapped and ready to use.
+                  {t('From what’s underground to what’s being planned next — captured, mapped and ready to use.')}
                 </p>
 
-                <Link
-                  to="/map"
-                  className="
+                <Link to="/map" className="
                     group
                     mt-8
                     inline-flex
@@ -849,18 +684,14 @@ export function LandingPage() {
                     duration-300
                     hover:-translate-y-1
                     hover:bg-teal-300
-                  "
-                >
-                  Open the municipal map
+                  ">
+                  {t('Open the municipal map')}
 
-                  <ArrowRight
-                    size={16}
-                    className="
+                  <ArrowRight size={16} className="
                       transition-transform
                       duration-300
                       group-hover:translate-x-2
-                    "
-                  />
+                    "/>
                 </Link>
               </ScrollReveal>
             </div>
@@ -875,44 +706,31 @@ export function LandingPage() {
             <ScrollReveal>
               <div className="mb-12 text-center">
                 <span className={kicker}>
-                  Connected spatial intelligence
+                  {t('Connected spatial intelligence')}
                 </span>
 
                 <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold tracking-[-.045em]">
-                  One Map. Every Department. Every Answer.
+                  {t('One Map. Every Department. Every Answer.')}
                 </h2>
               </div>
             </ScrollReveal>
 
             <div className="grid auto-rows-[240px] gap-3 md:grid-cols-2 lg:grid-cols-4">
               {[
-                'BackgroundSole.png',
-                'ExploreYourArea.png',
-                'FindCivicPlaces.png',
-                'golden-hour-valley-town-aerial.png',
-                'FollowLocalAction.png',
-              ].map((src, index) => (
-                <ScrollReveal
-                  key={src}
-                  delay={index * 60}
-                  direction="scale"
-                  className={
-                    index === 0
-                      ? 'lg:row-span-2'
-                      : index === 4
-                        ? 'lg:col-span-2'
-                        : ''
-                  }
-                >
+            'BackgroundSole.png',
+            'ExploreYourArea.png',
+            'FindCivicPlaces.png',
+            'golden-hour-valley-town-aerial.png',
+            'FollowLocalAction.png',
+        ].map((src, index) => (<ScrollReveal key={src} delay={index * 60} direction="scale" className={index === 0
+                ? 'lg:row-span-2'
+                : index === 4
+                    ? 'lg:col-span-2'
+                    : ''}>
                   <div className="group h-full overflow-hidden rounded-2xl">
-                    <img
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                      src={`/lgs-media/${src}`}
-                      alt="Mapped municipality view"
-                    />
+                    <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={`/lgs-media/${src}`} alt={t("Mapped municipality view")}/>
                   </div>
-                </ScrollReveal>
-              ))}
+                </ScrollReveal>))}
             </div>
           </div>
         </section>
@@ -920,8 +738,7 @@ export function LandingPage() {
         {/* =====================================================
             FINAL CTA
         ====================================================== */}
-        <section
-          className="
+        <section className="
             relative overflow-hidden
             bg-[url('/lgs-media/Misty%20Tea%20Hills%20at%20Golden%20Sunrise.png')]
             bg-cover bg-center
@@ -932,66 +749,53 @@ export function LandingPage() {
             before:via-[#071522]/78
             before:to-[#071522]/45
             sm:py-28
-          "
-        >
-          <div
-            className={`
+          ">
+          <div className={`
               ${sectionShell}
               relative z-10 grid gap-16
               lg:grid-cols-[1.1fr_.9fr]
               lg:items-center
-            `}
-          >
+            `}>
             {/* =====================================================
-                LEFT CONTENT
-            ===================================================== */}
+            LEFT CONTENT
+        ===================================================== */}
 
             <ScrollReveal>
-              <span
-                className="
+              <span className="
                   text-[10px] font-semibold uppercase
                   tracking-[.17em] text-teal-200
-                "
-              >
-                Ready to transform your council?
+                ">
+                {t('Ready to transform your council?')}
               </span>
 
-              <h2
-                className="
+              <h2 className="
                   mt-4 max-w-3xl
                   font-['Manrope']
                   text-[clamp(48px,5vw,78px)]
                   font-semibold
                   leading-[.95]
                   tracking-[-.045em]
-                "
-              >
-                Request a demo and meet our team.
+                ">
+                {t('Request a demo and meet our team.')}
               </h2>
 
-              <p
-                className="
+              <p className="
                   mt-5 max-w-xl
                   text-sm leading-7
                   text-slate-300
-                "
-              >
-                See how Spatio LGS can bring land records,
-                permits, revenue, assets and citizen services
-                into one connected geospatial platform.
+                ">
+                {t('See how Spatio LGS can bring land records, permits, revenue, assets and citizen services into one connected geospatial platform.')}
               </p>
 
               {/* ===================================================
-                  ACTION BUTTONS
-              =================================================== */}
+            ACTION BUTTONS
+        =================================================== */}
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
 
                 {/* Explore map */}
 
-                <Link
-                  to="/map"
-                  className="
+                <Link to="/map" className="
                     group
                     inline-flex min-h-[52px]
                     items-center justify-center gap-3
@@ -1006,31 +810,22 @@ export function LandingPage() {
                     hover:-translate-y-0.5
                     hover:bg-teal-400
                     hover:shadow-[0_14px_35px_rgba(20,184,166,.28)]
-                  "
-                >
-                  <MapPin
-                    size={16}
-                    strokeWidth={1.8}
-                  />
+                  ">
+                  <MapPin size={16} strokeWidth={1.8}/>
 
                   <span>
-                    Explore map
+                    {t('Explore map')}
                   </span>
 
-                  <ArrowRight
-                    size={16}
-                    className="
+                  <ArrowRight size={16} className="
                       transition-transform duration-200
                       group-hover:translate-x-1
-                    "
-                  />
+                    "/>
                 </Link>
 
                 {/* Request demo */}
 
-                <Link
-                  to="/contact"
-                  className="
+                <Link to="/contact" className="
                     group
                     inline-flex min-h-[52px]
                     items-center justify-center gap-3
@@ -1046,57 +841,44 @@ export function LandingPage() {
                     hover:-translate-y-0.5
                     hover:border-white/40
                     hover:bg-white/[.12]
-                  "
-                >
+                  ">
                   <span>
-                    Request a demo
+                    {t('Request a demo')}
                   </span>
 
-                  <ArrowRight
-                    size={16}
-                    className="
+                  <ArrowRight size={16} className="
                       transition-transform duration-200
                       group-hover:translate-x-1
-                    "
-                  />
+                    "/>
                 </Link>
               </div>
             </ScrollReveal>
 
             {/* =====================================================
-                RIGHT INFORMATION CARDS
-            ===================================================== */}
+            RIGHT INFORMATION CARDS
+        ===================================================== */}
 
-            <ScrollReveal
-              delay={140}
-              direction="right"
-            >
+            <ScrollReveal delay={140} direction="right">
               <div className="grid gap-3">
                 {[
-                  [
-                    Landmark,
-                    'Platform',
-                    'Spatio LGS',
-                  ],
-                  [
-                    MapPin,
-                    'Designed for',
-                    'Municipal & Urban Councils',
-                  ],
-                  [
-                    ShieldCheck,
-                    'Purpose',
-                    'Geospatial decision support',
-                  ],
-                ].map(
-                  ([Icon, label, value]) => {
-                    const C =
-                      Icon as typeof Landmark
-
-                    return (
-                      <div
-                        key={String(label)}
-                        className="
+            [
+                Landmark,
+                'Platform',
+                'Spatio LGS',
+            ],
+            [
+                MapPin,
+                'Designed for',
+                'Municipal & Urban Councils',
+            ],
+            [
+                ShieldCheck,
+                'Purpose',
+                'Geospatial decision support',
+            ],
+        ].map(([Icon, label, value]) => {
+            const C = Icon as typeof Landmark;
+            return (<div key={String(label)} className="
                           flex items-center gap-4
                           rounded-xl
                           border border-white/15
@@ -1107,52 +889,39 @@ export function LandingPage() {
                           transition-all duration-200
                           hover:border-white/25
                           hover:bg-[#071522]/55
-                        "
-                      >
-                        <div
-                          className="
+                        ">
+                        <div className="
                             grid h-10 w-10
                             shrink-0 place-items-center
                             rounded-lg
                             border border-teal-300/15
                             bg-teal-400/10
-                          "
-                        >
-                          <C
-                            size={19}
-                            strokeWidth={1.7}
-                            className="text-teal-200"
-                          />
+                          ">
+                          <C size={19} strokeWidth={1.7} className="text-teal-200"/>
                         </div>
 
                         <span>
-                          <small
-                            className="
+                          <small className="
                               block
                               text-[9px]
                               uppercase
                               tracking-[.13em]
                               text-slate-400
-                            "
-                          >
-                            {String(label)}
+                            ">
+                            {t(String(label))}
                           </small>
 
-                          <strong
-                            className="
+                          <strong className="
                               mt-1 block
                               text-[12px]
                               font-semibold
                               text-white
-                            "
-                          >
-                            {String(value)}
+                            ">
+                            {t(String(value))}
                           </strong>
                         </span>
-                      </div>
-                    )
-                  },
-                )}
+                      </div>);
+        })}
               </div>
             </ScrollReveal>
           </div>
@@ -1160,6 +929,5 @@ export function LandingPage() {
       </main>
 
       <PublicFooter />
-    </div>
-  )
+    </div>);
 }

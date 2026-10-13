@@ -1,8 +1,17 @@
-export const API_BASE_URL = (
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
-  (import.meta.env.VITE_API_URL as string | undefined) ||
-  'http://localhost:4000/api/v1'
-).replace(/\/$/, '')
+function resolveApiBaseUrl(): string {
+  const envUrl = (
+    (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
+    (import.meta.env.VITE_API_URL as string | undefined) ||
+    'http://localhost:4000/api/v1'
+  ).trim().replace(/\/+$/, '')
+
+  if (!envUrl.endsWith('/api/v1') && !envUrl.includes('/api/')) {
+    return `${envUrl}/api/v1`
+  }
+  return envUrl
+}
+
+export const API_BASE_URL = resolveApiBaseUrl()
 
 export class ApiError extends Error {
   status: number

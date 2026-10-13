@@ -8,3 +8,7 @@ dist
 .idea/
 *.log
 *.zip
+
+# gstack runtime binaries
+.agents/skills/gstack/**/*.exe
+.agents/skills/gstack/**/dist/

@@ -1,19 +1,10 @@
-import {
-  ExternalLink,
-} from 'lucide-react'
-
-import {
-  Link,
-} from 'react-router-dom'
-
-import {
-  CivicMap,
-} from './CivicMap'
-
+import { useLanguage } from '../context/LanguageContext'
+import { ExternalLink, } from 'lucide-react';
+import { Link, } from 'react-router-dom';
+import { CivicMap, } from './CivicMap';
 export function DashboardMiniMap() {
-  return (
-    <div
-      className="
+    const { t } = useLanguage();
+    return (<div className="
         relative
         h-[390px]
         w-full
@@ -22,31 +13,26 @@ export function DashboardMiniMap() {
         border
         border-slate-200
         bg-slate-100
-      "
-    >
+      ">
       {/* ===================================================
-          USE THE REAL CMC MAP
+            USE THE REAL CMC MAP
+  
+            This automatically includes:
+  
+            - CMC RGB drone imagery
+            - OSM fallback underneath
+            - CMC buildings
+            - request layer
+            - correct CMC center / zoom
+        ==================================================== */}
 
-          This automatically includes:
-
-          - CMC RGB drone imagery
-          - OSM fallback underneath
-          - CMC buildings
-          - request layer
-          - correct CMC center / zoom
-      ==================================================== */}
-
-      <CivicMap
-        mode="preview"
-      />
+      <CivicMap mode="preview"/>
 
       {/* ===================================================
-          FULL MAP BUTTON
-      ==================================================== */}
+            FULL MAP BUTTON
+        ==================================================== */}
 
-      <Link
-        to="/app/map"
-        className="
+      <Link to="/app/map" className="
           absolute
           right-4
           top-4
@@ -76,16 +62,7 @@ export function DashboardMiniMap() {
 
           hover:bg-teal-50
           hover:text-teal-700
-        "
-      >
-        Full map
-
-        <ExternalLink
-          size={
-            12
-          }
-        />
+        ">{t("Full map")}<ExternalLink size={12}/>
       </Link>
-    </div>
-  )
+    </div>);
 }

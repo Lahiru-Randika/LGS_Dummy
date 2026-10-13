@@ -1,4 +1,5 @@
 import type { RequestStatus, RequestType } from '../types'
+import { useLanguage } from '../context/LanguageContext'
 
 const labels: Record<RequestStatus, string> = {
   CREATED: 'Created', UNDER_REVIEW: 'Under review', ASSIGNED: 'Assigned', INSPECTION_SCHEDULED: 'Inspection scheduled',
@@ -7,6 +8,7 @@ const labels: Record<RequestStatus, string> = {
 }
 
 export function StatusBadge({ status }: { status: RequestStatus }) {
+  const { t } = useLanguage()
   const tone = status === 'RESOLVED' || status === 'CLOSED'
     ? 'success'
     : status.includes('APPROVAL') || status === 'NEEDS_APPROVAL'
@@ -18,9 +20,11 @@ export function StatusBadge({ status }: { status: RequestStatus }) {
           : status === 'CREATED' || status === 'UNDER_REVIEW'
             ? 'neutral'
             : 'info'
-  return <span className={`status-badge status-badge--${tone}`}><i />{labels[status]}</span>
+  return <span className={`status-badge status-badge--${tone}`}><i />{t(labels[status] || status)}</span>
 }
 
 export function TypeBadge({ type }: { type: RequestType }) {
-  return <span className={`type-badge type-badge--${type.toLowerCase()}`}>{type[0] + type.slice(1).toLowerCase()}</span>
+  const { t } = useLanguage()
+  const raw = type[0] + type.slice(1).toLowerCase()
+  return <span className={`type-badge type-badge--${type.toLowerCase()}`}>{t(raw)}</span>
 }

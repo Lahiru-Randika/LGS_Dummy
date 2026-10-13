@@ -1,6 +1,7 @@
 import type {
   MapViewMode,
 } from './types'
+import { useLanguage } from '../../context/LanguageContext'
 
 type MapLegendProps = {
   mapViewMode: MapViewMode
@@ -15,6 +16,7 @@ export function MapLegend({
   showLandParcels,
   showRequests,
 }: MapLegendProps) {
+  const { t } = useLanguage()
   return (
     <div className="civic-enter-up absolute bottom-3 left-1/2 z-[1100] flex -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-xl border border-white/70 bg-white/90 px-2.5 py-1.5 text-[7px] font-semibold text-slate-500 shadow-[0_5px_16px_rgba(15,23,42,.08)] backdrop-blur-xl max-sm:hidden">
       <span className="flex items-center gap-1.5">
@@ -33,8 +35,8 @@ export function MapLegend({
         {mapViewMode === 'rgb'
           ? 'RGB'
           : mapViewMode === 'detailed'
-            ? 'Detailed 2D'
-            : 'Standard'}
+            ? t('Detailed 2D')
+            : t('Standard')}
       </span>
 
       {showBuildings && (
@@ -46,7 +48,7 @@ export function MapLegend({
                 : 'border-2 border-blue-500 bg-blue-100'
             }`}
           />
-          Buildings
+          {t('Buildings')}
         </span>
       )}
 
@@ -65,14 +67,14 @@ export function MapLegend({
                   : 'rgba(251, 191, 36, .28)',
             }}
           />
-          Land parcels
+          {t('Land parcels')}
         </span>
       )}
 
       {showRequests && (
         <span className="flex items-center gap-1.5">
           <i className="h-2.5 w-2.5 rounded-full bg-red-500" />
-          Requests
+          {t('Requests')}
         </span>
       )}
     </div>

@@ -14,6 +14,7 @@ import {
 import type {
   LayerKey,
 } from '../types'
+import { translateText } from '../../../i18n'
 
 type MapUser = {
   role: string
@@ -132,15 +133,13 @@ export function useMapLayerState({
         row,
         index,
       }))
-      .filter(({ row }) =>
-        row[1]
-          .toLowerCase()
-          .includes(
-            layerSearch
-              .trim()
-              .toLowerCase(),
-          ),
-      )
+      .filter(({ row }) => {
+        const query = layerSearch.trim().toLowerCase()
+        if (!query) return true
+        const enLabel = row[1].toLowerCase()
+        const siLabel = translateText(row[1], 'si').toLowerCase()
+        return enLabel.includes(query) || siLabel.includes(query)
+      })
       .sort((a, b) => {
         const aOn =
           layers[a.row[0]]

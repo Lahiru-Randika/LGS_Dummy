@@ -152,3 +152,70 @@
 .language-toggle:hover,.app-language-toggle:hover{background:rgba(45,212,191,.12);border-color:rgba(45,212,191,.45)}
 .language-toggle span,.app-language-toggle span{opacity:.52}.language-toggle .is-active,.app-language-toggle .is-active{opacity:1;color:#2dd4bf}
 html[data-language="si"] body{font-family:"Noto Sans Sinhala","Nirmala UI","Iskoola Pota",system-ui,sans-serif}
+
+
+/* LGS multilingual typography: English styles remain unchanged.
+   Modify the values below to fine-tune Sinhala and future Tamil typography. */
+html[data-language="si"] {
+  --lgs-localized-display-size: clamp(31px, 3.65vw, 59px);
+  --lgs-localized-display-leading: 1.28;
+  --lgs-localized-display-tracking: -0.015em;
+  --lgs-localized-nav-size: 14px;
+}
+html[data-language="si"] h1,
+html[data-language="si"] h2,
+html[data-language="si"] h3,
+html[data-language="si"] h4,
+html[data-language="si"] strong {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  letter-spacing: normal;
+}
+/* Specificity overrides the hero's Tailwind arbitrary font-size/line-height. */
+html[data-language="si"] .lgs-home-hero-title {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  font-size: var(--lgs-localized-display-size);
+  line-height: var(--lgs-localized-display-leading);
+  letter-spacing: var(--lgs-localized-display-tracking);
+  font-weight: 650;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+html[data-language="si"] .lgs-home-hero-description {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  font-size: clamp(12px, 1.05vw, 15px);
+  line-height: 1.85;
+}
+html[data-language="si"] .public-site-nav a {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  font-size: var(--lgs-localized-nav-size);
+  line-height: 1.45;
+  letter-spacing: normal;
+  white-space: nowrap;
+}
+html[data-language="si"] .public-header__actions a {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+html[data-language="si"] .sidebar__nav a,
+html[data-language="si"] .app-shell button,
+html[data-language="si"] .app-shell label {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  letter-spacing: normal;
+}
+@media (max-width: 780px) {
+  html[data-language="si"] { --lgs-localized-display-size: clamp(30px, 7.5vw, 45px); }
+}
+@media (max-width: 480px) {
+  html[data-language="si"] { --lgs-localized-display-size: clamp(27px, 7.2vw, 36px); }
+}
+/* Prepared for a third language: no change to the English presentation. */
+html[data-language="ta"] {
+  --lgs-localized-display-size: clamp(30px, 3.9vw, 64px);
+}
+html[data-language="ta"] .lgs-home-hero-title {
+  font-size: var(--lgs-localized-display-size);
+  line-height: 1.32;
+  letter-spacing: normal;
+}

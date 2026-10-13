@@ -7,6 +7,7 @@ import {
 import type {
   MapViewMode,
 } from './types'
+import { useLanguage } from '../../context/LanguageContext'
 
 type MapViewModeSwitcherProps = {
   value: MapViewMode
@@ -39,6 +40,7 @@ export function MapViewModeSwitcher({
   value,
   onChange,
 }: MapViewModeSwitcherProps) {
+  const { t } = useLanguage()
   return (
     <div
       className="
@@ -71,7 +73,7 @@ export function MapViewModeSwitcher({
         max-sm:bottom-3
         max-sm:left-3
       "
-      aria-label="Map view"
+      aria-label={t('Map view')}
     >
       {/* Small heading */}
       <div
@@ -105,7 +107,7 @@ export function MapViewModeSwitcher({
             group-hover:opacity-100
           "
         >
-          Map view
+          {t('Map view')}
         </span>
       </div>
 
@@ -123,7 +125,7 @@ export function MapViewModeSwitcher({
               <button
                 key={key}
                 type="button"
-                title={label}
+                title={t(label)}
                 onClick={() =>
                   onChange(key)
                 }
@@ -194,7 +196,7 @@ export function MapViewModeSwitcher({
                     group-hover:opacity-100
                   "
                 >
-                  {label}
+                  {t(label)}
                 </span>
               </button>
             )

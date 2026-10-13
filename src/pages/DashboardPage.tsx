@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom'
 import { MetricCard } from '../components/MetricCard'
 import { RequestCard } from '../components/RequestCard'
 import { roleLabel, useAuth } from '../context/AuthContext'
+import { useLanguage } from '../context/LanguageContext'
 import { analyticsService } from '../services/analytics.service'
 import { approvalsService } from '../services/approvals.service'
 import { dashboardService } from '../services/dashboard.service'
@@ -35,41 +36,86 @@ type TrendPoint={day:string;opened:number;resolved:number}
 type DepartmentPoint={name:string;score:number;open:number}
 
 function CitizenDashboard({user,requests,dashboard}:{user:User;requests:ServiceRequest[];dashboard:any}) {
+  const { t } = useLanguage()
   const mine = requests
   const counts=dashboard?.requestCounts||{}
   return <>
-    <div className="welcome-band"><div><span className="eyebrow">Citizen workspace</span><h1>Good afternoon, {user.shortName}.</h1><p>Your local services, requests and places—kept in one clear view.</p></div><Link className="primary-btn" to="/app/map"><MapPin size={16}/>Open civic map</Link></div>
-    <div className="metrics-grid metrics-grid--4"><MetricCard icon={ClipboardCheck} label="My requests" value={Number(counts.total??mine.length)} note="Across all service types"/><MetricCard icon={Clock3} label="Open" value={Number(counts.openCount??mine.filter(r => !['RESOLVED','CLOSED'].includes(r.status)).length)} note="Currently being handled"/><MetricCard icon={CheckCircle2} label="Resolved" value={Number(counts.resolvedCount??mine.filter(r => r.status === 'RESOLVED').length)} note="Completed by the council"/><MetricCard icon={CalendarClock} label="Bookings" value={Number(counts.bookings??mine.filter(r => r.type === 'BOOKING').length)} note="Public facilities" tone="mint"/></div>
-    <div className="dashboard-grid dashboard-grid--citizen"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Recent activity</span><h2>Your requests</h2></div><Link className="text-button" to="/app/requests">View all <ArrowRight size={14}/></Link></div><div className="request-list compact-list">{mine.slice(0,3).map(r => <RequestCard key={r.id} request={r} compact/>)}</div></section><section className="panel place-pulse"><span className="eyebrow">Around you</span><h2>{user.wardId?`Ward ${user.wardId} pulse`:'Municipal pulse'}</h2><p>What the municipality is currently seeing around your area.</p><div className="pulse-row"><span><i className="pulse-dot pulse-dot--orange"/>Environmental</span><strong>—</strong></div><div className="pulse-row"><span><i className="pulse-dot pulse-dot--blue"/>Utilities</span><strong>—</strong></div><div className="pulse-row"><span><i className="pulse-dot pulse-dot--purple"/>Planning</span><strong>—</strong></div><Link to="/app/map" className="secondary-btn full"><Route size={16}/>Explore requests on map</Link></section></div>
+    <div className="welcome-band"><div><span className="eyebrow">{t('Citizen workspace')}</span><h1>{t('Good afternoon')}, {user.shortName}.</h1><p>{t('Your local services, requests and places—kept in one clear view.')}</p></div><Link className="primary-btn" to="/app/map"><MapPin size={16}/>{t('Open civic map')}</Link></div>
+    <div className="metrics-grid metrics-grid--4"><MetricCard icon={ClipboardCheck} label={t('My requests')} value={Number(counts.total??mine.length)} note={t('Across all service types')}/><MetricCard icon={Clock3} label={t('Open')} value={Number(counts.openCount??mine.filter(r => !['RESOLVED','CLOSED'].includes(r.status)).length)} note={t('Currently being handled')}/><MetricCard icon={CheckCircle2} label={t('Resolved')} value={Number(counts.resolvedCount??mine.filter(r => r.status === 'RESOLVED').length)} note={t('Completed by the council')}/><MetricCard icon={CalendarClock} label={t('Bookings')} value={Number(counts.bookings??mine.filter(r => r.type === 'BOOKING').length)} note={t('Public facilities')} tone="mint"/></div>
+    <div className="dashboard-grid dashboard-grid--citizen"><section className="panel"><div className="panel-head"><div><span className="eyebrow">{t('Recent activity')}</span><h2>{t('Your requests')}</h2></div><Link className="text-button" to="/app/requests">{t('View all')} <ArrowRight size={14}/></Link></div><div className="request-list compact-list">{mine.slice(0,3).map(r => <RequestCard key={r.id} request={r} compact/>)}</div></section><section className="panel place-pulse"><span className="eyebrow">{t('Around you')}</span><h2>{user.wardId?`Ward ${user.wardId} pulse`:t('Municipal pulse')}</h2><p>{t('What the municipality is currently seeing around your area.')}</p><div className="pulse-row"><span><i className="pulse-dot pulse-dot--orange"/>{t('Environmental')}</span><strong>—</strong></div><div className="pulse-row"><span><i className="pulse-dot pulse-dot--blue"/>{t('Utilities')}</span><strong>—</strong></div><div className="pulse-row"><span><i className="pulse-dot pulse-dot--purple"/>{t('Planning')}</span><strong>—</strong></div><Link to="/app/map" className="secondary-btn full"><Route size={16}/>{t('Explore requests on map')}</Link></section></div>
   </>
 }
 
 function WorkerDashboard({requests,dashboard}:{requests:ServiceRequest[];dashboard:any}) {
+  const { t } = useLanguage()
   const assigned = requests
   return <>
-    <div className="welcome-band"><div><span className="eyebrow">Field operations</span><h1>Today’s field workload.</h1><p>Prioritized around what needs your attention on the ground.</p></div><Link className="primary-btn" to="/app/map"><Route size={16}/>Open assigned map</Link></div>
-    <div className="metrics-grid metrics-grid--4"><MetricCard icon={ClipboardCheck} label="Assigned" value={Number(dashboard?.assigned??assigned.length)} note="Active cases in your queue"/><MetricCard icon={Target} label="Inspecting" value={assigned.filter(r => r.status === 'INSPECTING').length} note="Field inspection underway" tone="mint"/><MetricCard icon={AlertTriangle} label="Priority" value={Number(dashboard?.highPriority??assigned.filter(r => ['HIGH','URGENT'].includes(r.priority)).length)} note="High attention required"/><MetricCard icon={Clock3} label="Overdue" value="—" note="No overdue endpoint configured" tone="dark"/></div>
-    <div className="dashboard-grid dashboard-grid--worker"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Work queue</span><h2>Assigned to you</h2></div><Link className="text-button" to="/app/requests">Full queue <ArrowRight size={14}/></Link></div><div className="request-list compact-list">{assigned.map(r => <RequestCard key={r.id} request={r} compact/>)}</div></section><section className="panel field-brief"><div className="field-brief__icon"><Sparkles size={22}/></div><span className="eyebrow">Field brief</span><h2>{assigned[0]?.locationLabel||'Assigned route'}</h2><p>Your queue is ordered by server-side priority and the most recently updated municipal work.</p><div className="field-route"><div><span>1</span><strong>{assigned[0]?.id||'—'}</strong><small>{assigned[0]?.title||'No active assignment'}</small></div><i/><div><span>2</span><strong>{assigned[1]?.id||'—'}</strong><small>{assigned[1]?.title||'No second assignment'}</small></div></div><Link className="secondary-btn full" to="/app/map"><MapPin size={16}/>View route context</Link></section></div>
+    <div className="welcome-band"><div><span className="eyebrow">{t('Field operations')}</span><h1>{t('Today’s field workload.')}</h1><p>{t('Prioritized around what needs your attention on the ground.')}</p></div><Link className="primary-btn" to="/app/map"><Route size={16}/>{t('Open assigned map')}</Link></div>
+    <div className="metrics-grid metrics-grid--4"><MetricCard icon={ClipboardCheck} label={t('Assigned')} value={Number(dashboard?.assigned??assigned.length)} note={t('Active cases in your queue')}/><MetricCard icon={Target} label={t('Inspecting')} value={assigned.filter(r => r.status === 'INSPECTING').length} note={t('Field inspection underway')} tone="mint"/><MetricCard icon={AlertTriangle} label={t('Priority')} value={Number(dashboard?.highPriority??assigned.filter(r => ['HIGH','URGENT'].includes(r.priority)).length)} note={t('High attention required')}/><MetricCard icon={Clock3} label={t('Overdue')} value="—" note={t('No overdue endpoint configured')} tone="dark"/></div>
+    <div className="dashboard-grid dashboard-grid--worker"><section className="panel"><div className="panel-head"><div><span className="eyebrow">{t('Work queue')}</span><h2>{t('Assigned to you')}</h2></div><Link className="text-button" to="/app/requests">{t('Full queue')} <ArrowRight size={14}/></Link></div><div className="request-list compact-list">{assigned.map(r => <RequestCard key={r.id} request={r} compact/>)}</div></section><section className="panel field-brief"><div className="field-brief__icon"><Sparkles size={22}/></div><span className="eyebrow">{t('Field brief')}</span><h2>{assigned[0]?.locationLabel||t('Assigned route')}</h2><p>{t('Your queue is ordered by server-side priority and the most recently updated municipal work.')}</p><div className="field-route"><div><span>1</span><strong>{assigned[0]?.id||'—'}</strong><small>{assigned[0]?.title||t('No active assignment')}</small></div><i/><div><span>2</span><strong>{assigned[1]?.id||'—'}</strong><small>{assigned[1]?.title||t('No second assignment')}</small></div></div><Link className="secondary-btn full" to="/app/map"><MapPin size={16}/>{t('View route context')}</Link></section></div>
   </>
 }
 
 function AdminDashboard({requests,dashboard,trendData}:{requests:ServiceRequest[];dashboard:any;trendData:TrendPoint[]}) {
+  const { t } = useLanguage()
   const newCount=requests.filter(r=>r.status==='CREATED').length
   const inProgress=requests.filter(r=>['ASSIGNED','INSPECTION_SCHEDULED','INSPECTING','ACTION_REQUIRED','IN_PROGRESS'].includes(r.status)).length
   const unassigned=requests.filter(r=>!r.assignedTo&&!['RESOLVED','CLOSED','REJECTED','CANCELLED','DUPLICATE'].includes(r.status))
   return <>
-    <div className="welcome-band"><div><span className="eyebrow">Municipal operations</span><h1>Keep the service flow moving.</h1><p>See new demand, ownership gaps and the work most likely to stall.</p></div><Link className="primary-btn" to="/app/requests"><UserCheck size={16}/>Open request queue</Link></div>
-    <div className="metrics-grid metrics-grid--6"><MetricCard icon={ClipboardCheck} label="New" value={newCount}/><MetricCard icon={Users} label="Unassigned" value={Number(dashboard?.unassigned??unassigned.length)}/><MetricCard icon={Clock3} label="In progress" value={inProgress}/><MetricCard icon={FileCheck2} label="Approval" value={Number(dashboard?.awaitingApproval??0)}/><MetricCard icon={CheckCircle2} label="Resolved" value={Number(dashboard?.resolvedRequests??0)}/><MetricCard icon={AlertTriangle} label="Overdue" value="—" tone="dark"/></div>
-    <div className="dashboard-grid dashboard-grid--admin"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Request velocity</span><h2>Opened vs resolved</h2></div><span className="trend-positive"><TrendingUp size={15}/>Live data</span></div><div className="chart-wrap"><ResponsiveContainer width="100%" height="100%"><AreaChart data={trendData} margin={{top:10,right:10,left:-24,bottom:0}}><defs><linearGradient id="opened" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2563eb" stopOpacity="0.28"/><stop offset="1" stopColor="#2563eb" stopOpacity="0"/></linearGradient></defs><CartesianGrid vertical={false} stroke="#e7ecf2"/><XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#718096'}}/><YAxis axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#94a3b8'}}/><Tooltip/><Area type="monotone" dataKey="opened" stroke="#2563eb" strokeWidth={2.4} fill="url(#opened)"/><Area type="monotone" dataKey="resolved" stroke="#0f766e" strokeWidth={2.4} fillOpacity={0}/></AreaChart></ResponsiveContainer></div></section><section className="panel"><div className="panel-head"><div><span className="eyebrow">Attention queue</span><h2>Needs ownership</h2></div><span className="queue-count">{unassigned.length}</span></div><div className="attention-list">{unassigned.slice(0,4).map(r => <Link key={r.id} to={`/app/requests/${r.id}`}><span className={`attention-dot attention-dot--${r.priority.toLowerCase()}`}/><div><strong>{r.title}</strong><small>{r.department} · {r.ward}</small></div><ArrowRight size={15}/></Link>)}</div></section></div>
+    <div className="welcome-band"><div><span className="eyebrow">{t('Municipal operations')}</span><h1>{t('Keep the service flow moving.')}</h1><p>{t('See new demand, ownership gaps and the work most likely to stall.')}</p></div><Link className="primary-btn" to="/app/requests"><UserCheck size={16}/>{t('Open request queue')}</Link></div>
+    <div className="metrics-grid metrics-grid--6"><MetricCard icon={ClipboardCheck} label={t('New')} value={newCount}/><MetricCard icon={Users} label={t('Unassigned')} value={Number(dashboard?.unassigned??unassigned.length)}/><MetricCard icon={Clock3} label={t('In progress')} value={inProgress}/><MetricCard icon={FileCheck2} label={t('Approval')} value={Number(dashboard?.awaitingApproval??0)}/><MetricCard icon={CheckCircle2} label={t('Resolved')} value={Number(dashboard?.resolvedRequests??0)}/><MetricCard icon={AlertTriangle} label={t('Overdue')} value="—" tone="dark"/></div>
+    <div className="dashboard-grid dashboard-grid--admin"><section className="panel"><div className="panel-head"><div><span className="eyebrow">{t('Request velocity')}</span><h2>{t('Opened vs resolved')}</h2></div><span className="trend-positive"><TrendingUp size={15}/>{t('Live data')}</span></div><div className="chart-wrap"><ResponsiveContainer width="100%" height="100%"><AreaChart data={trendData} margin={{top:10,right:10,left:-24,bottom:0}}><defs><linearGradient id="opened" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2563eb" stopOpacity="0.28"/><stop offset="1" stopColor="#2563eb" stopOpacity="0"/></linearGradient></defs><CartesianGrid vertical={false} stroke="#e7ecf2"/><XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#718096'}}/><YAxis axisLine={false} tickLine={false} tick={{fontSize:11,fill:'#94a3b8'}}/><Tooltip/><Area type="monotone" dataKey="opened" stroke="#2563eb" strokeWidth={2.4} fill="url(#opened)"/><Area type="monotone" dataKey="resolved" stroke="#0f766e" strokeWidth={2.4} fillOpacity={0}/></AreaChart></ResponsiveContainer></div></section><section className="panel"><div className="panel-head"><div><span className="eyebrow">{t('Attention queue')}</span><h2>{t('Needs ownership')}</h2></div><span className="queue-count">{unassigned.length}</span></div><div className="attention-list">{unassigned.slice(0,4).map(r => <Link key={r.id} to={`/app/requests/${r.id}`}><span className={`attention-dot attention-dot--${r.priority.toLowerCase()}`}/><div><strong>{r.title}</strong><small>{t(r.department || 'Unassigned')} · {t(r.ward || 'Unassigned ward')}</small></div><ArrowRight size={15}/></Link>)}</div></section></div>
   </>
 }
 
 function ApproverDashboard({requests,dashboard,userCount}:{requests:ServiceRequest[];dashboard:any;userCount:number}) {
+  const { t } = useLanguage()
   const pending = requests.filter(r => r.status.includes('APPROVAL') || r.status === 'NEEDS_APPROVAL')
   return <>
-    <div className="welcome-band"><div><span className="eyebrow">Approval center</span><h1>Decisions with context.</h1><p>Review the case, place, supporting history and operational impact before acting.</p></div><Link className="primary-btn" to="/app/approvals"><FileCheck2 size={16}/>Review approvals</Link></div>
-    <div className="metrics-grid metrics-grid--4"><MetricCard icon={FileCheck2} label="Awaiting decision" value={Number(dashboard?.awaitingDecision??pending.length)} note="Across active workflows"/><MetricCard icon={Clock3} label="Oldest waiting" value={`${Number(dashboard?.oldestWaitingHours??0)}h`} note="Within current SLA"/><MetricCard icon={CheckCircle2} label="Approved this week" value={Number(dashboard?.approvedThisWeek??0)} note="Recorded by backend" tone="mint"/><MetricCard icon={Users} label="Authorized users" value={userCount} note="Government accounts"/></div>
-    <div className="dashboard-grid dashboard-grid--citizen"><section className="panel"><div className="panel-head"><div><span className="eyebrow">Priority decisions</span><h2>Awaiting your review</h2></div><Link className="text-button" to="/app/approvals">View all <ArrowRight size={14}/></Link></div><div className="request-list compact-list">{pending.map(r => <RequestCard key={r.id} request={r} compact/>)}</div></section><section className="panel decision-standards"><span className="eyebrow">Decision quality</span><h2>Approval standards</h2><p>Every decision should retain its rationale, supporting documents and who approved it.</p>{['Context verified','Impact assessed','Supporting evidence present','Decision rationale recorded'].map(item => <div className="standard-row" key={item}><CheckCircle2 size={17}/>{item}</div>)}</section></div>
+    <div className="welcome-band">
+      <div>
+        <span className="eyebrow">{t('Approval center')}</span>
+        <h1>{t('Decisions with context.')}</h1>
+        <p>{t('Review the case, place, supporting history and operational impact before acting.')}</p>
+      </div>
+      <Link className="primary-btn" to="/app/approvals">
+        <FileCheck2 size={16}/>
+        {t('Review approvals')}
+      </Link>
+    </div>
+    <div className="metrics-grid metrics-grid--4">
+      <MetricCard icon={FileCheck2} label={t('Awaiting decision')} value={Number(dashboard?.awaitingDecision??pending.length)} note={t('Across active workflows')}/>
+      <MetricCard icon={Clock3} label={t('Oldest waiting')} value={`${Number(dashboard?.oldestWaitingHours??0)}h`} note={t('Within current SLA')}/>
+      <MetricCard icon={CheckCircle2} label={t('Approved this week')} value={Number(dashboard?.approvedThisWeek??0)} note={t('Recorded by backend')} tone="mint"/>
+      <MetricCard icon={Users} label={t('Authorized users')} value={userCount} note={t('Government accounts')}/>
+    </div>
+    <div className="dashboard-grid dashboard-grid--citizen">
+      <section className="panel">
+        <div className="panel-head">
+          <div>
+            <span className="eyebrow">{t('Priority decisions')}</span>
+            <h2>{t('Awaiting your review')}</h2>
+          </div>
+          <Link className="text-button" to="/app/approvals">
+            {t('View all')} <ArrowRight size={14}/>
+          </Link>
+        </div>
+        <div className="request-list compact-list">
+          {pending.map(r => <RequestCard key={r.id} request={r} compact/>)}
+        </div>
+      </section>
+      <section className="panel decision-standards">
+        <span className="eyebrow">{t('Decision quality')}</span>
+        <h2>{t('Approval standards')}</h2>
+        <p>{t('Every decision should retain its rationale, supporting documents and who approved it.')}</p>
+        {['Context verified','Impact assessed','Supporting evidence present','Decision rationale recorded'].map(item => (
+          <div className="standard-row" key={item}>
+            <CheckCircle2 size={17}/>
+            {t(item)}
+          </div>
+        ))}
+      </section>
+    </div>
   </>
 }
 
@@ -96,6 +142,7 @@ function SuperiorDashboard({
     any[]
 
 }) {
+  const { t } = useLanguage()
   const total =
     Number(
       dashboard?.totalRequests ??
@@ -158,15 +205,15 @@ function SuperiorDashboard({
           <span
             className="eyebrow"
           >
-            Municipal overview
+            {t('Municipal overview')}
           </span>
 
           <h1>
-            Good afternoon, Director.
+            {t('Good afternoon, Director.')}
           </h1>
 
           <p>
-            What is happening across the municipality, and where leadership attention can have the most impact.
+            {t('What is happening across the municipality, and where leadership attention can have the most impact.')}
           </p>
         </div>
 
@@ -265,11 +312,11 @@ function SuperiorDashboard({
               <span
                 className="eyebrow"
               >
-                Municipal geography
+                {t('Municipal geography')}
               </span>
 
               <h2>
-                Live request map
+                {t('Live request map')}
               </h2>
             </div>
 
@@ -282,7 +329,7 @@ function SuperiorDashboard({
                 }
               />
 
-              Live data
+              {t('Live data')}
             </span>
           </div>
 
@@ -305,11 +352,11 @@ function SuperiorDashboard({
               <span
                 className="eyebrow"
               >
-                Service health
+                {t('Service health')}
               </span>
 
               <h2>
-                Department performance
+                {t('Department performance')}
               </h2>
             </div>
 
@@ -317,7 +364,7 @@ function SuperiorDashboard({
               className="text-button"
               to="/app/analytics"
             >
-              Analytics
+              {t('Analytics')}
 
               <ArrowRight
                 size={
@@ -369,7 +416,7 @@ function SuperiorDashboard({
                     {
                       department.open
                     }{' '}
-                    open requests
+                    {t('open requests')}
                   </small>
                 </div>
               ),
@@ -408,11 +455,11 @@ function SuperiorDashboard({
               <span
                 className="eyebrow"
               >
-                Municipal demand
+                {t('Municipal demand')}
               </span>
 
               <h2>
-                Requests & resolutions
+                {t('Requests & resolutions')}
               </h2>
             </div>
 
@@ -425,7 +472,7 @@ function SuperiorDashboard({
                 }
               />
 
-              Live data
+              {t('Live data')}
             </span>
           </div>
 
@@ -542,11 +589,11 @@ function SuperiorDashboard({
           <div className="panel-head">
             <div>
               <span className="eyebrow">
-                Geographic attention
+                {t('Geographic attention')}
               </span>
 
               <h2>
-                Most reported locations
+                {t('Most reported locations')}
               </h2>
             </div>
 
@@ -554,7 +601,7 @@ function SuperiorDashboard({
               to="/app/map"
               className="text-button"
             >
-              View map
+              {t('View map')}
               <ArrowRight size={14} />
             </Link>
           </div>
@@ -617,7 +664,7 @@ function SuperiorDashboard({
                       </strong>
 
                       <span className="mt-0.5 block text-[9px] text-slate-400">
-                        {reports} {reports === 1 ? 'report' : 'reports'}
+                        {reports} {reports === 1 ? t('report') : t('reports')}
                       </span>
                     </div>
 
@@ -661,11 +708,11 @@ function SuperiorDashboard({
                 />
 
                 <strong className="mt-2 text-[10px] text-slate-600">
-                  No hotspot data yet
+                  {t('No hotspot data yet')}
                 </strong>
 
                 <span className="mt-1 text-[9px] text-slate-400">
-                  Reported locations will appear here.
+                  {t('Reported locations will appear here.')}
                 </span>
               </div>
             )}
@@ -678,6 +725,7 @@ function SuperiorDashboard({
 
 export function DashboardPage() {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const [dashboard,setDashboard]=useState<any>({})
   const [requests,setRequests]=useState<ServiceRequest[]>([])
   const [trendRaw,setTrendRaw]=useState<any[]>([])
@@ -706,7 +754,7 @@ export function DashboardPage() {
   const departmentData=useMemo(()=>departmentRaw.slice(0,6).map(item=>({name:String(item.name||'Department'),open:Number(item.open||0),score:Number(item.total||0)>0?Math.round(Number(item.resolved||0)/Number(item.total||1)*100):0})),[departmentRaw])
 
   if (!user) return null
-  return <div className="page dashboard-page"><div className="page-role-strip"><span className="eyebrow">{roleLabel(user.role)}</span></div>{user.role === 'CITIZEN' ? <CitizenDashboard user={user} requests={requests} dashboard={dashboard}/> : user.role === 'GOV_WORKER' ? <WorkerDashboard requests={requests} dashboard={dashboard}/> : user.role === 'GOV_ADMIN' ? <AdminDashboard requests={requests} dashboard={dashboard} trendData={trendData}/> : user.role === 'APPROVER' ? <ApproverDashboard requests={requests} dashboard={dashboard} userCount={userCount}/> : 
+  return <div className="page dashboard-page"><div className="page-role-strip"><span className="eyebrow">{t(roleLabel(user.role))}</span></div>{user.role === 'CITIZEN' ? <CitizenDashboard user={user} requests={requests} dashboard={dashboard}/> : user.role === 'GOV_WORKER' ? <WorkerDashboard requests={requests} dashboard={dashboard}/> : user.role === 'GOV_ADMIN' ? <AdminDashboard requests={requests} dashboard={dashboard} trendData={trendData}/> : user.role === 'APPROVER' ? <ApproverDashboard requests={requests} dashboard={dashboard} userCount={userCount}/> : 
   <SuperiorDashboard
     dashboard={
       dashboard

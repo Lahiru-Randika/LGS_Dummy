@@ -1,81 +1,37 @@
-import {
-  ArrowLeft,
-  ArrowRight,
-  Eye,
-  EyeOff,
-  KeyRound,
-  LockKeyhole,
-  Mail,
-  ShieldCheck,
-} from 'lucide-react'
-
-import {
-  FormEvent,
-  useState,
-} from 'react'
-
-import {
-  Link,
-  useNavigate,
-} from 'react-router-dom'
-
-import { Brand } from '../components/Brand'
-import { useAuth } from '../context/AuthContext'
-import { ApiError } from '../services/http'
-
+import { useLanguage } from '../context/LanguageContext'
+import { ArrowLeft, ArrowRight, Eye, EyeOff, KeyRound, LockKeyhole, Mail, ShieldCheck, } from 'lucide-react';
+import { FormEvent, useState, } from 'react';
+import { Link, useNavigate, } from 'react-router-dom';
+import { Brand } from '../components/Brand';
+import { useAuth } from '../context/AuthContext';
+import { ApiError } from '../services/http';
 export function LoginPage() {
-  const [email, setEmail] =
-    useState('')
-
-  const [password, setPassword] =
-    useState('')
-
-  const [
-    showPassword,
-    setShowPassword,
-  ] = useState(false)
-
-  const [error, setError] =
-    useState('')
-
-  const [
-    submitting,
-    setSubmitting,
-  ] = useState(false)
-
-  const { login } = useAuth()
-
-  const navigate =
-    useNavigate()
-
-  async function submit(
-    event: FormEvent,
-  ) {
-    event.preventDefault()
-
-    setError('')
-    setSubmitting(true)
-
-    try {
-      await login(
-        email.trim(),
-        password,
-      )
-
-      navigate('/app')
-    } catch (cause) {
-      setError(
-        cause instanceof ApiError
-          ? cause.message
-          : 'Unable to sign in. Please try again.',
-      )
-    } finally {
-      setSubmitting(false)
+    const { t } = useLanguage();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword,] = useState(false);
+    const [error, setError] = useState('');
+    const [submitting, setSubmitting,] = useState(false);
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    async function submit(event: FormEvent) {
+        event.preventDefault();
+        setError('');
+        setSubmitting(true);
+        try {
+            await login(email.trim(), password);
+            navigate('/app');
+        }
+        catch (cause) {
+            setError(cause instanceof ApiError
+                ? cause.message
+                : 'Unable to sign in. Please try again.');
+        }
+        finally {
+            setSubmitting(false);
+        }
     }
-  }
-
-  return (
-    <>
+    return (<>
       <style>{`
         .login-page-new {
           isolation: isolate;
@@ -209,67 +165,54 @@ export function LoginPage() {
         }
       `}</style>
 
-      <main
-        className="
+      <main className="
           login-page-new
           relative
           h-[100dvh]
           w-full
           overflow-hidden
           bg-slate-950
-        "
-      >
+        ">
         {/* =====================================================
             FULL SCREEN BACKGROUND
         ====================================================== */}
 
-        <div
-          className="
+        <div className="
             absolute
             inset-0
             scale-[1.02]
             bg-cover
             bg-center
             bg-no-repeat
-          "
-          style={{
-            backgroundImage:
-              "url('/lgs-media/BackgroundSole.png')",
-          }}
-        />
+          " style={{
+            backgroundImage: "url('/lgs-media/BackgroundSole.png')",
+        }}/>
 
         {/* Main dark overlay */}
-        <div
-          className="
+        <div className="
             absolute
             inset-0
             bg-slate-950/45
-          "
-        />
+          "/>
 
         {/* Left/right cinematic gradient */}
-        <div
-          className="
+        <div className="
             absolute
             inset-0
 
             bg-[linear-gradient(90deg,rgba(3,15,20,.72)_0%,rgba(3,15,20,.32)_45%,rgba(3,15,20,.58)_100%)]
-          "
-        />
+          "/>
 
         {/* Bottom vignette */}
-        <div
-          className="
+        <div className="
             absolute
             inset-0
 
             bg-[linear-gradient(0deg,rgba(2,12,17,.70)_0%,transparent_45%)]
-          "
-        />
+          "/>
 
         {/* Teal ambient glow */}
-        <div
-          className="
+        <div className="
             pointer-events-none
             absolute
             -left-[15%]
@@ -283,15 +226,13 @@ export function LoginPage() {
             bg-teal-500/[0.10]
 
             blur-[140px]
-          "
-        />
+          "/>
 
         {/* =====================================================
             BRAND
         ====================================================== */}
 
-        <header
-          className="
+        <header className="
             absolute
             left-0
             right-0
@@ -306,10 +247,9 @@ export function LoginPage() {
 
             max-sm:h-[64px]
             max-sm:px-5
-          "
-        >
+          ">
           <div className="origin-left scale-[0.90]">
-            <Brand light />
+            <Brand light/>
           </div>
         </header>
 
@@ -317,8 +257,7 @@ export function LoginPage() {
             MAIN CONTENT
         ====================================================== */}
 
-        <div
-          className="
+        <div className="
             relative
             z-20
 
@@ -339,14 +278,12 @@ export function LoginPage() {
             max-lg:pt-[64px]
 
             max-sm:px-4
-          "
-        >
+          ">
           {/* ===================================================
-              LEFT
-          ==================================================== */}
+            LEFT
+        ==================================================== */}
 
-          <section
-            className="
+          <section className="
               login-left-enter
 
               flex
@@ -356,11 +293,9 @@ export function LoginPage() {
               pr-[7vw]
 
               max-lg:hidden
-            "
-          >
+            ">
             <div className="max-w-[560px]">
-              <span
-                className="
+              <span className="
                   inline-flex
                   items-center
                   gap-3
@@ -371,15 +306,10 @@ export function LoginPage() {
                   tracking-[.22em]
 
                   text-teal-300
-                "
-              >
-                <i className="h-7 w-[2px] rounded-full bg-teal-300" />
+                ">
+                <i className="h-7 w-[2px] rounded-full bg-teal-300"/>{t("Welcome to LGS")}</span>
 
-                Welcome to LGS
-              </span>
-
-              <h1
-                className="
+              <h1 className="
                   mt-6
 
                   font-['Manrope']
@@ -393,15 +323,9 @@ export function LoginPage() {
                   tracking-[-.06em]
 
                   text-white
-                "
-              >
-                Welcome
-                <br />
-                Back.
-              </h1>
+                ">{t("Welcome")}<br />{t("Back.")}</h1>
 
-              <p
-                className="
+              <p className="
                   mt-7
 
                   max-w-[440px]
@@ -411,17 +335,12 @@ export function LoginPage() {
                   leading-7
 
                   text-white/70
-                "
-              >
-                Access maps, service requests and municipal operations from one secure workspace.
-              </p>
+                ">{t("Access maps, service requests and municipal operations from one secure workspace.")}</p>
 
               {/* Compact trust row */}
 
               <div className="mt-9">
-                <Link
-                  to="/"
-                  className="
+                <Link to="/" className="
                     group
                     inline-flex
                     items-center
@@ -446,10 +365,8 @@ export function LoginPage() {
                     hover:-translate-y-0.5
                     hover:border-white/25
                     hover:bg-white/[.12]
-                  "
-                >
-                  <span
-                    className="
+                  ">
+                  <span className="
                       grid
                       h-9
                       w-9
@@ -465,19 +382,14 @@ export function LoginPage() {
                       duration-200
 
                       group-hover:-translate-x-0.5
-                    "
-                  >
-                    <ArrowLeft size={16} />
+                    ">
+                    <ArrowLeft size={16}/>
                   </span>
 
                   <span>
-                    <strong className="block text-[10px] font-bold text-white/90">
-                      Back to Home
-                    </strong>
+                    <strong className="block text-[10px] font-bold text-white/90">{t("Back to Home")}</strong>
 
-                    <small className="mt-0.5 block text-[8px] text-white/45">
-                      Return to the main website
-                    </small>
+                    <small className="mt-0.5 block text-[8px] text-white/45">{t("Return to the main website")}</small>
                   </span>
                 </Link>
               </div>
@@ -485,11 +397,10 @@ export function LoginPage() {
           </section>
 
           {/* ===================================================
-              RIGHT LOGIN
-          ==================================================== */}
+            RIGHT LOGIN
+        ==================================================== */}
 
-          <section
-            className="
+          <section className="
               login-right-enter
 
               flex
@@ -499,10 +410,8 @@ export function LoginPage() {
               justify-center
 
               max-lg:h-full
-            "
-          >
-            <div
-              className="
+            ">
+            <div className="
                 w-full
                 max-w-[450px]
 
@@ -522,27 +431,21 @@ export function LoginPage() {
                 max-lg:max-w-[440px]
                 max-sm:rounded-[20px]
                 max-sm:p-5
-              "
-            >
+              ">
               {/* Heading */}
 
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span
-                    className="
+                  <span className="
                       text-[8px]
                       font-extrabold
                       uppercase
                       tracking-[.18em]
 
                       text-teal-300
-                    "
-                  >
-                    Secure access
-                  </span>
+                    ">{t("Secure access")}</span>
 
-                  <h2
-                    className="
+                  <h2 className="
                       mt-1.5
 
                       font-['Manrope']
@@ -552,14 +455,10 @@ export function LoginPage() {
                       tracking-[-.045em]
 
                       text-white
-                    "
-                  >
-                    Sign in
-                  </h2>
+                    ">{t("Sign in")}</h2>
                 </div>
 
-                <span
-                  className="
+                <span className="
                     login-float-icon
 
                     grid
@@ -577,32 +476,22 @@ export function LoginPage() {
                     text-teal-200
 
                     backdrop-blur-md
-                  "
-                >
-                  <LockKeyhole
-                    size={18}
-                    strokeWidth={1.8}
-                  />
+                  ">
+                  <LockKeyhole size={18} strokeWidth={1.8}/>
                 </span>
               </div>
 
-              <p className="mt-3 text-[10px] leading-5 text-white/55">
-                Enter your account details below.
-              </p>
+              <p className="mt-3 text-[10px] leading-5 text-white/55">{t("Enter your account details below.")}</p>
 
               {/* =================================================
-                  FORM
-              ================================================== */}
+            FORM
+        ================================================== */}
 
-              <form
-                onSubmit={submit}
-                className="mt-7"
-              >
+              <form onSubmit={submit} className="mt-7">
                 {/* EMAIL */}
 
                 <label className="block">
-                  <span
-                    className="
+                  <span className="
                       mb-2
                       block
 
@@ -612,13 +501,9 @@ export function LoginPage() {
                       tracking-[.12em]
 
                       text-white/65
-                    "
-                  >
-                    Email address
-                  </span>
+                    ">{t("Email address")}</span>
 
-                  <div
-                    className="
+                  <div className="
                       login-field-new
 
                       flex
@@ -636,38 +521,20 @@ export function LoginPage() {
                       px-4
 
                       shadow-[0_8px_24px_rgba(0,0,0,.08)]
-                    "
-                  >
-                    <Mail
-                      size={16}
-                      strokeWidth={1.7}
-                      className="
+                    ">
+                    <Mail size={16} strokeWidth={1.7} className="
                         shrink-0
                         text-slate-400
-                      "
-                    />
+                      "/>
 
-                    <input
-                      className="login-input-new"
-                      type="email"
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(event) =>
-                        setEmail(
-                          event.target.value,
-                        )
-                      }
-                      required
-                    />
+                    <input className="login-input-new" type="email" autoComplete="email" placeholder={t("you@example.com")} value={email} onChange={(event) => setEmail(event.target.value)} required/>
                   </div>
                 </label>
 
                 {/* PASSWORD */}
 
                 <label className="mt-4 block">
-                  <span
-                    className="
+                  <span className="
                       mb-2
                       block
 
@@ -677,13 +544,9 @@ export function LoginPage() {
                       tracking-[.12em]
 
                       text-white/65
-                    "
-                  >
-                    Password
-                  </span>
+                    ">{t("Password")}</span>
 
-                  <div
-                    className="
+                  <div className="
                       login-field-new
 
                       flex
@@ -701,49 +564,19 @@ export function LoginPage() {
                       px-4
 
                       shadow-[0_8px_24px_rgba(0,0,0,.08)]
-                    "
-                  >
-                    <KeyRound
-                      size={16}
-                      strokeWidth={1.7}
-                      className="
+                    ">
+                    <KeyRound size={16} strokeWidth={1.7} className="
                         shrink-0
                         text-slate-400
-                      "
-                    />
+                      "/>
 
-                    <input
-                      className="login-input-new"
-                      type={
-                        showPassword
-                          ? 'text'
-                          : 'password'
-                      }
-                      autoComplete="current-password"
-                      placeholder="Your password"
-                      value={password}
-                      onChange={(event) =>
-                        setPassword(
-                          event.target.value,
-                        )
-                      }
-                      required
-                    />
+                    <input className="login-input-new" type={showPassword
+            ? 'text'
+            : 'password'} autoComplete="current-password" placeholder={t("Your password")} value={password} onChange={(event) => setPassword(event.target.value)} required/>
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowPassword(
-                          (current) =>
-                            !current,
-                        )
-                      }
-                      aria-label={
-                        showPassword
-                          ? 'Hide password'
-                          : 'Show password'
-                      }
-                      className="
+                    <button type="button" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword
+            ? 'Hide password'
+            : 'Show password'} className="
                         grid
                         h-8
                         w-8
@@ -766,22 +599,15 @@ export function LoginPage() {
 
                         hover:bg-slate-100
                         hover:text-slate-700
-                      "
-                    >
-                      {showPassword ? (
-                        <EyeOff size={15} />
-                      ) : (
-                        <Eye size={15} />
-                      )}
+                      ">
+                      {showPassword ? (<EyeOff size={15}/>) : (<Eye size={15}/>)}
                     </button>
                   </div>
                 </label>
 
                 {/* ERROR */}
 
-                {error && (
-                  <div
-                    className="
+                {error && (<div className="
                       mt-4
 
                       flex
@@ -804,25 +630,17 @@ export function LoginPage() {
                       text-red-100
 
                       backdrop-blur-md
-                    "
-                  >
-                    <KeyRound
-                      size={13}
-                      className="mt-px shrink-0"
-                    />
+                    ">
+                    <KeyRound size={13} className="mt-px shrink-0"/>
 
                     <span>
                       {error}
                     </span>
-                  </div>
-                )}
+                  </div>)}
 
                 {/* SUBMIT */}
 
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="
+                <button type="submit" disabled={submitting} className="
                     group
 
                     mt-5
@@ -865,32 +683,25 @@ export function LoginPage() {
 
                     disabled:cursor-not-allowed
                     disabled:opacity-60
-                  "
-                >
+                  ">
                   {submitting
-                    ? 'Signing in…'
-                    : 'Sign in'}
+            ? 'Signing in…'
+            : 'Sign in'}
 
-                  {!submitting && (
-                    <ArrowRight
-                      size={15}
-                      className="
+                  {!submitting && (<ArrowRight size={15} className="
                         transition-transform
                         duration-300
 
                         group-hover:translate-x-1
-                      "
-                    />
-                  )}
+                      "/>)}
                 </button>
               </form>
 
               {/* =================================================
-                  ACCOUNT LINK
-              ================================================== */}
+            ACCOUNT LINK
+        ================================================== */}
 
-              <div
-                className="
+              <div className="
                   mt-5
 
                   border-t
@@ -899,14 +710,10 @@ export function LoginPage() {
                   pt-4
 
                   text-center
-                "
-              >
-                <span className="text-[9px] text-white/55">
-                  New resident?{' '}
+                ">
+                <span className="text-[9px] text-white/55">{t("New resident?")}{' '}
 
-                  <Link
-                    to="/register"
-                    className="
+                  <Link to="/register" className="
                       font-extrabold
 
                       !text-teal-300
@@ -914,10 +721,7 @@ export function LoginPage() {
                       transition
 
                       hover:!text-teal-200
-                    "
-                  >
-                    Create account
-                  </Link>
+                    ">{t("Create account")}</Link>
                 </span>
               </div>
             </div>
@@ -925,6 +729,5 @@ export function LoginPage() {
         </div>
 
       </main>
-    </>
-  )
+    </>);
 }

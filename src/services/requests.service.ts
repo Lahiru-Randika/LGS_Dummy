@@ -11,7 +11,7 @@ import type {
   ServiceRequest,
   StatusEvent,
 } from '../types'
-import { apiData, apiDataCached, apiRequestCached, apiUrl, invalidateApiCache, queryString } from './http'
+import { ApiError, apiData, apiDataCached, apiRequestCached, apiUrl, invalidateApiCache, queryString } from './http'
 
 function numberValue(value: unknown, fallback = 0) {
   const n = Number(value)

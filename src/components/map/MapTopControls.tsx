@@ -6,6 +6,7 @@ import {
 import type {
   RefObject,
 } from 'react'
+import { useLanguage } from '../../context/LanguageContext'
 
 type MapTopControlsProps = {
   layerButtonRef: RefObject<HTMLButtonElement | null>
@@ -26,6 +27,7 @@ export function MapTopControls({
   onShowAll,
   onReport,
 }: MapTopControlsProps) {
+  const { t } = useLanguage()
   return (
     <div className="civic-enter-up absolute bottom-4 right-4 z-[1400] flex flex-col items-stretch gap-2 max-sm:bottom-3 max-sm:right-3">
       <button
@@ -43,7 +45,7 @@ export function MapTopControls({
           strokeWidth={1.9}
           className="shrink-0"
         />
-        <span>Layers</span>
+        <span>{t('Layers')}</span>
       </button>
 
       <button
@@ -56,7 +58,7 @@ export function MapTopControls({
           strokeWidth={1.9}
           className="shrink-0"
         />
-        <span>Show all</span>
+        <span>{t('Show all')}</span>
       </button>
 
       {isCitizen && (
@@ -72,8 +74,8 @@ export function MapTopControls({
 
           <span>
             {hasPendingRequestLocation
-              ? 'Report here'
-              : 'Report'}
+              ? t('Report here')
+              : t('Report')}
           </span>
         </button>
       )}

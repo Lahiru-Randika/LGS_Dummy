@@ -7,6 +7,7 @@ import {
 import type {
   RefObject,
 } from 'react'
+import { useLanguage } from '../../context/LanguageContext'
 
 type BaseSearchResult = {
   id: string
@@ -38,6 +39,7 @@ export function MapSearchBar<T extends BaseSearchResult>({
   onClear,
   onSelect,
 }: MapSearchBarProps<T>) {
+  const { t } = useLanguage()
   return (
     <div
       ref={wrapRef}
@@ -57,7 +59,7 @@ export function MapSearchBar<T extends BaseSearchResult>({
             event.target.value,
           )
         }
-        placeholder="Search a place, building, address or CMC ID..."
+        placeholder={t('Search a place, building, address or CMC ID...')}
         className="!m-0 !h-auto min-w-0 flex-1 !border-0 !border-none !bg-transparent !p-0 text-[12px] font-medium leading-none text-slate-800 !shadow-none !outline-none !ring-0 placeholder:font-normal placeholder:text-slate-400 focus:!border-0 focus:!outline-none focus:!ring-0 focus:!shadow-none max-sm:text-[10px]"
         style={{
           border: 'none',
@@ -83,7 +85,7 @@ export function MapSearchBar<T extends BaseSearchResult>({
         <button
           type="button"
           onClick={onClear}
-          aria-label="Clear search"
+          aria-label={t('Clear search')}
           className="civic-map-control ml-1.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg border-0 bg-slate-100/70 text-slate-400 shadow-none outline-none hover:bg-slate-100 hover:text-slate-700"
         >
           <X size={13} />
@@ -130,8 +132,8 @@ export function MapSearchBar<T extends BaseSearchResult>({
                         {result.subtitle ||
                           (result.source ===
                           'osm'
-                            ? 'OpenStreetMap place'
-                            : 'CMC building')}
+                            ? t('OpenStreetMap place')
+                            : t('CMC building'))}
                       </small>
                     </span>
                   </span>
@@ -146,7 +148,7 @@ export function MapSearchBar<T extends BaseSearchResult>({
                   >
                     {result.source ===
                     'osm'
-                      ? 'Place'
+                      ? t('Place')
                       : 'CMC'}
                   </span>
                 </button>
@@ -158,20 +160,16 @@ export function MapSearchBar<T extends BaseSearchResult>({
                 size={17}
                 className="animate-spin text-teal-700"
               />
-              Searching places and
-              addresses...
+              {t('Searching places and addresses...')}
             </div>
           ) : (
             <div className="px-4 py-4">
               <p className="text-[11px] font-semibold text-slate-700">
-                No matching result
-                found.
+                {t('No matching result found.')}
               </p>
 
               <p className="mt-1 text-[9px] leading-4 text-slate-400">
-                Try a landmark,
-                street, address or CMC
-                building ID.
+                {t('Try a landmark, street, address or CMC building ID.')}
               </p>
             </div>
           )}
