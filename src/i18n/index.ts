@@ -274,7 +274,6 @@ const additionalPhrases: Record<string, string> = {
   'Is this open today?': 'මෙය අද විවෘතද?',
   'Citizen workspace': 'පුරවැසි වැඩ අවකාශය',
   'Your local services, requests and places—kept in one clear view.': 'ඔබගේ ප්‍රාදේශීය සේවා, ඉල්ලීම් සහ ස්ථාන—එක් පැහැදිලි දැක්මකින්.',
-  'Bookings': 'වෙන්කිරීම්',
   'Your requests': 'ඔබගේ ඉල්ලීම්',
   'What the municipality is currently seeing around your area.': 'නගර සභාව විසින් ඔබගේ ප්‍රදේශය තුළ දැනට නිරීක්ෂණය කරන තොරතුරු.',
   'Field operations': 'ක්ෂේත්‍ර මෙහෙයුම්',
