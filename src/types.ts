@@ -62,9 +62,9 @@ export interface User {
 
 export interface AuthSession {
   user: User
-
-  permissions:
-    string[]
+  permissions: string[]
+  token?: string
+  expiresIn?: number
 }
 
 export interface StatusEvent {

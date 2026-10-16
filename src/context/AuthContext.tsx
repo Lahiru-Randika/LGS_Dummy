@@ -15,9 +15,38 @@ type AuthValue = {
 
 const AuthContext = createContext<AuthValue | null>(null)
 
+const SESSION_CACHE_KEY = 'lgs_auth_session'
+
+function getCachedSession(): { user: User; permissions: string[] } | null {
+  try {
+    const raw = localStorage.getItem(SESSION_CACHE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (parsed && typeof parsed === 'object' && parsed.user?.id) {
+      return parsed
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
+function setCachedSession(session: { user: User; permissions: string[] } | null) {
+  try {
+    if (session) {
+      localStorage.setItem(SESSION_CACHE_KEY, JSON.stringify(session))
+    } else {
+      localStorage.removeItem(SESSION_CACHE_KEY)
+    }
+  } catch {
+    // Graceful fallback if localStorage is unavailable
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [permissions, setPermissions] = useState<string[]>([])
+  const initial = getCachedSession()
+  const [user, setUser] = useState<User | null>(initial?.user ?? null)
+  const [permissions, setPermissions] = useState<string[]>(initial?.permissions ?? [])
   const [loading, setLoading] = useState(true)
 
   const refreshSession = useCallback(async () => {
@@ -25,12 +54,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const session = await authService.me()
       setUser(session.user)
       setPermissions(session.permissions)
+      setCachedSession({ user: session.user, permissions: session.permissions })
     } catch (error) {
-      if (!(error instanceof ApiError) || error.status !== 401) {
-        console.error('Unable to restore LGS session', error)
+      if (error instanceof ApiError && error.status === 401) {
+        // Access token or cookie might need extension; attempt refresh once before dropping session
+        try {
+          const refreshed = await authService.refresh()
+          setUser(refreshed.user)
+          setPermissions(refreshed.permissions)
+          setCachedSession({ user: refreshed.user, permissions: refreshed.permissions })
+        } catch (refreshErr) {
+          if (refreshErr instanceof ApiError && refreshErr.status === 401) {
+            setUser(null)
+            setPermissions([])
+            setCachedSession(null)
+          }
+        }
+      } else {
+        // Network error / server starting up: retain cached user to prevent unnecessary logout
+        console.warn('Network issue restoring LGS session; keeping cached session if present', error)
       }
-      setUser(null)
-      setPermissions([])
     }
   }, [])
 
@@ -38,39 +81,61 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshSession().finally(() => setLoading(false))
   }, [refreshSession])
 
-
-
   // Keep a valid server session alive while the user is actively using the app.
-  // Returning after screen lock/sleep triggers a silent refresh instead of logout.
+  // Throttled: only refreshes if 15 minutes have passed, preventing rapid focus-event logout loops.
   useEffect(() => {
     if (!user) return
     let refreshing = false
-    const silentlyRefresh = async () => {
+    let lastRefreshTime = Date.now()
+
+    const silentlyRefresh = async (force = false) => {
       if (refreshing) return
+      const now = Date.now()
+      // Only refresh if at least 15 minutes elapsed since last refresh (or if forced)
+      if (!force && now - lastRefreshTime < 15 * 60 * 1000) return
+
       refreshing = true
       try {
         const session = await authService.refresh()
+        lastRefreshTime = Date.now()
         setUser(session.user)
         setPermissions(session.permissions)
+        setCachedSession({ user: session.user, permissions: session.permissions })
       } catch (error) {
-        // Do not force logout for temporary network/server failures.
+        // Only invalidate if the backend explicitly confirms 401 (session revoked or expired)
         if (error instanceof ApiError && error.status === 401) {
           setUser(null)
           setPermissions([])
+          setCachedSession(null)
         }
-      } finally { refreshing = false }
+      } finally {
+        refreshing = false
+      }
     }
-    const onVisible = () => { if (document.visibilityState === 'visible') void silentlyRefresh() }
-    window.addEventListener('focus', silentlyRefresh)
+
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') {
+        void silentlyRefresh()
+      }
+    }
+
+    window.addEventListener('focus', onVisible)
     document.addEventListener('visibilitychange', onVisible)
-    const timer = window.setInterval(() => { if (document.visibilityState === 'visible') void silentlyRefresh() }, 6 * 60 * 60 * 1000)
-    return () => { window.removeEventListener('focus', silentlyRefresh); document.removeEventListener('visibilitychange', onVisible); window.clearInterval(timer) }
+    // Periodic refresh timer every 30 minutes while active
+    const timer = window.setInterval(onVisible, 30 * 60 * 1000)
+
+    return () => {
+      window.removeEventListener('focus', onVisible)
+      document.removeEventListener('visibilitychange', onVisible)
+      window.clearInterval(timer)
+    }
   }, [user?.id])
 
   const login = useCallback(async (email: string, password: string) => {
     const session = await authService.login(email, password)
     setUser(session.user)
     setPermissions(session.permissions)
+    setCachedSession({ user: session.user, permissions: session.permissions })
   }, [])
 
   const logout = useCallback(async () => {
@@ -79,6 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setUser(null)
       setPermissions([])
+      setCachedSession(null)
     }
   }, [])
 

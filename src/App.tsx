@@ -37,57 +37,28 @@ function BookingsSwitchPage() {
 }
 
 function Protected() {
-  const {
-    user,
-    loading,
-  } =
-    useAuth()
+  const { user, loading } = useAuth()
 
-  if (
-    loading
-  ) {
-    return null
+  if (loading && !user) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-3">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-teal-500 border-t-transparent" />
+        <span className="text-xs text-slate-400 font-medium tracking-wider uppercase">Validating session…</span>
+      </div>
+    )
   }
 
-  return user
-    ? <Outlet />
-    : (
-      <Navigate
-        to="/login"
-        replace
-      />
-    )
+  return user ? <Outlet /> : <Navigate to="/login" replace />
 }
 
-function RoleGate({
-  roles,
-}: {
-  roles:
-    UserRole[]
-}) {
-  const {
-    user,
-    loading,
-  } =
-    useAuth()
+function RoleGate({ roles }: { roles: UserRole[] }) {
+  const { user, loading } = useAuth()
 
-  if (
-    loading
-  ) {
+  if (loading && !user) {
     return null
   }
 
-  return user &&
-    roles.includes(
-      user.role,
-    )
-    ? <Outlet />
-    : (
-      <Navigate
-        to="/app"
-        replace
-      />
-    )
+  return user && roles.includes(user.role) ? <Outlet /> : <Navigate to="/app" replace />
 }
 
 export default function App() {

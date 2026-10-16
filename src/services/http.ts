@@ -43,6 +43,28 @@ type ApiEnvelope<T> = {
 
 type RequestOptions = RequestInit & { json?: unknown }
 
+const TOKEN_STORAGE_KEY = 'lgs_auth_token'
+
+export function getStoredAuthToken(): string | null {
+  try {
+    return localStorage.getItem(TOKEN_STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+
+export function setStoredAuthToken(token: string | null): void {
+  try {
+    if (token) {
+      localStorage.setItem(TOKEN_STORAGE_KEY, token)
+    } else {
+      localStorage.removeItem(TOKEN_STORAGE_KEY)
+    }
+  } catch {
+    // Graceful fallback if localStorage is disabled
+  }
+}
+
 export function apiUrl(path: string) {
   if (/^https?:\/\//i.test(path)) return path
   return `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`
@@ -63,6 +85,12 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   const body = json === undefined ? rest.body : JSON.stringify(json)
   const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
 
+  const token = getStoredAuthToken()
+  const authHeaders: Record<string, string> = {}
+  if (token) {
+    authHeaders['Authorization'] = `Bearer ${token}`
+  }
+
   const response = await fetch(apiUrl(path), {
     ...rest,
     body,
@@ -70,6 +98,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     headers: {
       Accept: 'application/json',
       ...(json !== undefined && !isFormData ? { 'Content-Type': 'application/json' } : {}),
+      ...authHeaders,
       ...headers,
     },
   })

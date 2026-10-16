@@ -1,5 +1,5 @@
 import type { AuthSession, User, UserRole } from '../types'
-import { apiData } from './http'
+import { apiData, setStoredAuthToken } from './http'
 
 function initials(name: string) {
   return name.split(/\s+/).filter(Boolean).map((part) => part[0]).join('').slice(0, 2).toUpperCase() || 'LG'
@@ -25,12 +25,18 @@ function normalizeSession(raw: any): AuthSession {
   return {
     user: normalizeUser(raw?.user),
     permissions: Array.isArray(raw?.permissions) ? raw.permissions.map(String) : [],
+    token: raw?.token ? String(raw.token) : undefined,
+    expiresIn: raw?.expiresIn ? Number(raw.expiresIn) : undefined,
   }
 }
 
 export const authService = {
   async login(email: string, password: string) {
-    return normalizeSession(await apiData<any>('/auth/login', { method: 'POST', json: { email, password } }))
+    const session = normalizeSession(await apiData<any>('/auth/login', { method: 'POST', json: { email, password } }))
+    if (session.token) {
+      setStoredAuthToken(session.token)
+    }
+    return session
   },
 
   async me() {
@@ -38,11 +44,19 @@ export const authService = {
   },
 
   async refresh() {
-    return normalizeSession(await apiData<any>('/auth/refresh', { method: 'POST' }))
+    const session = normalizeSession(await apiData<any>('/auth/refresh', { method: 'POST' }))
+    if (session.token) {
+      setStoredAuthToken(session.token)
+    }
+    return session
   },
 
   async logout() {
-    return apiData<{ loggedOut: boolean }>('/auth/logout', { method: 'POST' })
+    try {
+      return await apiData<{ loggedOut: boolean }>('/auth/logout', { method: 'POST' })
+    } finally {
+      setStoredAuthToken(null)
+    }
   },
 
   async register(input: { firstName: string; lastName: string; email: string; password: string }) {
