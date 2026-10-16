@@ -345,11 +345,15 @@ export function RequestFormModal({
       setRequestCode(result.requestCode)
       setStep('success')
     } catch (cause) {
-      setError(
-        cause instanceof ApiError
-          ? cause.message
-          : 'Unable to submit the request.',
-      )
+      if (cause instanceof ApiError && cause.status === 401) {
+        setError('Your session has expired on the server. Please sign out and sign in again to submit.')
+      } else {
+        setError(
+          cause instanceof ApiError
+            ? cause.message
+            : 'Unable to submit the request.',
+        )
+      }
     } finally {
       setSubmitting(false)
     }
