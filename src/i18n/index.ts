@@ -55,6 +55,7 @@ const additionalPhrases: Record<string, string> = {
   'My tax payments': 'මගේ බදු ගෙවීම්',
   'Applications': 'අයදුම්පත්',
   'Requests': 'ඉල්ලීම්',
+  'Bookings': 'වෙන්කිරීම්',
   'Approvals': 'අනුමැතිය',
   'Analytics': 'විශ්ලේෂණ',
   'Tax': 'බදු',

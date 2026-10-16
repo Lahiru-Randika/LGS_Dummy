@@ -54,8 +54,7 @@ export function ApprovalsPage() {
       <PageHeader
         eyebrow={t('Governance')}
         title={t('Approval center')}
-        description={t('Review decisions with the request context, location and audit trail still attached.')}
-      />
+        />
       <div className="metrics-grid metrics-grid--3">
         <MetricCard icon={FileCheck2} label={t('Awaiting decision')} value={pending.length} />
         <MetricCard

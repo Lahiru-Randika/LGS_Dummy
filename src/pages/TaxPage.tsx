@@ -229,7 +229,7 @@ export function TaxPage() {
             HEADER
         ==================================================== */}
 
-      <PageHeader eyebrow="Financial overview" title={t("Municipal tax collection")} description={`Executive-level tax health, collection progress and geographic performance for ${year}.`}/>
+      <PageHeader eyebrow="Financial overview" title={t("Municipal tax collection")} />
 
       {/* ===================================================
             METRICS

@@ -74,8 +74,8 @@ const news = [
         'Live spatial data, connected workflows and executive dashboards help councils act from one shared picture.',
     ],
 ];
-const sectionShell = 'mx-auto w-[min(1500px,calc(100%-80px))] max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-32px)]';
-const kicker = 'text-[10px] font-semibold uppercase tracking-[.17em] text-teal-700';
+const sectionShell = 'mx-auto w-[min(1500px,calc(100%-80px))] max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-28px)] max-[400px]:w-[calc(100%-20px)] 3xl:w-[min(1820px,calc(100%-120px))] 4k:w-[min(2360px,calc(100%-160px))]';
+const kicker = 'text-[10px] font-semibold uppercase tracking-[.17em] text-teal-700 3xl:text-xs';
 export function LandingPage() {
     const {  t  } = useLanguage();
     const navigate = useNavigate();
@@ -93,25 +93,29 @@ export function LandingPage() {
         {/* =====================================================
             HERO
         ====================================================== */}
-        <section data-no-translate translate="no" className="relative -mb-px min-h-[620px] overflow-hidden text-white sm:min-h-[660px] lg:h-[calc(100vh-119px)] lg:min-h-[580px]">
+        <section
+          data-no-translate
+          translate="no"
+          className="relative h-screen h-[100dvh] min-h-[100dvh] w-full overflow-hidden text-white flex flex-col justify-start"
+        >
           <HeroMedia />
 
-          <div className={`${sectionShell} relative z-10 flex h-full min-h-[620px] items-center sm:min-h-[660px] lg:min-h-0 lg:translate-y-10`}>
-            <ScrollReveal direction="fade" className="max-w-4xl lgs-home-hero-copy">
-              <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-teal-200">{t("Spatio LGS")}</span>
+          <div className={`${sectionShell} relative z-10 flex h-full w-full items-start pt-[clamp(135px,21dvh,215px)] pb-16 sm:pt-[clamp(145px,22dvh,225px)] lg:pt-[clamp(135px,21dvh,210px)] 3xl:pt-[clamp(180px,24dvh,270px)] 4k:pt-[clamp(220px,26dvh,340px)]`}>
+            <ScrollReveal direction="fade" className="max-w-4xl 3xl:max-w-5xl 4k:max-w-6xl lgs-home-hero-copy pl-4 sm:pl-8 md:pl-12 lg:pl-16 xl:pl-20 2xl:pl-24 3xl:pl-32 4k:pl-40">
+              <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-teal-200 3xl:text-xs">{t("Spatio LGS")}</span>
 
-              <h1 className="lgs-home-hero-title mt-6 font-['Manrope'] text-[clamp(46px,5.8vw,88px)] font-semibold leading-[.95] tracking-[-.055em]">{t("Location Drives Insight")}<br />
+              <h1 className="lgs-home-hero-title mt-6 font-['Manrope'] text-[clamp(40px,5.8vw,88px)] 3xl:text-[104px] 4k:text-[124px] font-semibold leading-[.95] tracking-[-.055em]">{t("Location Drives Insight")}<br />
 
                 <em className="not-italic text-teal-300">{t("Governance Evolves")}</em>
               </h1>
 
-              <p className="lgs-home-hero-description mt-6 max-w-2xl text-[13px] font-normal leading-6 text-slate-200 sm:text-[15px] sm:leading-7">{t("Public Services. Local Requests. Municipal Action. One Connected Map.\r\n                Spatio LGS is a geospatial decision-support platform built for Municipal\r\n                and Urban Councils managing real complexity.")}</p>
+              <p className="lgs-home-hero-description mt-6 max-w-2xl 3xl:max-w-3xl text-[13px] font-normal leading-6 text-slate-200 sm:text-[15px] sm:leading-7 3xl:text-[17px] 3xl:leading-8">{t("Public Services. Local Requests. Municipal Action. One Connected Map.\n                Spatio LGS is a geospatial decision-support platform built for Municipal\n                and Urban Councils managing real complexity.")}</p>
             </ScrollReveal>
           </div>
 
-          <div className="absolute bottom-4 left-1/2 z-20 hidden -translate-x-1/2 items-center text-[9px] font-semibold uppercase tracking-[.16em] text-white/60 lg:flex">
+          <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center text-[9px] font-semibold uppercase tracking-[.16em] text-white/60 3xl:bottom-10">
             <div className="flex animate-[scrollFloat_2s_ease-in-out_infinite] items-center gap-3">
-              <i className="h-12 w-px bg-white/40"/>
+              <i className="h-10 w-px bg-white/40 3xl:h-14"/>
               <span>{t("Scroll")}</span>
             </div>
           </div>

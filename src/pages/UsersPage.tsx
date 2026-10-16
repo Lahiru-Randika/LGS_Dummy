@@ -292,7 +292,7 @@ export function UsersPage() {
        PAGE
     ======================================================= */
     return (<div className="page">
-      <PageHeader eyebrow="Access governance" title={t("User access")} description="Search all registered users and manage access levels according to the municipal role hierarchy."/>
+      <PageHeader eyebrow="Access governance" title={t("User access")} />
 
 
       {/* ===================================================

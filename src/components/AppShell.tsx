@@ -23,6 +23,7 @@ const items: Item[] = [
     { label: 'Applications', to: '/app/applications', icon: FileText, roles: ['CITIZEN'] },
     // Government navigation
     { label: 'Requests', to: '/app/requests', icon: ClipboardCheck, roles: ['GOV_WORKER', 'GOV_ADMIN', 'APPROVER', 'SUPERIOR'] },
+    { label: 'Bookings', to: '/app/facility-bookings', icon: CalendarDays, roles: ['GOV_ADMIN', 'APPROVER', 'SUPERIOR'] },
     { label: 'Approvals', to: '/app/approvals', icon: FileCheck2, roles: ['APPROVER', 'SUPERIOR'] },
     { label: 'Analytics', to: '/app/analytics', icon: BarChart3, roles: ['SUPERIOR'] },
     { label: 'Tax', to: '/app/tax', icon: ReceiptText, roles: ['SUPERIOR'] },
@@ -99,6 +100,29 @@ export function AppShell() {
     }, [
         location.pathname,
     ]);
+
+    /*
+      Prevent background scrolling when mobile sidebar is open,
+      and support Escape dismissal or auto-close on tablet/desktop expansion.
+    */
+    useEffect(() => {
+        if (!mobileOpen) return;
+        const originalStyle = window.getComputedStyle(document.body).overflow;
+        document.body.style.overflow = 'hidden';
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setMobileOpen(false);
+        };
+        const onResize = () => {
+            if (window.innerWidth >= 900) setMobileOpen(false);
+        };
+        window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('resize', onResize);
+        return () => {
+            document.body.style.overflow = originalStyle;
+            window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('resize', onResize);
+        };
+    }, [mobileOpen]);
     if (!user) {
         return null;
     }

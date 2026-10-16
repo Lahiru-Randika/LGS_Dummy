@@ -36,23 +36,26 @@
 @media (prefers-reduced-motion:reduce){.scroll-reveal{opacity:1!important;transform:none!important;transition:none!important}.editorial-hero__scroll i{animation:none!important}}
 
 /* header */
-.public-header{position:fixed;inset:0 0 auto 0;z-index:5000;height:86px;background:rgba(255,255,255,.96);border-bottom:1px solid rgba(15,37,55,.08);transition:background .25s ease,height .25s ease,box-shadow .25s ease,backdrop-filter .25s ease}
+.public-header{position:fixed;inset:0 0 auto 0;z-index:5000;height:86px;background:rgba(255,255,255,.96);border-bottom:1px solid rgba(15,37,55,.08);transition:background .25s ease,height .25s ease,box-shadow .25s ease,backdrop-filter .25s ease;padding-top:env(safe-area-inset-top,0)}
 .public-header--overlay{background:transparent;border-color:rgba(255,255,255,.14)}
-.public-header.is-scrolled{height:72px;background:rgba(8,21,34,.94);backdrop-filter:blur(16px);border-color:rgba(255,255,255,.08);box-shadow:0 10px 32px rgba(0,0,0,.13)}
-.public-header__inner{height:100%;width:min(1540px,calc(100% - 72px));margin:auto;display:flex;align-items:center;gap:42px}
+.public-header.is-scrolled{height:72px;background:rgba(8,21,34,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-color:rgba(255,255,255,.08);box-shadow:0 10px 32px rgba(0,0,0,.13)}
+.public-header__inner{height:100%;width:min(1540px,calc(100% - 72px));margin:auto;display:flex;align-items:center;gap:36px}
 .public-header .brand{flex:0 0 auto}
 .public-header.is-scrolled .brand{color:#fff}.public-header.is-scrolled .brand__mark{background:#fff;color:var(--pub-navy)}.public-header.is-scrolled .brand__copy small{color:#a7b9c8}
-.public-site-nav{margin-left:auto;display:flex;height:100%;align-items:center;gap:42px}
-.public-site-nav a{height:100%;display:flex;align-items:center;position:relative;color:#33475a;font-size:13px;font-weight:800;letter-spacing:.01em}
-.public-header--overlay:not(.is-scrolled) .public-site-nav a{color:#fff}
-.public-header.is-scrolled .public-site-nav a{color:#fff}
-.public-site-nav a::after{content:"";position:absolute;left:50%;bottom:0;width:0;height:2px;background:var(--pub-cyan);transform:translateX(-50%);transition:width .25s ease}
-.public-site-nav a:hover::after,.public-site-nav a.active::after{width:100%}
+.public-site-nav{margin-left:auto;display:flex;height:100%;align-items:center;gap:36px}
+.public-site-nav__links{display:flex;height:100%;align-items:center;gap:36px}
+.public-site-nav__links a{height:100%;display:flex;align-items:center;position:relative;color:#33475a;font-size:13px;font-weight:800;letter-spacing:.01em}
+.public-header--overlay:not(.is-scrolled) .public-site-nav__links a{color:#fff}
+.public-header.is-scrolled .public-site-nav__links a{color:#fff}
+.public-site-nav__links a::after{content:"";position:absolute;left:50%;bottom:0;width:0;height:2px;background:var(--pub-cyan);transform:translateX(-50%);transition:width .25s ease}
+.public-site-nav__links a:hover::after,.public-site-nav__links a.active::after{width:100%}
+.public-site-nav__mobile-actions{display:none}
+.public-mobile-scrim{display:none}
 .public-header__actions{display:flex;align-items:center;gap:12px;margin-left:18px}
 .public-header__map,.public-header__signin{display:inline-flex;align-items:center;justify-content:center;height:43px;padding:0 20px;font-size:12px;font-weight:900;letter-spacing:.04em;border-radius:2px;transition:.2s ease}
 .public-header__map{color:#425468;border:1px solid #dce4e8}.public-header--overlay:not(.is-scrolled) .public-header__map,.public-header.is-scrolled .public-header__map{color:#fff;border-color:rgba(255,255,255,.36)}
 .public-header__signin{background:var(--pub-cyan);color:#06211e}.public-header__signin:hover{background:#fff}
-.public-header__menu{display:none;background:none;border:0;color:inherit}
+.public-header__menu{display:none;background:none;border:0;color:inherit;cursor:pointer}
 .public-header--overlay:not(.is-scrolled) .public-header__menu,.public-header.is-scrolled .public-header__menu{color:#fff}
 
 /* hero */
@@ -124,15 +127,270 @@
 .contact-editorial{background:#fff}.contact-editorial__grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:100px}.contact-detail{display:flex;align-items:flex-start;gap:14px;margin-top:25px}.contact-detail>svg{color:#0b7167}.contact-detail span{display:flex;flex-direction:column}.contact-detail small{color:#7d8b97;font-size:9px;text-transform:uppercase;letter-spacing:.12em}.contact-detail strong{font-size:13px;margin-top:4px}.contact-editorial__form{display:grid;gap:18px}.contact-editorial__form>div{display:grid;grid-template-columns:1fr 1fr;gap:18px}.contact-editorial__form label{display:flex;flex-direction:column;gap:8px}.contact-editorial__form label>span{font-size:9px;text-transform:uppercase;letter-spacing:.14em;font-weight:900;color:#7f8d98}.contact-editorial__form input,.contact-editorial__form textarea{width:100%;border:0;background:#f3f6f7;padding:17px 19px;outline:none;font:inherit;color:#182533}.contact-editorial__form button{justify-self:start;height:54px;border:0;background:var(--pub-navy);color:#fff;padding:0 28px;display:flex;align-items:center;gap:9px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
 .office-card-section{padding:20px 0 100px;background:#fff}.office-card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.office-card-grid article{text-align:center;border:1px solid #e3e8ea;padding:38px 30px 42px;border-radius:12px}.office-card-grid article>span{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#eff5f4;color:#0b7167;margin:0 auto 24px}.office-card-grid h3{font:800 25px/1 var(--pub-display);text-transform:uppercase;margin:0 0 8px}.office-card-grid strong{font-size:12px}.office-card-grid p{font-size:12px;color:#748393}.contact-map-live{height:620px;position:relative;overflow:hidden}.contact-map-live .map-preview,.contact-map-live .map-host{height:100%!important}.contact-map-live .map-preview__label{display:none}.contact-map-live__label{position:absolute;left:50%;bottom:32px;transform:translateX(-50%);z-index:1000;background:#fff;padding:14px 24px;display:flex;gap:16px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.13)}.contact-map-live__label span{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#7e8b96}.contact-map-live__label strong{font-size:13px}
 
-/* responsive */
-@media (max-width:1100px){
-  .section-shell{width:min(100% - 48px,1450px)}.section-pad{padding:90px 0}.public-header__inner{width:calc(100% - 40px)}.public-site-nav{gap:22px}.public-header__map{display:none}.editorial-hero__content{width:calc(100% - 48px)}.editorial-hero__rail{display:none}.service-editorial-grid{grid-template-columns:1fr 1fr}.image-story-grid{grid-template-columns:1fr 1fr}.image-story-grid>div:last-child{grid-column:1/-1;max-width:50%;margin:auto}.contact-cinematic__inner{gap:50px}.public-footer__grid{grid-template-columns:1.5fr 1fr 1fr}.public-footer__contact{grid-column:2/4}.map-gallery{grid-template-columns:1fr 1fr}.map-gallery__item--5{grid-column:auto}.about-editorial,.contact-editorial__grid{gap:50px}.service-long-grid{grid-template-columns:1fr}
+/* ============================================================
+   RESPONSIVE ARCHITECTURE — ALL SCREENS (MOBILE, TABLET, LAPTOP, TV)
+   ============================================================ */
+
+/* 4K and Ultra-wide TV Screens (>= 2560px) */
+@media (min-width: 2560px) {
+  .section-shell { width: min(2300px, calc(100% - 160px)); }
+  .section-pad { padding: 150px 0; }
+  .public-header__inner { width: min(2300px, calc(100% - 160px)); }
+  .editorial-hero { min-height: 960px; }
+  .editorial-hero h1 { font-size: clamp(86px, 7vw, 150px); }
+  .editorial-hero__content p { font-size: 21px; max-width: 900px; }
+  .service-editorial-grid { grid-template-columns: repeat(4, 1fr); gap: 36px; }
+  .service-editorial-card { min-height: 420px; padding: 48px 36px; }
+  .service-editorial-card h3 { font-size: 38px; }
+  .service-editorial-card p { font-size: 16px; }
+  .image-story-grid { gap: 40px; }
+  .image-story-card__media { height: 460px; }
+  .image-story-card h3 { font-size: 40px; }
+  .cinematic-feature-grid { gap: 40px; }
+  .cinematic-feature { min-height: 320px; padding: 50px 38px; }
+  .public-footer__grid { width: min(2300px, calc(100% - 160px)); gap: 90px; }
+  .public-footer__bottom { width: min(2300px, calc(100% - 160px)); min-height: 85px; }
 }
-@media (max-width:780px){
-  .section-shell{width:calc(100% - 32px)}.section-pad{padding:72px 0}.public-header{height:70px}.public-header__inner{width:calc(100% - 28px);gap:14px}.public-header__actions{margin-left:auto}.public-header__signin{height:40px;padding:0 14px}.public-header__menu{display:block}.public-site-nav{position:fixed;left:14px;right:14px;top:70px;height:auto;display:none;flex-direction:column;align-items:stretch;gap:0;background:#0a1a29;padding:10px;box-shadow:0 22px 40px rgba(0,0,0,.2)}.public-site-nav.is-open{display:flex}.public-site-nav a{height:48px;color:#fff!important;padding:0 14px}.public-site-nav a::after{display:none}.public-header.is-scrolled{height:70px}.public-inner-page{padding-top:70px}
-  .editorial-hero{min-height:690px;height:100svh}.editorial-hero__content{width:calc(100% - 32px);padding-top:30px}.editorial-hero h1{font-size:58px}.editorial-hero__content p{font-size:15px}.editorial-hero__actions{align-items:flex-start;flex-direction:column;gap:18px}.editorial-hero__scroll{left:18px}.search-overlap-section{height:120px}.search-overlap{width:calc(100% - 32px);padding:18px;top:-40px}.search-overlap__label{display:none}.search-overlap__form{grid-template-columns:auto 1fr}.search-overlap__form button{grid-column:1/-1}.quick-value{padding-top:85px}.quick-value__grid{grid-template-columns:1fr;gap:34px;padding-bottom:55px}.editorial-heading h2{font-size:46px}.editorial-heading--split{grid-template-columns:1fr;gap:18px}.service-editorial-grid{grid-template-columns:1fr}.service-editorial-card{min-height:300px}.image-story-grid{grid-template-columns:1fr}.image-story-grid>div:last-child{grid-column:auto;max-width:none}.image-story-card__media{height:320px}.cinematic-section{padding:100px 0}.cinematic-section h2{font-size:52px}.cinematic-feature-grid{grid-template-columns:1fr;gap:55px}.process-line{grid-template-columns:1fr 1fr}.process-line article:nth-child(2){border-right:0}.process-line article:nth-child(-n+2){border-bottom:1px solid var(--pub-line)}.map-feature-banner{height:650px}.map-feature-banner h2{font-size:56px}.map-gallery{grid-template-columns:1fr;grid-auto-rows:260px}.map-gallery__item--1,.map-gallery__item--4{grid-row:auto}.news-editorial-grid{grid-template-columns:1fr}.news-editorial-grid article{border-right:0;border-bottom:1px solid var(--pub-line)}.news-editorial-grid>div:last-child article{border-bottom:0}.contact-cinematic__inner{grid-template-columns:1fr;gap:60px}.contact-cinematic::before{background-size:cover;opacity:.2}.contact-cinematic h2{font-size:50px}.public-footer__grid{width:calc(100% - 32px);grid-template-columns:1fr 1fr;gap:40px}.public-footer__brand{grid-column:1/-1}.public-footer__contact{grid-column:1/-1}.public-footer__bottom{width:calc(100% - 32px);align-items:flex-start;flex-direction:column;justify-content:center;gap:8px}.inner-hero{min-height:470px}.inner-hero h1{font-size:55px}.about-editorial,.contact-editorial__grid{grid-template-columns:1fr}.about-editorial__image{height:420px}.news-list-grid{grid-template-columns:1fr}.contact-editorial__form>div{grid-template-columns:1fr}.office-card-grid{grid-template-columns:1fr}.contact-map-live{height:500px}
+
+/* Full HD & Standard Large Screens (1920px - 2559px) */
+@media (min-width: 1920px) and (max-width: 2559px) {
+  .section-shell { width: min(1800px, calc(100% - 120px)); }
+  .section-pad { padding: 130px 0; }
+  .public-header__inner { width: min(1800px, calc(100% - 120px)); }
+  .editorial-hero { min-height: 840px; }
+  .editorial-hero h1 { font-size: clamp(74px, 6.2vw, 120px); }
+  .editorial-hero__content p { font-size: 18px; max-width: 800px; }
+  .service-editorial-grid { gap: 28px; }
+  .service-editorial-card { min-height: 390px; padding: 40px 32px; }
+  .service-editorial-card h3 { font-size: 34px; }
+  .image-story-card__media { height: 420px; }
+  .public-footer__grid { width: min(1800px, calc(100% - 120px)); gap: 75px; }
+  .public-footer__bottom { width: min(1800px, calc(100% - 120px)); }
 }
-@media (max-width:480px){.process-line{grid-template-columns:1fr}.process-line article{border-right:0!important;border-bottom:1px solid var(--pub-line)}.public-footer__grid{grid-template-columns:1fr}.public-footer__grid>div{grid-column:auto!important}.editorial-hero h1{font-size:49px}.editorial-heading h2{font-size:40px}}
+
+/* Laptops & Mid Desktops (1100px - 1440px) */
+@media (max-width: 1100px) {
+  .section-shell { width: min(100% - 48px, 1450px); }
+  .section-pad { padding: 90px 0; }
+  .public-header__inner { width: calc(100% - 40px); }
+  .public-site-nav { gap: 22px; }
+  .editorial-hero__content { width: calc(100% - 48px); }
+  .editorial-hero__rail { display: none; }
+  .service-editorial-grid { grid-template-columns: 1fr 1fr; }
+  .image-story-grid { grid-template-columns: 1fr 1fr; }
+  .image-story-grid > div:last-child { grid-column: 1 / -1; max-width: 50%; margin: auto; }
+  .contact-cinematic__inner { gap: 50px; }
+  .public-footer__grid { grid-template-columns: 1.5fr 1fr 1fr; }
+  .public-footer__contact { grid-column: 2 / 4; }
+  .map-gallery { grid-template-columns: 1fr 1fr; }
+  .map-gallery__item--5 { grid-column: auto; }
+  .about-editorial, .contact-editorial__grid { gap: 50px; }
+  .service-long-grid { grid-template-columns: 1fr; }
+}
+
+/* Tablets (781px - 1023px) */
+@media (max-width: 1023px) {
+  .public-header__map { display: none; }
+  .public-header__menu { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 8px; }
+  .public-site-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 72px;
+    height: auto;
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: rgba(7, 20, 33, 0.98);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 16px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+    z-index: 4999;
+  }
+  .public-site-nav.is-open { display: flex; animation: publicNavSlide 0.24s cubic-bezier(0.16, 1, 0.3, 1); }
+  .public-site-nav__links { display: flex; flex-direction: column; width: 100%; gap: 2px; }
+  .public-site-nav__links a {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    color: #fff !important;
+    font-size: 15px;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 0 4px;
+  }
+  .public-site-nav__links a::after { display: none; }
+  .public-site-nav__mobile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .public-site-nav__mobile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    height: 48px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .public-site-nav__mobile-btn--map {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #fff !important;
+  }
+  .public-site-nav__mobile-btn--signin {
+    background: var(--pub-cyan);
+    color: #06211e !important;
+  }
+  .public-site-nav__mobile-lang {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 4px 0;
+  }
+  .public-mobile-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 10, 18, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 4998;
+    animation: publicScrimFade 0.24s ease;
+  }
+}
+
+@keyframes publicNavSlide {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes publicScrimFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Mobile & Small Tablets (<= 780px) */
+@media (max-width: 780px) {
+  .section-shell { width: calc(100% - 32px); }
+  .section-pad { padding: 68px 0; }
+  .public-header { height: 70px; }
+  .public-header__inner { width: calc(100% - 24px); gap: 14px; }
+  .public-header__actions { margin-left: auto; gap: 8px; }
+  .public-header__signin { height: 38px; padding: 0 14px; font-size: 11px; }
+  .public-inner-page { padding-top: 70px; }
+
+  .editorial-hero { min-height: 600px; height: 100svh; }
+  .editorial-hero__content { width: calc(100% - 32px); padding-top: 24px; }
+  .editorial-hero h1 { font-size: clamp(44px, 8.5vw, 62px); line-height: 0.95; }
+  .editorial-hero__content p { font-size: 14px; line-height: 1.65; }
+  .editorial-hero__actions { align-items: stretch; flex-direction: column; gap: 14px; }
+  .editorial-hero__scroll { left: 16px; bottom: 20px; }
+
+  .search-overlap-section { height: 110px; }
+  .search-overlap { width: calc(100% - 32px); padding: 18px; top: -38px; }
+  .search-overlap__label { display: none; }
+  .search-overlap__form { grid-template-columns: auto 1fr; gap: 12px; }
+  .search-overlap__form button { grid-column: 1 / -1; height: 48px; }
+
+  .quick-value { padding-top: 75px; padding-bottom: 60px; }
+  .quick-value__grid { grid-template-columns: 1fr; gap: 30px; padding-bottom: 45px; }
+
+  .editorial-heading h2 { font-size: clamp(36px, 7.5vw, 48px); }
+  .editorial-heading--split { grid-template-columns: 1fr; gap: 16px; }
+
+  .service-editorial-grid { grid-template-columns: 1fr; gap: 16px; }
+  .service-editorial-card { min-height: 280px; padding: 28px 22px; }
+
+  .image-story-grid { grid-template-columns: 1fr; gap: 24px; }
+  .image-story-grid > div:last-child { grid-column: auto; max-width: none; }
+  .image-story-card__media { height: 300px; }
+
+  .cinematic-section { padding: 80px 0; min-height: auto; }
+  .cinematic-section h2 { font-size: clamp(38px, 7.5vw, 54px); margin-bottom: 45px; }
+  .cinematic-feature-grid { grid-template-columns: 1fr; gap: 48px; }
+
+  .process-line { grid-template-columns: 1fr 1fr; }
+  .process-line article { min-height: 240px; padding: 26px 20px; }
+  .process-line article:nth-child(2) { border-right: 0; }
+  .process-line article:nth-child(-n+2) { border-bottom: 1px solid var(--pub-line); }
+
+  .map-feature-banner { height: 560px; }
+  .map-feature-banner h2 { font-size: clamp(40px, 8vw, 60px); }
+
+  .map-gallery { grid-template-columns: 1fr; grid-auto-rows: 240px; }
+  .map-gallery__item--1, .map-gallery__item--4 { grid-row: auto; }
+
+  .news-editorial-grid { grid-template-columns: 1fr; }
+  .news-editorial-grid article { border-right: 0; border-bottom: 1px solid var(--pub-line); padding: 28px 20px; }
+  .news-editorial-grid > div:last-child article { border-bottom: 0; }
+
+  .contact-cinematic { padding: 75px 0; }
+  .contact-cinematic__inner { grid-template-columns: 1fr; gap: 45px; }
+  .contact-cinematic h2 { font-size: clamp(38px, 7.5vw, 52px); }
+
+  .public-footer { padding-top: 50px; }
+  .public-footer__grid { width: calc(100% - 32px); grid-template-columns: 1fr 1fr; gap: 36px; }
+  .public-footer__brand { grid-column: 1 / -1; }
+  .public-footer__contact { grid-column: 1 / -1; }
+  .public-footer__bottom { width: calc(100% - 32px); flex-direction: column; align-items: flex-start; gap: 10px; padding: 18px 0; }
+
+  .inner-hero { min-height: 440px; }
+  .inner-hero h1 { font-size: clamp(42px, 8vw, 64px); }
+  .about-editorial, .contact-editorial__grid { grid-template-columns: 1fr; }
+  .about-editorial__image { height: 380px; }
+  .news-list-grid { grid-template-columns: 1fr; }
+  .contact-editorial__form > div { grid-template-columns: 1fr; }
+  .office-card-grid { grid-template-columns: 1fr; }
+  .contact-map-live { height: 460px; }
+}
+
+/* Compact Mobile (<= 480px) */
+@media (max-width: 480px) {
+  .section-shell { width: calc(100% - 24px); }
+  .section-pad { padding: 54px 0; }
+  .process-line { grid-template-columns: 1fr; }
+  .process-line article { border-right: 0 !important; border-bottom: 1px solid var(--pub-line); }
+  .public-footer__grid { grid-template-columns: 1fr; gap: 28px; }
+  .public-footer__grid > div { grid-column: auto !important; }
+  .editorial-hero h1 { font-size: clamp(36px, 9vw, 48px); }
+  .editorial-heading h2 { font-size: clamp(30px, 8vw, 40px); }
+  .service-editorial-card h3 { font-size: 26px; }
+  .image-story-card h3 { font-size: 26px; }
+  .cinematic-feature h3 { font-size: 23px; }
+  .editorial-btn { width: 100%; min-height: 50px; }
+  .public-header { height: 64px; }
+  .public-site-nav { top: 64px; max-height: calc(100dvh - 64px); }
+}
+
+/* Very Small Mobile (<= 360px - Galaxy Fold cover / iPhone SE compact) */
+@media (max-width: 360px) {
+  .section-shell { width: calc(100% - 20px); }
+  .public-header__inner { width: calc(100% - 16px); }
+  .public-header__signin { display: none; } /* Accessible in drawer */
+  .editorial-hero h1 { font-size: 32px; }
+  .editorial-heading h2 { font-size: 28px; }
+}
+
+/* Low-height Viewports (Mobile Landscape, height <= 600px) */
+@media (max-height: 600px) {
+  .editorial-hero { min-height: 480px; height: auto; padding: 85px 0 45px; }
+  .editorial-hero h1 { font-size: clamp(34px, 5.5vw, 50px); margin: 10px 0 12px; }
+  .editorial-hero__scroll { display: none; }
+  .inner-hero { min-height: 360px; padding: 75px 0 35px; }
+}
 
 @keyframes scrollFloat {
   0%,
@@ -155,67 +413,145 @@ html[data-language="si"] body{font-family:"Noto Sans Sinhala","Nirmala UI","Isko
 
 
 /* LGS multilingual typography: English styles remain unchanged.
-   Modify the values below to fine-tune Sinhala and future Tamil typography. */
-html[data-language="si"] {
-  --lgs-localized-display-size: clamp(31px, 3.65vw, 59px);
-  --lgs-localized-display-leading: 1.28;
-  --lgs-localized-display-tracking: -0.015em;
-  --lgs-localized-nav-size: 14px;
+   Fine-tune Sinhala typography so all section headings and the hero title
+   match the English design reference in perceived visual size, balance, and weight. */
+
+/* Hero title in Sinhala: Calibrated to match the exact 2-line structure, width, and optical scale of English */
+html[data-language="si"] h1.lgs-home-hero-title,
+html[data-language="si"] .lgs-home-hero-title {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif !important;
+  font-size: clamp(30px, 3.7vw, 52px) !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.01em !important;
+  font-weight: 600 !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
 }
-html[data-language="si"] h1,
-html[data-language="si"] h2,
-html[data-language="si"] h3,
+
+@media (min-width: 1920px) {
+  html[data-language="si"] h1.lgs-home-hero-title,
+  html[data-language="si"] .lgs-home-hero-title {
+    font-size: 62px !important;
+    line-height: 1.22 !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  html[data-language="si"] h1.lgs-home-hero-title,
+  html[data-language="si"] .lgs-home-hero-title {
+    font-size: 74px !important;
+    line-height: 1.22 !important;
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-language="si"] h1.lgs-home-hero-title,
+  html[data-language="si"] .lgs-home-hero-title {
+    font-size: clamp(26px, 5.2vw, 36px) !important;
+    line-height: 1.26 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html[data-language="si"] h1.lgs-home-hero-title,
+  html[data-language="si"] .lgs-home-hero-title {
+    font-size: clamp(22px, 5.8vw, 28px) !important;
+    line-height: 1.28 !important;
+  }
+}
+
+/* Large Editorial & Cinematic Display Headings */
+html[data-language="si"] .editorial-heading h2,
+html[data-language="si"] .cinematic-section h2,
+html[data-language="si"] .map-feature-banner h2,
+html[data-language="si"] .contact-cinematic h2 {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif !important;
+  font-size: clamp(28px, 3.2vw, 42px) !important;
+  line-height: 1.28 !important;
+  letter-spacing: normal !important;
+  font-weight: 600 !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+/* General Section Headings & Inner Heroes */
+html[data-language="si"] .section-heading h2,
+html[data-language="si"] .lgs-section-heading h2,
+html[data-language="si"] .inner-hero h1,
+html[data-language="si"] .about-editorial h2,
+html[data-language="si"] .contact-editorial h2,
+html[data-language="si"] .news-editorial-grid h2 {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif !important;
+  font-size: clamp(24px, 2.6vw, 34px) !important;
+  line-height: 1.3 !important;
+  letter-spacing: normal !important;
+  font-weight: 600 !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+/* Card & Feature Subheadings */
+html[data-language="si"] .service-editorial-card h3,
+html[data-language="si"] .image-story-card h3,
+html[data-language="si"] .news-list-grid h2,
+html[data-language="si"] .office-card-grid h3,
+html[data-language="si"] .process-line h3 {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif !important;
+  font-size: clamp(17px, 1.8vw, 21px) !important;
+  line-height: 1.35 !important;
+  letter-spacing: normal !important;
+  font-weight: 600 !important;
+}
+
+/* Public Site Navigation & Actions */
+html[data-language="si"] .public-site-nav a {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: normal;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+html[data-language="si"] .public-header__actions a,
+html[data-language="si"] .public-header__map,
+html[data-language="si"] .public-header__signin {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  font-size: 12.5px;
+  line-height: 1.4;
+  font-weight: 650;
+  letter-spacing: normal;
+  white-space: nowrap;
+}
+
+/* Hero Description & Body Text */
+html[data-language="si"] .lgs-home-hero-description {
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  font-size: clamp(13px, 1.05vw, 15px);
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+html[data-language="si"] p,
+html[data-language="si"] .editorial-hero__content p,
+html[data-language="si"] .service-editorial-card p,
+html[data-language="si"] .image-story-card p,
+html[data-language="si"] .news-list-grid p,
+html[data-language="si"] .about-editorial p,
+html[data-language="si"] .contact-editorial p {
+  line-height: 1.68;
+  letter-spacing: normal;
+}
+
 html[data-language="si"] h4,
 html[data-language="si"] strong {
   font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
   letter-spacing: normal;
 }
-/* Specificity overrides the hero's Tailwind arbitrary font-size/line-height. */
-html[data-language="si"] .lgs-home-hero-title {
-  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
-  font-size: var(--lgs-localized-display-size);
-  line-height: var(--lgs-localized-display-leading);
-  letter-spacing: var(--lgs-localized-display-tracking);
-  font-weight: 650;
-  overflow-wrap: normal;
-  word-break: normal;
-}
-html[data-language="si"] .lgs-home-hero-description {
-  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
-  font-size: clamp(12px, 1.05vw, 15px);
-  line-height: 1.85;
-}
-html[data-language="si"] .public-site-nav a {
-  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
-  font-size: var(--lgs-localized-nav-size);
-  line-height: 1.45;
-  letter-spacing: normal;
-  white-space: nowrap;
-}
-html[data-language="si"] .public-header__actions a {
-  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
-  font-size: 13px;
-  line-height: 1.5;
-  white-space: nowrap;
-}
-html[data-language="si"] .sidebar__nav a,
-html[data-language="si"] .app-shell button,
-html[data-language="si"] .app-shell label {
-  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
-  letter-spacing: normal;
-}
-@media (max-width: 780px) {
-  html[data-language="si"] { --lgs-localized-display-size: clamp(30px, 7.5vw, 45px); }
-}
-@media (max-width: 480px) {
-  html[data-language="si"] { --lgs-localized-display-size: clamp(27px, 7.2vw, 36px); }
-}
+
 /* Prepared for a third language: no change to the English presentation. */
-html[data-language="ta"] {
-  --lgs-localized-display-size: clamp(30px, 3.9vw, 64px);
-}
 html[data-language="ta"] .lgs-home-hero-title {
-  font-size: var(--lgs-localized-display-size);
-  line-height: 1.32;
+  font-size: clamp(30px, 3.8vw, 54px);
+  line-height: 1.3;
   letter-spacing: normal;
 }

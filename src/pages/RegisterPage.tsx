@@ -182,10 +182,11 @@ export function RegisterPage() {
 
           relative
 
-          h-[100dvh]
+          min-h-[100dvh]
           w-full
 
-          overflow-hidden
+          overflow-x-hidden
+          overflow-y-auto
 
           bg-slate-950
         ">
@@ -288,22 +289,28 @@ export function RegisterPage() {
             z-20
 
             grid
-            h-full
+            min-h-[100dvh]
             grid-cols-[1.05fr_.95fr]
 
             items-center
 
             px-[6.5vw]
-            pb-[3vh]
-            pt-[70px]
+            pt-[84px]
+            pb-[36px]
 
             max-xl:px-[5vw]
 
             max-lg:grid-cols-1
             max-lg:px-5
-            max-lg:pt-[64px]
+            max-lg:pt-[76px]
+            max-lg:pb-8
 
             max-sm:px-4
+            max-sm:pt-[70px]
+            max-sm:pb-6
+
+            3xl:px-[8vw]
+            4k:px-[10vw]
           ">
           {/* ===================================================
             LEFT

@@ -7,7 +7,7 @@ export function HeroMedia() {
 
   return (
     <div
-      className="absolute inset-0 overflow-hidden"
+      className="absolute inset-0 h-full w-full overflow-hidden"
       aria-hidden="true"
     >
       {heroVideo ? (

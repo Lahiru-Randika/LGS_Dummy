@@ -335,29 +335,11 @@ export function BuildingsPage() {
             HEADER
         ==================================================== */}
 
-      <PageHeader eyebrow={t('Municipal assets')} title={t('Buildings & properties')} description={t('Mapped public and authorized administrative information connected to municipal service history.')} actions={<Link to="/app/map" className="secondary-btn">
+      <PageHeader eyebrow={t('Municipal assets')} title={t('Buildings & properties')} actions={<Link to="/app/map" className="secondary-btn">
             <MapPin size={16}/>
 
             {t('View on map')}
           </Link>}/>
-
-      {/* ===================================================
-            SECURITY
-        ==================================================== */}
-
-      <div className="security-banner security-banner--soft">
-        <ShieldCheck size={20}/>
-
-        <div>
-          <strong>
-            {t('Authorized data view')}
-          </strong>
-
-          <p>
-            {t('This screen includes property and tax metadata and should only be populated by secure backend responses for permitted roles.')}
-          </p>
-        </div>
-      </div>
 
       {/* ===================================================
             SEARCH

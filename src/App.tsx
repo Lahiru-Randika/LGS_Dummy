@@ -24,8 +24,17 @@ const TaxPage = lazy(() => import('./pages/TaxPage').then(m => ({ default: m.Tax
 const BuildingsPage = lazy(() => import('./pages/BuildingsPage').then(m => ({ default: m.BuildingsPage })))
 const UsersPage = lazy(() => import('./pages/UsersPage').then(m => ({ default: m.UsersPage })))
 const MyBookingsPage = lazy(() => import('./pages/MyBookingsPage').then(m => ({ default: m.MyBookingsPage })))
+const FacilityBookingsCalendarPage = lazy(() => import('./pages/FacilityBookingsCalendarPage').then(m => ({ default: m.FacilityBookingsCalendarPage })))
 const MyTaxPaymentsPage = lazy(() => import('./pages/MyTaxPaymentsPage').then(m => ({ default: m.MyTaxPaymentsPage })))
 const ApplicationsPage = lazy(() => import('./pages/ApplicationsPage').then(m => ({ default: m.ApplicationsPage })))
+
+function BookingsSwitchPage() {
+  const { user } = useAuth()
+  if (user?.role === 'CITIZEN') {
+    return <MyBookingsPage />
+  }
+  return <FacilityBookingsCalendarPage />
+}
 
 function Protected() {
   const {
@@ -201,11 +210,20 @@ export default function App() {
             }
           />
 
+          {/* Citizen & Government Bookings */}
+          <Route element={<RoleGate roles={['CITIZEN', 'GOV_ADMIN', 'APPROVER', 'SUPERIOR']} />}>
+            <Route path="bookings" element={<BookingsSwitchPage />} />
+          </Route>
+
           {/* Citizen-only service pages */}
           <Route element={<RoleGate roles={['CITIZEN']} />}>
-            <Route path="bookings" element={<MyBookingsPage />} />
             <Route path="my-tax-payments" element={<MyTaxPaymentsPage />} />
             <Route path="applications" element={<ApplicationsPage />} />
+          </Route>
+
+          {/* Government Facility Bookings Calendar (GOV_ADMIN, APPROVER, SUPERIOR) */}
+          <Route element={<RoleGate roles={['GOV_ADMIN', 'APPROVER', 'SUPERIOR']} />}>
+            <Route path="facility-bookings" element={<FacilityBookingsCalendarPage />} />
           </Route>
 
           {/* All authenticated roles can open this */}

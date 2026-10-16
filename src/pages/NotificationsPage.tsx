@@ -104,7 +104,7 @@ export function NotificationsPage() {
         }
     }
     return (<div className="page">
-      <PageHeader eyebrow="Updates" title={t("Notification center")} description="Requests, inspections, approvals and municipal updates that need your attention." actions={<div className="flex flex-wrap items-center gap-2">
+      <PageHeader eyebrow="Updates" title={t("Notification center")} actions={<div className="flex flex-wrap items-center gap-2">
             <button type="button" className="secondary-btn" onClick={() => void load()} disabled={loading}>
                 <RefreshCw size={15} className={loading
                 ? 'animate-spin'

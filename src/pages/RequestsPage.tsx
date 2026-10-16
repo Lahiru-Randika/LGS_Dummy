@@ -186,7 +186,7 @@ export function RequestsPage() {
             PAGE HEADER
         ====================================================== */}
 
-      <PageHeader eyebrow="Service workflow" title={title} description={description} actions={isCitizen ? (<button type="button" className="primary-btn" onClick={() => setShowNew(true)}>
+      <PageHeader eyebrow="Service workflow" title={title} actions={isCitizen ? (<button type="button" className="primary-btn" onClick={() => setShowNew(true)}>
               <Plus size={16}/>{t("Create request")}</button>) : undefined}/>
 
       {/* =====================================================

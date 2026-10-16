@@ -55,10 +55,10 @@ export function AnalyticsPage() {
     const avgDays = Number(summary.averageResolutionHours || 0) / 24;
     const hotspot = hotspots[0]?.location || 'No active hotspot';
     return (<div className="page">
-      <PageHeader eyebrow={t('Executive intelligence')} title={t('Municipal analytics')} description={t('High-level service patterns, geographic pressure and operational performance.')}/>
+      <PageHeader eyebrow={t('Executive intelligence')} title={t('Municipal analytics')} />
       <div className="metrics-grid metrics-grid--4">
         <MetricCard icon={Activity} label={t('Resolution rate')} value={resolutionRate} note={`${Number(summary.resolved || 0)} ${t('resolved requests')}`} tone="mint"/>
-        <MetricCard icon={Timer} label={t('Median resolution')} value={avgDays ? `${avgDays.toFixed(1)}d` : '—'} note="Backend average resolution time"/>
+        <MetricCard icon={Timer} label={t('Median resolution')} value={avgDays ? `${avgDays.toFixed(1)}d` : '—'} note={t('Average resolution')}/>
         <MetricCard icon={MapPinned} label={t('Hotspot wards')} value={Math.min(hotspots.length, 3)} note={String(hotspot)}/>
         <MetricCard icon={TrendingUp} label={t('Demand change')} value={trendData.length ? `${trendData[trendData.length - 1]?.opened || 0}` : '0'} note="Requests in latest period" tone="dark"/>
       </div>
