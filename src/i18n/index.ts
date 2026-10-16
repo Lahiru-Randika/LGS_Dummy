@@ -649,128 +649,161 @@ for (const [enStr, siStr] of Object.entries(phraseMap)) {
   reversePhraseMap[siStr.trim()] = enStr.trim()
 }
 
+// Precomputed lowercase lookup maps to eliminate O(N) loops during translation
+const lowerPhraseMap: Record<string, string> = {}
+for (const [key, value] of Object.entries(phraseMap)) {
+  lowerPhraseMap[key.toLowerCase()] = value
+}
+
+const lowerReversePhraseMap: Record<string, string> = {}
+for (const [key, value] of Object.entries(reversePhraseMap)) {
+  lowerReversePhraseMap[key.toLowerCase()] = value
+}
+
+// In-memory memoization cache for fast O(1) translation lookup
+const translationMemoCache = new Map<string, string>()
+
 /**
  * Translates text bidirectionally between English and Sinhala.
  * Preserves place names, personal names, codes, dates, and technical formats untouched.
  */
 export function translateText(text: string, lang: Language): string {
+  if (!text) return text
   const trimmed = text.trim()
   if (!trimmed) return text
+
+  const cacheKey = `${lang}:${trimmed}`
+  const cached = translationMemoCache.get(cacheKey)
+  if (cached !== undefined) {
+    return text.replace(trimmed, cached)
+  }
+
+  let translated: string | null = null
 
   if (lang === 'en') {
     // If the text is Sinhala, convert it back to English
     if (reversePhraseMap[trimmed]) {
-      return text.replace(trimmed, reversePhraseMap[trimmed])
-    }
-
-    const lower = trimmed.toLowerCase()
-    for (const [key, value] of Object.entries(reversePhraseMap)) {
-      if (key.toLowerCase() === lower) {
-        return text.replace(trimmed, value)
+      translated = reversePhraseMap[trimmed]
+    } else if (lowerReversePhraseMap[trimmed.toLowerCase()]) {
+      translated = lowerReversePhraseMap[trimmed.toLowerCase()]
+    } else {
+      // Dynamic patterns in reverse
+      const greetingMatchSi = trimmed.match(/^සුබ දහවලක්,\s+(.+)\.$/)
+      if (greetingMatchSi) {
+        translated = `Good afternoon, ${greetingMatchSi[1]}.`
+      } else {
+        const wardPulseMatchSi = trimmed.match(/^(Ward\s+\d+)\s+සක්‍රියතාව$/)
+        if (wardPulseMatchSi) {
+          translated = `${wardPulseMatchSi[1]} pulse`
+        } else {
+          const searchingForMatchSi = trimmed.match(/^"(.+)" සොයමින් පවතී\.\.\.$/)
+          if (searchingForMatchSi) {
+            translated = `Searching for "${searchingForMatchSi[1]}"...`
+          } else {
+            const resultsForMatchSi = trimmed.match(/^"(.+)" සඳහා ප්‍රතිඵල$/)
+            if (resultsForMatchSi) {
+              translated = `Results for "${resultsForMatchSi[1]}"`
+            } else {
+              const buildingsNearMatchSi = trimmed.match(/^(.+)\s+සිට මීටර් 250ක් ඇතුළත ගොඩනැගිලි$/)
+              if (buildingsNearMatchSi) {
+                translated = `Buildings within 250 m of ${buildingsNearMatchSi[1]}`
+              } else {
+                const buildingCountMatchSi = trimmed.match(/^(\d+)\s+(ගොඩනැගිල්ල|ගොඩනැගිලි)$/)
+                if (buildingCountMatchSi) {
+                  const count = buildingCountMatchSi[1]
+                  translated = `${count} ${count === '1' ? 'building' : 'buildings'}`
+                } else if (trimmed.startsWith('LGS / ')) {
+                  const sub = trimmed.slice(6).trim()
+                  if (reversePhraseMap[sub]) {
+                    translated = `LGS / ${reversePhraseMap[sub]}`
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
 
-    // Dynamic patterns in reverse
-    const greetingMatchSi = trimmed.match(/^සුබ දහවලක්,\s+(.+)\.$/)
-    if (greetingMatchSi) {
-      return text.replace(trimmed, `Good afternoon, ${greetingMatchSi[1]}.`)
-    }
-
-    const wardPulseMatchSi = trimmed.match(/^(Ward\s+\d+)\s+සක්‍රියතාව$/)
-    if (wardPulseMatchSi) {
-      return text.replace(trimmed, `${wardPulseMatchSi[1]} pulse`)
-    }
-
-    const searchingForMatchSi = trimmed.match(/^"(.+)" සොයමින් පවතී\.\.\.$/)
-    if (searchingForMatchSi) {
-      return text.replace(trimmed, `Searching for "${searchingForMatchSi[1]}"...`)
-    }
-
-    const resultsForMatchSi = trimmed.match(/^"(.+)" සඳහා ප්‍රතිඵල$/)
-    if (resultsForMatchSi) {
-      return text.replace(trimmed, `Results for "${resultsForMatchSi[1]}"`)
-    }
-
-    const buildingsNearMatchSi = trimmed.match(/^(.+)\s+සිට මීටර් 250ක් ඇතුළත ගොඩනැගිලි$/)
-    if (buildingsNearMatchSi) {
-      return text.replace(trimmed, `Buildings within 250 m of ${buildingsNearMatchSi[1]}`)
-    }
-
-    const buildingCountMatchSi = trimmed.match(/^(\d+)\s+(ගොඩනැගිල්ල|ගොඩනැගිලි)$/)
-    if (buildingCountMatchSi) {
-      const count = buildingCountMatchSi[1]
-      return text.replace(trimmed, `${count} ${count === '1' ? 'building' : 'buildings'}`)
-    }
-
-    if (trimmed.startsWith('LGS / ')) {
-      const sub = trimmed.slice(6).trim()
-      if (reversePhraseMap[sub]) {
-        return text.replace(trimmed, `LGS / ${reversePhraseMap[sub]}`)
-      }
-    }
-
-    return text
+    const finalVal = translated ?? trimmed
+    translationMemoCache.set(cacheKey, finalVal)
+    return text.replace(trimmed, finalVal)
   }
 
   // lang === 'si'
   // 1. Strict preservation check for names, places, and IDs
   if (isPreservedEntity(trimmed)) {
+    translationMemoCache.set(cacheKey, trimmed)
     return text
   }
 
   // 2. Exact match in dictionary
   if (phraseMap[trimmed]) {
-    return text.replace(trimmed, phraseMap[trimmed])
+    translated = phraseMap[trimmed]
+  } else if (lowerPhraseMap[trimmed.toLowerCase()]) {
+    translated = lowerPhraseMap[trimmed.toLowerCase()]
   }
 
-  // Case-insensitive lookup fallback
-  const lower = trimmed.toLowerCase()
-  for (const [key, value] of Object.entries(phraseMap)) {
-    if (key.toLowerCase() === lower) {
-      return text.replace(trimmed, value)
-    }
+  if (translated) {
+    translationMemoCache.set(cacheKey, translated)
+    return text.replace(trimmed, translated)
   }
 
   // 3. Dynamic patterns that preserve placeholders, user names, or numbers
   const greetingMatch = trimmed.match(/^(Good morning|Good afternoon|Good evening),\s+(.+)\.$/i)
   if (greetingMatch) {
     const namePart = greetingMatch[2]
-    return text.replace(trimmed, `සුබ දහවලක්, ${namePart}.`)
+    const res = `සුබ දහවලක්, ${namePart}.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
   }
 
   const wardPulseMatch = trimmed.match(/^(Ward\s+\d+)\s+pulse$/i)
   if (wardPulseMatch) {
-    return text.replace(trimmed, `${wardPulseMatch[1]} සක්‍රියතාව`)
+    const res = `${wardPulseMatch[1]} සක්‍රියතාව`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
   }
 
   const searchingForMatch = trimmed.match(/^Searching for "(.+)"\.\.\.$/i)
   if (searchingForMatch) {
-    return text.replace(trimmed, `"${searchingForMatch[1]}" සොයමින් පවතී...`)
+    const res = `"${searchingForMatch[1]}" සොයමින් පවතී...`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
   }
 
   const resultsForMatch = trimmed.match(/^Results for "(.+)"$/i)
   if (resultsForMatch) {
-    return text.replace(trimmed, `"${resultsForMatch[1]}" සඳහා ප්‍රතිඵල`)
+    const res = `"${resultsForMatch[1]}" සඳහා ප්‍රතිඵල`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
   }
 
   const buildingsNearMatch = trimmed.match(/^Buildings within 250 m of\s+(.+)$/i)
   if (buildingsNearMatch) {
-    return text.replace(trimmed, `${buildingsNearMatch[1]} සිට මීටර් 250ක් ඇතුළත ගොඩනැගිලි`)
+    const res = `${buildingsNearMatch[1]} සිට මීටර් 250ක් ඇතුළත ගොඩනැගිලි`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
   }
 
   const buildingCountMatch = trimmed.match(/^(\d+)\s+buildings?$/i)
   if (buildingCountMatch) {
     const count = buildingCountMatch[1]
     const label = count === '1' ? 'ගොඩනැගිල්ල' : 'ගොඩනැගිලි'
-    return text.replace(trimmed, `${count} ${label}`)
+    const res = `${count} ${label}`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
   }
 
   if (trimmed.startsWith('LGS / ')) {
     const sub = trimmed.slice(6).trim()
     if (phraseMap[sub]) {
-      return text.replace(trimmed, `LGS / ${phraseMap[sub]}`)
+      const res = `LGS / ${phraseMap[sub]}`
+      translationMemoCache.set(cacheKey, res)
+      return text.replace(trimmed, res)
     }
   }
 
+  translationMemoCache.set(cacheKey, trimmed)
   return text
 }

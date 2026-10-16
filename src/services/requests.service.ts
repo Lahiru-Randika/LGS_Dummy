@@ -11,7 +11,7 @@ import type {
   ServiceRequest,
   StatusEvent,
 } from '../types'
-import { ApiError, apiData, apiDataCached, apiRequestCached, apiUrl, invalidateApiCache, queryString } from './http'
+import { ApiError, apiData, apiDataCached, apiRequestCached, apiUrl, getStoredAuthToken, invalidateApiCache, queryString } from './http'
 
 function numberValue(value: unknown, fallback = 0) {
   const n = Number(value)
@@ -193,6 +193,10 @@ export const requestsService = {
     attachmentId: string,
     filename: string,
   ) {
+    const token = getStoredAuthToken()
+    const headers: Record<string, string> = {}
+    if (token) headers['Authorization'] = `Bearer ${token}`
+
     const response = await fetch(
       apiUrl(
         `/requests/${encodeURIComponent(code)}/attachments/${encodeURIComponent(
@@ -201,6 +205,7 @@ export const requestsService = {
       ),
       {
         credentials: 'include',
+        headers,
       },
     )
 

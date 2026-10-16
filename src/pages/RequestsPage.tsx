@@ -134,11 +134,16 @@ export function RequestsPage() {
     /* =========================================================
        STAGE COUNT
     ========================================================= */
-    function getStageCount(stage: StageDefinition) {
-        if (stage.key === 'ALL') {
-            return searchableRequests.length;
+    const stageCounts = useMemo(() => {
+        const counts: Record<string, number> = { ALL: searchableRequests.length };
+        for (const req of searchableRequests) {
+            counts[req.status] = (counts[req.status] || 0) + 1;
         }
-        return searchableRequests.filter((request) => request.status === stage.key).length;
+        return counts;
+    }, [searchableRequests]);
+
+    function getStageCount(stage: StageDefinition) {
+        return stageCounts[stage.key] ?? 0;
     }
     /* =========================================================
        VISIBLE REQUESTS

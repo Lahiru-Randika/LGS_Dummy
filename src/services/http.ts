@@ -138,18 +138,49 @@ export async function apiData<T>(path: string, options?: RequestOptions) {
  * Used for existing GIS/vector resources that are not JSON API envelopes.
  * Keeping this helper here ensures pages/components never call fetch directly.
  */
-export async function fetchJsonResource<T>(url: string, signal?: AbortSignal): Promise<T> {
-  const response = await fetch(url, {
-    signal,
-    headers: { Accept: 'application/json, application/geo+json, */*' },
-    credentials: url.startsWith(API_BASE_URL) ? 'include' : 'same-origin',
-  })
+const resourceCache = new Map<string, unknown>()
+const inFlightResources = new Map<string, Promise<unknown>>()
 
-  if (!response.ok) {
-    throw new ApiError(response.status, 'RESOURCE_FETCH_FAILED', `${response.status} ${response.statusText} while loading ${url}`)
+export async function fetchJsonResource<T>(url: string, signal?: AbortSignal): Promise<T> {
+  // If already cached in memory, return immediately
+  if (resourceCache.has(url)) {
+    return resourceCache.get(url) as T
   }
 
-  return response.json() as Promise<T>
+  // Deduplicate concurrent in-flight requests for the same URL
+  const existing = inFlightResources.get(url)
+  if (existing) {
+    return existing as Promise<T>
+  }
+
+  const token = getStoredAuthToken()
+  const authHeaders: Record<string, string> = {}
+  if (token && url.startsWith(API_BASE_URL)) {
+    authHeaders['Authorization'] = `Bearer ${token}`
+  }
+
+  const request = fetch(url, {
+    signal,
+    headers: {
+      Accept: 'application/json, application/geo+json, */*',
+      ...authHeaders,
+    },
+    credentials: url.startsWith(API_BASE_URL) ? 'include' : 'same-origin',
+  })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new ApiError(response.status, 'RESOURCE_FETCH_FAILED', `${response.status} ${response.statusText} while loading ${url}`)
+      }
+      const data = await response.json()
+      resourceCache.set(url, data)
+      return data as T
+    })
+    .finally(() => {
+      inFlightResources.delete(url)
+    })
+
+  inFlightResources.set(url, request)
+  return request
 }
 
 

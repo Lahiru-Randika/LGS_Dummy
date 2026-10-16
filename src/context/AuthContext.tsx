@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { authService } from '../services/auth.service'
-import { ApiError } from '../services/http'
+import { ApiError, getStoredAuthToken } from '../services/http'
 import type { User, UserRole } from '../types'
 
 type AuthValue = {
@@ -45,9 +45,12 @@ function setCachedSession(session: { user: User; permissions: string[] } | null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const initial = getCachedSession()
+  const hasStoredAuth = Boolean(getStoredAuthToken() || initial?.user)
+
   const [user, setUser] = useState<User | null>(initial?.user ?? null)
   const [permissions, setPermissions] = useState<string[]>(initial?.permissions ?? [])
-  const [loading, setLoading] = useState(true)
+  // If user is a guest without stored token or session, don't block initial rendering
+  const [loading, setLoading] = useState<boolean>(hasStoredAuth)
 
   const refreshSession = useCallback(async () => {
     try {
@@ -78,8 +81,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
-    refreshSession().finally(() => setLoading(false))
-  }, [refreshSession])
+    if (hasStoredAuth) {
+      refreshSession().finally(() => setLoading(false))
+    } else {
+      setLoading(false)
+    }
+  }, [hasStoredAuth, refreshSession])
 
   // Keep a valid server session alive while the user is actively using the app.
   // Throttled: only refreshes if 15 minutes have passed, preventing rapid focus-event logout loops.

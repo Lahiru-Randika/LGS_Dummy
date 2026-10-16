@@ -292,6 +292,18 @@ export function FacilityBookingsCalendarPage() {
     return calendarCells
   }, [currentDate, selectedDate, startDayOfWeek, todayStr, dateRangeStart, dateRangeEnd])
 
+  // Pre-indexed map of dateStr -> bookings for instant O(1) cell lookup
+  const bookingsByDate = useMemo(() => {
+    const map: Record<string, BookingItem[]> = {}
+    for (const b of filteredBookings) {
+      const bDate = b.dateIso || b.rawDate?.slice(0, 10) || ''
+      if (!bDate) continue
+      if (!map[bDate]) map[bDate] = []
+      map[bDate].push(b)
+    }
+    return map
+  }, [filteredBookings])
+
   // Check availability when date or facility changes in booking modal
   useEffect(() => {
     if (!isModalOpen || !newFacilityCode || !newDate) return
@@ -831,10 +843,7 @@ export function FacilityBookingsCalendarPage() {
         {/* 7-column Calendar Grid matching Image 1 */}
         <div className="grid grid-cols-7 gap-1 sm:gap-2 p-3 sm:p-5 bg-white">
           {monthData.map((cell, idx) => {
-            const dayBookings = filteredBookings.filter((b) => {
-              const bDate = b.dateIso || b.rawDate?.slice(0, 10) || ''
-              return bDate === cell.dateStr
-            })
+            const dayBookings = bookingsByDate[cell.dateStr] || []
 
             // Days outside current month
             if (!cell.isCurrentMonth) {

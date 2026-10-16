@@ -1,4 +1,4 @@
-import { apiData, queryString } from './http'
+import { apiData, apiDataCached, invalidateApiCache, queryString } from './http'
 
 export interface BookingItem {
   id: string
@@ -76,9 +76,9 @@ export interface BookingListFilters {
 
 export const bookingsService = {
   list: (filters: BookingListFilters = {}) =>
-    apiData<BookingItem[]>(`/bookings${queryString(filters as Record<string, unknown>)}`),
+    apiDataCached<BookingItem[]>(`/bookings${queryString(filters as Record<string, unknown>)}`, 6_000),
 
-  facilities: () => apiData<BookableFacility[]>('/bookings/facilities'),
+  facilities: () => apiDataCached<BookableFacility[]>('/bookings/facilities', 60_000),
 
   availability: (facilityIdOrCode: string | number, date: string) => {
     const params = typeof facilityIdOrCode === 'number'
@@ -87,20 +87,29 @@ export const bookingsService = {
     return apiData<AvailabilityResponse>(`/bookings/availability${queryString(params)}`)
   },
 
-  create: (input: CreateBookingInput) =>
-    apiData<{ bookingCode: string; status: string; message?: string }>('/bookings', {
+  create: async (input: CreateBookingInput) => {
+    const result = await apiData<{ bookingCode: string; status: string; message?: string }>('/bookings', {
       method: 'POST',
       json: input,
-    }),
+    })
+    invalidateApiCache('/bookings')
+    return result
+  },
 
-  cancel: (id: string | number) =>
-    apiData<{ cancelled: boolean; status: string }>(`/bookings/${encodeURIComponent(String(id))}/cancel`, {
+  cancel: async (id: string | number) => {
+    const result = await apiData<{ cancelled: boolean; status: string }>(`/bookings/${encodeURIComponent(String(id))}/cancel`, {
       method: 'POST',
-    }),
+    })
+    invalidateApiCache('/bookings')
+    return result
+  },
 
-  updateStatus: (id: string | number, status: string, note?: string) =>
-    apiData<{ updated: boolean; status: string }>(`/bookings/${encodeURIComponent(String(id))}/status`, {
+  updateStatus: async (id: string | number, status: string, note?: string) => {
+    const result = await apiData<{ updated: boolean; status: string }>(`/bookings/${encodeURIComponent(String(id))}/status`, {
       method: 'PATCH',
       json: { status, note },
-    }),
+    })
+    invalidateApiCache('/bookings')
+    return result
+  },
 }
