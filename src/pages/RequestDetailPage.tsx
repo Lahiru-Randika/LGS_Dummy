@@ -375,7 +375,160 @@ export function RequestDetailPage() {
         });
     }, [workers, workerSearch, request?.assignedToName]);
     if (loading) {
-        return <div className="page"/>;
+        return (
+          <div className="page" aria-busy="true">
+            <button type="button" className="back-link" onClick={() => navigate(-1)}>
+              <ArrowLeft size={15}/>{t("Back")}
+            </button>
+
+            <div className="request-detail-head animate-pulse">
+              <div>
+                <div className="badge-row flex items-center gap-2">
+                  <span className="inline-block h-6 w-24 rounded-full bg-slate-200" />
+                  <span className="inline-block h-6 w-20 rounded-full bg-slate-200" />
+                </div>
+
+                <div className="mt-3.5 h-3.5 w-36 rounded bg-slate-200" />
+
+                <div className="mt-3 h-9 w-3/4 max-w-xl rounded-lg bg-slate-200" />
+
+                <div className="mt-3 space-y-2 max-w-2xl">
+                  <div className="h-3.5 w-full rounded bg-slate-200" />
+                  <div className="h-3.5 w-4/5 rounded bg-slate-200" />
+                </div>
+              </div>
+
+              <div className="request-priority-card">
+                <div className="h-2.5 w-12 rounded bg-slate-200" />
+                <div className="my-2.5 h-6 w-20 rounded bg-slate-200" />
+                <div className="h-2.5 w-24 rounded bg-slate-200" />
+              </div>
+            </div>
+
+            <div className="request-detail-layout">
+              <main className="request-main">
+                {/* Timeline skeleton */}
+                <section className="panel animate-pulse">
+                  <div className="panel-head">
+                    <div>
+                      <div className="h-2.5 w-24 rounded bg-slate-200 mb-1.5" />
+                      <div className="h-5 w-36 rounded bg-slate-200" />
+                    </div>
+                  </div>
+
+                  <div className="timeline">
+                    {[1, 2, 3].map((index) => (
+                      <div className="timeline-item" key={index}>
+                        <span className="timeline-mark !bg-slate-100 !border !border-slate-200">
+                          <span className="block h-2.5 w-2.5 rounded-full bg-slate-300" />
+                        </span>
+
+                        <div className="w-full space-y-2 pr-4">
+                          <div className="h-5 w-20 rounded-full bg-slate-200" />
+                          <div className="h-3.5 w-44 rounded bg-slate-200" />
+                          <div className="h-3 w-4/5 max-w-md rounded bg-slate-200" />
+                          <div className="h-2.5 w-32 rounded bg-slate-200" />
+                        </div>
+
+                        {index < 3 && <i />}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Evidence skeleton */}
+                <section className="panel animate-pulse">
+                  <div className="panel-head">
+                    <div>
+                      <div className="h-2.5 w-16 rounded bg-slate-200 mb-1.5" />
+                      <div className="h-5 w-44 rounded bg-slate-200" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="mb-3 flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/70 px-3.5 py-3">
+                      <div className="space-y-1.5">
+                        <div className="h-3.5 w-32 rounded bg-slate-200" />
+                        <div className="h-2.5 w-48 rounded bg-slate-200" />
+                      </div>
+                      <div className="h-5 w-8 rounded-full bg-slate-200" />
+                    </div>
+
+                    <div className="evidence-grid">
+                      {[1, 2, 3].map((item) => (
+                        <div key={item} className="evidence-card pointer-events-none">
+                          <div className="h-6 w-6 rounded-md bg-slate-200 shrink-0" />
+                          <div className="space-y-1.5 flex-1 min-w-0">
+                            <div className="h-3 w-28 rounded bg-slate-200" />
+                            <div className="h-2.5 w-20 rounded bg-slate-200" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                {/* Inspection Notes skeleton */}
+                <section className="panel animate-pulse">
+                  <div className="panel-head">
+                    <div>
+                      <div className="h-2.5 w-24 rounded bg-slate-200 mb-1.5" />
+                      <div className="h-5 w-36 rounded bg-slate-200" />
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-dashed border-slate-200 p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-lg bg-slate-200 shrink-0" />
+                      <div className="space-y-2 flex-1">
+                        <div className="h-3.5 w-36 rounded bg-slate-200" />
+                        <div className="h-2.5 w-56 rounded bg-slate-200" />
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </main>
+
+              <aside className="request-side">
+                {/* Location panel skeleton */}
+                <section className="panel detail-summary animate-pulse">
+                  <div className="h-2.5 w-16 rounded bg-slate-200 mb-2" />
+                  <div className="h-5 w-40 rounded bg-slate-200 mb-2" />
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="h-3.5 w-3.5 rounded bg-slate-200" />
+                    <div className="h-3 w-28 rounded bg-slate-200" />
+                  </div>
+                  <div className="h-9 w-full rounded-xl bg-slate-200" />
+                </section>
+
+                {/* Ownership panel skeleton */}
+                <section className="panel detail-summary animate-pulse">
+                  <div className="h-2.5 w-20 rounded bg-slate-200 mb-3" />
+
+                  {[1, 2, 3].map((row) => (
+                    <div className="owner-row" key={row}>
+                      <div className="h-4 w-4 rounded bg-slate-200 shrink-0 mt-0.5" />
+                      <div className="space-y-1.5 flex-1 min-w-0">
+                        <div className="h-2 w-16 rounded bg-slate-200" />
+                        <div className="h-3 w-32 rounded bg-slate-200" />
+                      </div>
+                    </div>
+                  ))}
+                </section>
+
+                {/* Workflow actions skeleton */}
+                <section className="panel action-panel animate-pulse">
+                  <div className="h-2.5 w-24 rounded bg-slate-200 mb-2" />
+                  <div className="h-4 w-40 rounded bg-slate-200 mb-4" />
+                  <div className="space-y-2">
+                    <div className="h-9 w-full rounded-xl bg-slate-200" />
+                    <div className="h-9 w-full rounded-xl bg-slate-200" />
+                  </div>
+                </section>
+              </aside>
+            </div>
+          </div>
+        );
     }
     if (!request || !user) {
         return (<div className="page">
