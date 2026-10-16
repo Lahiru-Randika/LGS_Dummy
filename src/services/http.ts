@@ -47,7 +47,14 @@ const TOKEN_STORAGE_KEY = 'lgs_auth_token'
 
 export function getStoredAuthToken(): string | null {
   try {
-    return localStorage.getItem(TOKEN_STORAGE_KEY)
+    const token = localStorage.getItem(TOKEN_STORAGE_KEY)
+    if (!token) return null
+    const trimmed = token.trim()
+    if (!trimmed || trimmed === 'undefined' || trimmed === 'null' || trimmed === '[object Object]') {
+      localStorage.removeItem(TOKEN_STORAGE_KEY)
+      return null
+    }
+    return trimmed
   } catch {
     return null
   }
@@ -55,11 +62,14 @@ export function getStoredAuthToken(): string | null {
 
 export function setStoredAuthToken(token: string | null): void {
   try {
-    if (token) {
-      localStorage.setItem(TOKEN_STORAGE_KEY, token)
-    } else {
-      localStorage.removeItem(TOKEN_STORAGE_KEY)
+    if (token && typeof token === 'string') {
+      const trimmed = token.trim()
+      if (trimmed && trimmed !== 'undefined' && trimmed !== 'null' && trimmed !== '[object Object]') {
+        localStorage.setItem(TOKEN_STORAGE_KEY, trimmed)
+        return
+      }
     }
+    localStorage.removeItem(TOKEN_STORAGE_KEY)
   } catch {
     // Graceful fallback if localStorage is disabled
   }
