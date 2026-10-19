@@ -49,6 +49,9 @@ export function ContactPage() {
       'http://localhost:4000'
     ).trim().replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
     try {
       const response = await fetch(
         `${apiBase}/api/v1/contact`,
@@ -63,8 +66,10 @@ export function ContactPage() {
             serviceNeed,
             message,
           }),
+          signal: controller.signal,
         }
       );
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
