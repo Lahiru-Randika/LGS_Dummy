@@ -100,7 +100,7 @@ export function LandingPage() {
         >
           <HeroMedia />
 
-          <div className={`${sectionShell} relative z-10 flex h-full w-full items-start pt-[clamp(135px,21dvh,215px)] pb-16 sm:pt-[clamp(145px,22dvh,225px)] lg:pt-[clamp(135px,21dvh,210px)] 3xl:pt-[clamp(180px,24dvh,270px)] 4k:pt-[clamp(220px,26dvh,340px)]`}>
+          <div className={`${sectionShell} relative z-10 flex h-full w-full items-center pt-20 pb-14 sm:pt-24 sm:pb-16`}>
             <ScrollReveal direction="fade" className="max-w-4xl 3xl:max-w-5xl 4k:max-w-6xl lgs-home-hero-copy pl-4 sm:pl-8 md:pl-12 lg:pl-16 xl:pl-20 2xl:pl-24 3xl:pl-32 4k:pl-40">
               <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-teal-200 3xl:text-xs">{t("Spatio LGS")}</span>
 
