@@ -36,8 +36,6 @@ export function HeroMedia() {
       {/* Slight bottom depth */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#061522]/35 via-transparent to-black/10" />
 
-      {/* Very subtle texture */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:radial-gradient(circle_at_center,white_0.7px,transparent_0.8px)] [background-size:5px_5px]" />
     </div>
   )
 }

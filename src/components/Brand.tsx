@@ -1,12 +1,23 @@
-import { useLanguage } from '../context/LanguageContext'
+import { useLanguage } from '../context/LanguageContext';
 import { Link } from 'react-router-dom';
-export function Brand({ compact = false, }: {
-    compact?: boolean;
-    light?: boolean;
+
+export function Brand({
+  compact = false,
+  light = false,
+}: {
+  compact?: boolean;
+  light?: boolean;
 }) {
-    const { t } = useLanguage();
-    return (<Link to="/" aria-label={t("SPATIO LGS home")} className="inline-flex items-center">
-      <img src="/logos/logo white.png" alt={t("SPATIO LGS")} className={compact
+  const { t } = useLanguage();
+  const logoSrc = light ? '/logos/logo white.png' : '/logos/logo background removed.png';
+
+  return (
+    <Link to="/" aria-label={t('SPATIO LGS home')} className="inline-flex items-center">
+      <img
+        src={logoSrc}
+        alt={t('SPATIO LGS')}
+        className={
+          compact
             ? `
                 !block
                 !h-[34px]
@@ -22,6 +33,9 @@ export function Brand({ compact = false, }: {
                 !max-h-[46px]
                 !max-w-[180px]
                 !object-contain
-              `}/>
-    </Link>);
+              `
+        }
+      />
+    </Link>
+  );
 }

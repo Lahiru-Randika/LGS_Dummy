@@ -1,931 +1,620 @@
-import { ArrowRight, Building2, CalendarCheck2, CheckCircle2, CircleHelp, Compass, Crosshair, FileText, Landmark, Layers3, LocateFixed, MapPin, MessageSquareWarning, Search, ShieldCheck, Sparkles, Users2, } from 'lucide-react';
-import { type FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { HeroMedia } from '../components/HeroMedia';
-import { PublicFooter } from '../components/PublicFooter';
-import { PublicHeader } from '../components/PublicHeader';
-import { ScrollReveal } from '../components/ScrollReveal';
-import { ParallaxSection } from '../components/ParallaxSection';
-import { useLanguage } from '../context/LanguageContext';
-const serviceCards = [
-    {
-        icon: MessageSquareWarning,
-        eyebrow: 'Land',
-        title: 'Land & Spatial Intelligence',
-        body: 'Connect property and parcel records, boundaries, zoning and spatial intelligence to one verified map.',
-        tone: 'hover:border-rose-200 hover:bg-rose-50/40',
-    },
-    {
-        icon: Sparkles,
-        eyebrow: 'Permits',
-        title: 'Permits, Certificates & Licensing',
-        body: 'Track applications, approvals, certificates and licensing workflows from submission to final decision.',
-        tone: 'hover:border-emerald-200 hover:bg-emerald-50/40',
-    },
-    {
-        icon: CircleHelp,
-        eyebrow: 'Revenue',
-        title: 'Tax, Revenue & Payments',
-        body: 'Manage assessments, bills, collections and arrears with every record tied to a real, mapped property.',
-        tone: 'hover:border-blue-200 hover:bg-blue-50/40',
-    },
-    {
-        icon: CalendarCheck2,
-        eyebrow: 'Engage',
-        title: 'Citizen Engagement & Command Center',
-        body: 'Bring citizen services, complaints, public participation and executive visibility into one connected system.',
-        tone: 'hover:border-violet-200 hover:bg-violet-50/40',
-    },
-];
-const featureCards = [
-    {
-        image: '/lgs-media/ExploreYourArea.png',
-        kicker: 'Spatial foundation',
-        title: 'Land Information System (LIS)',
-        body: 'Manage municipal assets and infrastructure with real location intelligence instead of guesswork.',
-    },
-    {
-        image: '/lgs-media/FindCivicPlaces.png',
-        kicker: 'Planning intelligence',
-        title: 'City Planning',
-        body: 'Bring land records, ownership and boundaries together clearly so planning starts from facts, not files.',
-    },
-    {
-        image: '/lgs-media/FollowLocalAction.png',
-        kicker: 'Infrastructure intelligence',
-        title: 'Underground Utility Management',
-        body: 'Map and manage water, sewerage, electricity and telecom networks before anyone breaks ground.',
-    },
-];
-const news = [
-    [
-        'Spatial intelligence',
-        'Every layer of the city, finally in one place',
-        'From what is underground to what is being planned next, council information can be captured, mapped and ready to use.',
-    ],
-    [
-        'Connected operations',
-        'One map. Every department. Every answer.',
-        'Land records, permits, tax data, certificates and citizen services connect back to the same verified council map.',
-    ],
-    [
-        'Decision support',
-        'A stronger, smarter path to local governance',
-        'Live spatial data, connected workflows and executive dashboards help councils act from one shared picture.',
-    ],
-];
-const sectionShell = 'mx-auto w-[min(1500px,calc(100%-80px))] max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-28px)] max-[400px]:w-[calc(100%-20px)] 3xl:w-[min(1820px,calc(100%-120px))] 4k:w-[min(2360px,calc(100%-160px))]';
-const kicker = 'text-[10px] font-semibold uppercase tracking-[.17em] text-teal-700 3xl:text-xs';
+import {
+  ArrowRight,
+  Building2,
+  Compass,
+  Crosshair,
+  Eye,
+  FileCheck2,
+  FileText,
+  Landmark,
+  Layers3,
+  LocateFixed,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+  Users2,
+  Zap,
+} from 'lucide-react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { HeroMedia } from '../components/HeroMedia'
+import { PublicFooter } from '../components/PublicFooter'
+import { PublicHeader } from '../components/PublicHeader'
+import { ScrollReveal } from '../components/ScrollReveal'
+import { useLanguage } from '../context/LanguageContext'
+
+const sectionShell =
+  'mx-auto w-[min(1500px,calc(100%-80px))] max-[1100px]:w-[calc(100%-48px)] max-[780px]:w-[calc(100%-28px)] max-[400px]:w-[calc(100%-20px)] 3xl:w-[min(1820px,calc(100%-120px))] 4k:w-[min(2360px,calc(100%-160px))]'
+const kicker = 'text-[10px] font-semibold uppercase tracking-[.17em] text-teal-700 3xl:text-xs'
+
+const MAP_LAYERS = [
+  {
+    id: 'properties',
+    label: 'Properties',
+    badge: 'Cadastral & Parcel Boundaries',
+    description:
+      'Detailed parcels, registered property boundaries, ownership identification, and zoning compliance status.',
+    stat: 'Registered Cadastral Parcels',
+  },
+  {
+    id: 'landuse',
+    label: 'Land Use',
+    badge: 'Zoning & Master Plan Classifications',
+    description:
+      'Commercial corridors, residential density zones, environmental reservations, and municipal special project areas.',
+    stat: 'Validated Municipal Zoning',
+  },
+  {
+    id: 'roads',
+    label: 'Roads',
+    badge: 'Street Network & Ward Infrastructure',
+    description:
+      'Classified roadway hierarchy, ward corridors, maintenance responsibilities, and pedestrian access networks.',
+    stat: 'Complete Council Road Grid',
+  },
+  {
+    id: 'utilities',
+    label: 'Utilities',
+    badge: 'Underground & Surface Networks',
+    description:
+      'Subsurface water pipelines, drainage canals, electrical conduits, and street lighting maintenance grids.',
+    stat: 'Subterranean Utility GIS',
+  },
+  {
+    id: 'public_assets',
+    label: 'Public Assets',
+    badge: 'Civic Facilities & Council Properties',
+    description:
+      'Council town halls, community centers, public dispensaries, markets, playgrounds, and municipal properties.',
+    stat: 'Live Council Asset Register',
+  },
+]
+
 export function LandingPage() {
-    const {  t  } = useLanguage();
-    const navigate = useNavigate();
-    const [search, setSearch] = useState('');
-    const submitSearch = (event: FormEvent) => {
-        event.preventDefault();
-        navigate(search.trim()
-            ? `/map?q=${encodeURIComponent(search.trim())}`
-            : '/map');
-    };
-    return (<div className="min-h-screen bg-white font-['DM_Sans'] text-slate-950">
-      <PublicHeader overlay/>
+  const { t } = useLanguage()
+  const [activeLayerId, setActiveLayerId] = useState('properties')
+
+  const activeLayer =
+    MAP_LAYERS.find((layer) => layer.id === activeLayerId) || MAP_LAYERS[0]
+
+  return (
+    <div className="min-h-screen bg-white font-['DM_Sans'] text-slate-950">
+      <PublicHeader overlay />
 
       <main>
         {/* =====================================================
-            HERO
+            SECTION 1 — HERO
         ====================================================== */}
         <section
           data-no-translate
           translate="no"
-          className="relative h-screen h-[100dvh] min-h-[100dvh] w-full overflow-hidden text-white flex flex-col justify-start"
+          className="relative flex h-[100dvh] min-h-[100dvh] w-full flex-col justify-start overflow-hidden text-white"
         >
           <HeroMedia />
 
-          <div className={`${sectionShell} relative z-10 flex h-full w-full items-center pt-20 pb-14 sm:pt-24 sm:pb-16`}>
-            <ScrollReveal direction="fade" className="max-w-4xl 3xl:max-w-5xl 4k:max-w-6xl lgs-home-hero-copy pl-4 sm:pl-8 md:pl-12 lg:pl-16 xl:pl-20 2xl:pl-24 3xl:pl-32 4k:pl-40">
-              <span className="text-[10px] font-semibold uppercase tracking-[.18em] text-teal-200 3xl:text-xs">{t("Spatio LGS")}</span>
-
-              <h1 className="lgs-home-hero-title mt-6 font-['Manrope'] text-[clamp(40px,5.8vw,88px)] 3xl:text-[104px] 4k:text-[124px] font-semibold leading-[.95] tracking-[-.055em]">{t("Location Drives Insight")}<br />
-
-                <em className="not-italic text-teal-300">{t("Governance Evolves")}</em>
+          <div
+            className={`${sectionShell} relative z-10 flex h-full w-full items-center pt-20 pb-14 sm:pt-24 sm:pb-16`}
+          >
+            <ScrollReveal
+              direction="fade"
+              className="lgs-home-hero-copy max-w-4xl pl-4 sm:pl-8 md:pl-12 lg:pl-16 xl:pl-20 2xl:pl-24 3xl:max-w-5xl 3xl:pl-32 4k:max-w-6xl 4k:pl-40"
+            >
+              <h1 className="lgs-home-hero-title mt-6 font-['Manrope'] text-[clamp(40px,5.8vw,88px)] font-semibold leading-[.95] tracking-[-.055em] 3xl:text-[104px] 4k:text-[124px]">
+                {t('Location Drives Insight.')}
+                <br />
+                <span className="not-italic text-teal-300">
+                  {t('Governance Evolves.')}
+                </span>
               </h1>
 
-              <p className="lgs-home-hero-description mt-6 max-w-2xl 3xl:max-w-3xl text-[13px] font-normal leading-6 text-slate-200 sm:text-[15px] sm:leading-7 3xl:text-[17px] 3xl:leading-8">{t("Public Services. Local Requests. Municipal Action. One Connected Map.\n                Spatio LGS is a geospatial decision-support platform built for Municipal\n                and Urban Councils managing real complexity.")}</p>
+              <p className="lgs-home-hero-description mt-6 max-w-2xl text-[14px] font-normal leading-relaxed text-slate-200 sm:text-[16px] sm:leading-7 3xl:max-w-3xl 3xl:text-[18px]">
+                {t(
+                  'Spatio LGS brings location intelligence into everyday council operations — helping local authorities manage services, respond to communities, and make informed decisions.'
+                )}
+              </p>
+
             </ScrollReveal>
           </div>
 
-          <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center text-[9px] font-semibold uppercase tracking-[.16em] text-white/60 3xl:bottom-10">
-            <div className="flex animate-[scrollFloat_2s_ease-in-out_infinite] items-center gap-3">
-              <i className="h-10 w-px bg-white/40 3xl:h-14"/>
-              <span>{t("Scroll")}</span>
+          <div className="absolute bottom-6 left-1/2 z-20 -translate-x-1/2 text-[10px] font-semibold uppercase tracking-[.18em] text-white/50 3xl:bottom-10">
+            <span>{t('Scroll')}</span>
+          </div>
+        </section>
+
+        {/* =====================================================
+            SECTION 2 — OUR VISION
+        ====================================================== */}
+        <section className="bg-slate-50/50 py-20 sm:py-28">
+          <div className={`${sectionShell} relative z-10`}>
+            <ScrollReveal className="mb-14 text-center">
+              <span className={kicker}>{t("WHERE WE'RE HEADED")}</span>
+
+              <h2 className="lgs-section-title mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(40px,4.8vw,68px)] font-semibold leading-[1.02] tracking-[-.045em] text-slate-950">
+                {t('One Direction. Two Ways to Make It Happen.')}
+              </h2>
+            </ScrollReveal>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <ScrollReveal delay={100} className="h-full">
+                <article className="group flex h-full min-h-[280px] flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-8 shadow-[0_1px_3px_rgba(15,23,42,0.03)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-teal-600/35 hover:shadow-[0_20px_40px_-15px_rgba(15,23,42,0.08)] sm:p-10">
+                  <div>
+                    <span className="grid h-12 w-12 place-items-center rounded-xl border border-teal-600/10 bg-teal-50 text-teal-700 transition-all duration-300 group-hover:border-teal-600/30 group-hover:bg-teal-600 group-hover:text-white group-hover:shadow-sm">
+                      <Users2 size={24} strokeWidth={1.8} />
+                    </span>
+
+                    <h3 className="mt-6 font-['Manrope'] text-2xl font-semibold tracking-[-.025em] text-slate-900 transition-colors duration-200 group-hover:text-slate-950 sm:text-3xl">
+                      {t('A Council That Works Together')}
+                    </h3>
+
+                    <p className="mt-4 text-[13px] leading-relaxed text-slate-600 sm:text-[14px] sm:leading-7">
+                      {t(
+                        'Bring departments, staff, and services into a more coordinated way of working — with clearer responsibilities and fewer disconnected processes.'
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="mt-8 pt-4">
+                    <Link
+                      to="/about"
+                      className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.1em] text-teal-700 transition-colors duration-200 group-hover:text-teal-900"
+                    >
+                      <span>{t('Learn more')}</span>
+                      <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </article>
+              </ScrollReveal>
+
+              <ScrollReveal delay={200} className="h-full">
+                <article className="group flex h-full min-h-[280px] flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-8 shadow-[0_1px_3px_rgba(15,23,42,0.03)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-teal-600/35 hover:shadow-[0_20px_40px_-15px_rgba(15,23,42,0.08)] sm:p-10">
+                  <div>
+                    <span className="grid h-12 w-12 place-items-center rounded-xl border border-teal-600/10 bg-teal-50 text-teal-700 transition-all duration-300 group-hover:border-teal-600/30 group-hover:bg-teal-600 group-hover:text-white group-hover:shadow-sm">
+                      <MapPin size={24} strokeWidth={1.8} />
+                    </span>
+
+                    <h3 className="mt-6 font-['Manrope'] text-2xl font-semibold tracking-[-.025em] text-slate-900 transition-colors duration-200 group-hover:text-slate-950 sm:text-3xl">
+                      {t('A City That Makes Sense on the Map')}
+                    </h3>
+
+                    <p className="mt-4 text-[13px] leading-relaxed text-slate-600 sm:text-[14px] sm:leading-7">
+                      {t(
+                        'Understand properties, infrastructure, and local needs through accurate spatial information that supports planning and service delivery.'
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="mt-8 pt-4">
+                    <Link
+                      to="/map"
+                      className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.1em] text-teal-700 transition-colors duration-200 group-hover:text-teal-900"
+                    >
+                      <span>{t('Learn more')}</span>
+                      <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </article>
+              </ScrollReveal>
             </div>
           </div>
         </section>
 
         {/* =====================================================
-            SEARCH
+            SECTION 3 — PLATFORM CAPABILITIES
         ====================================================== */}
-        {/* <section className="relative h-24 bg-white sm:h-28">
-          <ScrollReveal
-            className={`${sectionShell} absolute left-1/2 top-0 z-20 -translate-x-1/2 -translate-y-1/2`}
-            direction="up"
-          >
-            <form
-              onSubmit={submitSearch}
-              className="grid min-h-[118px] grid-cols-[auto_1fr_auto] items-center gap-4 border border-slate-200 bg-white px-6 py-5 shadow-[0_25px_70px_rgba(11,19,35,.15)] max-sm:grid-cols-[auto_1fr] max-sm:gap-3 max-sm:px-4"
-            >
-              <Search
-                size={22}
-                className="text-slate-400"
-              />
-
-              <input
-                className="min-w-0 bg-transparent text-[14px] outline-none placeholder:text-slate-400"
-                value={search}
-                onChange={(event) =>
-                  setSearch(event.target.value)
-                }
-                placeholder="Search an address, building or place"
-              />
-
-              <button
-                type="submit"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-slate-950 px-6 text-[11px] font-semibold uppercase tracking-[.06em] text-white transition hover:bg-slate-800 max-sm:col-span-2"
-              >
-                Search map
-                <ArrowRight size={16} />
-              </button>
-            </form>
-          </ScrollReveal>
-        </section> */}
-
-        {/* =====================================================
-            THREE BENEFITS
-        ====================================================== */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50/70 to-white py-20 sm:py-24">
-          {/* subtle decorative glow */}
-          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal-100/30 blur-3xl"/>
-
-          <div className="mb-12 text-center">
-            <span className={kicker}>
-              {t('WHERE WE’RE HEADED')}
-            </span>
-
-            <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
-              {t('One Direction')}
-              <br />
-              {t('Two Ways to Say It')}
-            </h2>
-          </div>
-
-          <div className={`${sectionShell} relative z-10 grid gap-5 md:grid-cols-2`}>
-            {[
-            [
-                LocateFixed,
-                'One Connected Council',
-                'A spatially accurate digital foundation where requests, records and revenue do not get lost between departments.',
-                'from-cyan-500/15 via-teal-500/10 to-transparent',
-                'group-hover:text-cyan-600',
-            ],
-            [
-                Layers3,
-                'One Map. Every Department.',
-                'Land records, permits, tax and revenue, certificates and citizen services work from the same verified geographic picture.',
-                'from-emerald-500/15 via-teal-500/10 to-transparent',
-                'group-hover:text-emerald-600',
-            ],
-        ].map(([Icon, title, body, gradient, iconHover,], index) => {
-            const C = Icon as typeof LocateFixed;
-            return (<ScrollReveal key={String(title)} delay={index * 120}>
-                    <article className="
-                        group relative min-h-[250px] overflow-hidden
-                        rounded-3xl border border-slate-200/80
-                        bg-white/90 p-7
-                        shadow-[0_10px_40px_rgba(15,23,42,0.06)]
-                        backdrop-blur-sm
-                        transition-all duration-500
-                        hover:-translate-y-2
-                        hover:border-slate-300
-                        hover:shadow-[0_24px_70px_rgba(15,23,42,0.12)]
-                      ">
-                      {/* hover gradient */}
-                      <div className={`
-                          pointer-events-none absolute inset-0
-                          bg-gradient-to-br ${String(gradient)}
-                          opacity-0 transition-opacity duration-500
-                          group-hover:opacity-100
-                        `}/>
-
-                      {/* top accent line */}
-                      <div className="
-                          absolute left-7 right-7 top-0 h-px
-                          bg-gradient-to-r from-transparent
-                          via-teal-400/60 to-transparent
-                          opacity-0 transition-opacity duration-500
-                          group-hover:opacity-100
-                        "/>
-
-                      <div className="relative z-10">
-                        <div className="flex items-start justify-between">
-                          <span className={`
-                              grid h-14 w-14 place-items-center
-                              rounded-2xl border border-slate-200
-                              bg-slate-50 text-slate-700
-                              shadow-sm
-                              transition-all duration-500
-                              group-hover:scale-110
-                              group-hover:rotate-3
-                              group-hover:border-transparent
-                              group-hover:bg-white
-                              ${String(iconHover)}
-                            `}>
-                            <C size={24} strokeWidth={1.8}/>
-                          </span>
-                        </div>
-
-                        <div className="mt-10">
-                          <h3 className="
-                              font-['Manrope'] text-xl font-semibold
-                              tracking-[-.02em] text-slate-900
-                            ">
-                            {t(String(title))}
-                          </h3>
-
-                          <p className="
-                              mt-3 max-w-sm text-[13px] leading-6
-                              text-slate-500
-                              transition-colors duration-300
-                              group-hover:text-slate-600
-                            ">
-                            {t(String(body))}
-                          </p>
-                        </div>
-
-                        <div className="
-                            mt-8 flex items-center gap-2
-                            text-[10px] font-semibold uppercase
-                            tracking-[.12em] text-teal-700
-                            opacity-0 translate-y-2
-                            transition-all duration-500
-                            group-hover:translate-y-0
-                            group-hover:opacity-100
-                          ">
-                          {t('Learn more')}
-                          <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1"/>
-                        </div>
-                      </div>
-                    </article>
-                  </ScrollReveal>);
-        })}
-          </div>
-        </section>
-
-        {/* =====================================================
-            SERVICES
-        ====================================================== */}
-        <section className="bg-[#f6f9fa] py-24 sm:py-28" id="services">
+        <section className="bg-[#f7fafb] py-20 sm:py-28" id="capabilities">
           <div className={sectionShell}>
-            <ScrollReveal>
-              <div className="mb-12 max-w-4xl">
-                <span className={kicker}>
-                  {t('One connected platform')}
-                </span>
+            <ScrollReveal className="mb-14 max-w-4xl">
+              <span className={kicker}>{t('BUILT FOR LOCAL GOVERNMENT')}</span>
 
-                <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
-                  {t('One Platform. Every Council Function.')}
-                </h2>
+              <h2 className="lgs-section-title mt-4 font-['Manrope'] text-[clamp(38px,4.5vw,64px)] font-semibold leading-[1.02] tracking-[-.045em] text-slate-950">
+                {t('The Tools Behind Better Council Services.')}
+              </h2>
 
-                <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-500">
-                  {t('Spatio LGS connects land and spatial intelligence, permits and licensing, tax and revenue, and citizen engagement through one verified geographic foundation.')}
-                </p>
-              </div>
+              <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-slate-600 sm:text-[15px]">
+                {t(
+                  'From property administration to public requests, Spatio LGS supports the essential work of local authorities through practical digital tools.'
+                )}
+              </p>
             </ScrollReveal>
 
-            <div className="grid items-stretch gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {serviceCards.map(({ icon: Icon, eyebrow, title, body, tone, }, index) => (<ScrollReveal key={title} delay={index * 90} className="h-full">
-                    <article className={`
-                        group flex h-full min-h-[430px] cursor-pointer flex-col
-                        rounded-2xl border border-slate-200 bg-white p-9
-                        shadow-[0_10px_30px_rgba(15,23,42,0.05)]
-                        transition-all duration-500 ease-out
-                        hover:-translate-y-2
-                        hover:shadow-[0_24px_60px_rgba(15,23,42,0.12)]
-                        ${tone}
-                      `}>
-                      <span className="
-                          grid h-16 w-16 place-items-center rounded-full
-                          bg-teal-50 text-teal-700
-                          transition-all duration-500 ease-out
-                          group-hover:rotate-6
-                          group-hover:scale-110
-                          group-hover:bg-white
-                          group-hover:shadow-md
-                        ">
-                        <Icon size={26} className="
-                            transition-transform duration-500
-                            group-hover:rotate-6
-                          "/>
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              {[
+                {
+                  icon: Landmark,
+                  title: 'Land & Property',
+                  body: 'Organize parcels, ownership records, boundaries, and zoning information for more reliable land administration.',
+                  link: '/services',
+                },
+                {
+                  icon: FileCheck2,
+                  title: 'Permits & Licensing',
+                  body: 'Manage applications, reviews, approvals, and certificates with clear progress tracking.',
+                  link: '/services',
+                },
+                {
+                  icon: ShieldCheck,
+                  title: 'Revenue & Payments',
+                  body: 'Keep assessments, billing, collections, and outstanding payments organized around property records.',
+                  link: '/services',
+                },
+                {
+                  icon: Users2,
+                  title: 'Citizen Services',
+                  body: 'Give residents a clearer way to submit requests, report issues, and follow the progress of council services.',
+                  link: '/services',
+                },
+              ].map(({ icon: Icon, title, body, link }, index) => (
+                <ScrollReveal
+                  key={title}
+                  delay={index * 80}
+                  className="h-full"
+                >
+                  <article className="group flex h-full min-h-[320px] flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-7 shadow-[0_1px_3px_rgba(15,23,42,0.03)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-teal-600/35 hover:shadow-[0_20px_35px_-12px_rgba(15,23,42,0.08)]">
+                    <div>
+                      <span className="grid h-12 w-12 place-items-center rounded-xl border border-teal-600/10 bg-teal-50 text-teal-700 transition-all duration-300 group-hover:border-teal-600/30 group-hover:bg-teal-600 group-hover:text-white group-hover:shadow-sm">
+                        <Icon size={22} strokeWidth={1.8} />
                       </span>
 
-                      <small className="mt-12 block text-[9px] font-semibold uppercase tracking-[.15em] text-slate-400">
-                        {t(eyebrow)}
-                      </small>
-
-                      <h3 className="mt-3 font-['Manrope'] text-3xl font-semibold uppercase tracking-[-.03em] text-slate-950 transition-colors duration-300">
+                      <h3 className="mt-6 font-['Manrope'] text-xl font-semibold tracking-[-.02em] text-slate-950 transition-colors duration-200 group-hover:text-teal-950 sm:text-2xl">
                         {t(title)}
                       </h3>
 
-                      <p className="mt-4 text-[12px] leading-6 text-slate-500">
+                      <p className="mt-3 text-[13px] leading-relaxed text-slate-600">
                         {t(body)}
                       </p>
-
-                      <Link className="
-                          mt-auto inline-flex items-center gap-2 pt-10
-                          text-[10px] font-semibold uppercase
-                          tracking-[.08em] text-slate-800
-                          transition-colors duration-300
-                          group-hover:text-teal-700
-                        " to="/services">
-                        {t('View service')}
-
-                        <ArrowRight size={15} className="
-                            transition-transform duration-300 ease-out
-                            group-hover:translate-x-2
-                          "/>
-                      </Link>
-                    </article>
-                  </ScrollReveal>))}
-            </div>
-          </div>
-        </section>
-
-        {/* =====================================================
-            EXPLORE MUNICIPALITY
-        ====================================================== */}
-        <section className="py-24 sm:py-28">
-          <div className={sectionShell}>
-            <ScrollReveal>
-              <div className="mb-12 text-center">
-                <span className={kicker}>
-                  {t('Strong geospatial foundation')}
-                </span>
-
-                <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em]">
-                  {t('Every Layer of the City, Finally in One Place.')}
-                </h2>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid gap-6 lg:grid-cols-3">
-              {featureCards.map((card, index) => (<ScrollReveal key={card.title} delay={index * 120}>
-                  <article className="group">
-                    <div className="h-[360px] overflow-hidden rounded-2xl">
-                      <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={card.image} alt=""/>
                     </div>
 
-                    <small className="mt-6 block text-[9px] font-semibold uppercase tracking-[.15em] text-teal-700">
-                      {t(card.kicker)}
-                    </small>
-
-                    <h3 className="mt-2 font-['Manrope'] text-2xl font-semibold">
-                      {t(card.title)}
-                    </h3>
-
-                    <p className="mt-2 text-[12px] leading-6 text-slate-500">
-                      {t(card.body)}
-                    </p>
+                    <div className="mt-6 pt-2">
+                      <Link
+                        to={link}
+                        className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.08em] text-slate-900 transition-colors duration-200 group-hover:text-teal-700"
+                      >
+                        <span>{t('Explore Service')}</span>
+                        <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                      </Link>
+                    </div>
                   </article>
-                </ScrollReveal>))}
+                </ScrollReveal>
+              ))}
             </div>
           </div>
         </section>
 
         {/* =====================================================
-            SHARED FIXED BACKGROUND FOR 3 SECTIONS
+            SECTION 4 — GEOSPATIAL INTELLIGENCE
         ====================================================== */}
-        <div className="
-            relative
-            bg-[url('/lgs-media/BackgroundSole.png')]
-            bg-cover
-            bg-center
-            bg-fixed
-            bg-no-repeat
-          ">
-          {/* =====================================================
-            WHY LGS
-        ====================================================== */}
-          <section className="relative overflow-hidden py-28 text-white sm:py-36">
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-slate-950/75"/>
-
-            <div className={`${sectionShell} relative z-10`}>
-              <ScrollReveal>
-                <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-200">
-                  {t('Why Spatio LGS?')}
-                </span>
-
-                <h2 className="mt-4 font-['Manrope'] text-[clamp(50px,5.5vw,84px)] font-semibold tracking-[-.045em]">
-                  {t('One Filing Cabinet Away From Chaos')}
-                </h2>
-              </ScrollReveal>
-
-              <div className="mt-16 grid gap-10 md:grid-cols-3">
-                {[
-            [
-                MapPin,
-                'From Filing to Finishing',
-                'Real-time spatial data and automated workflows can turn long approval chains into faster, more accountable decisions.',
-            ],
-            [
-                Users2,
-                'Nothing Hidden, Nothing Lost',
-                'Every department sees the same data, while citizens can follow their own request instead of wondering where it went.',
-            ],
-            [
-                CheckCircle2,
-                'Decisions Grounded in Reality',
-                'Dashboards built on live field data help councils plan from what is actually there, not from assumptions.',
-            ],
-        ].map(([Icon, title, body], index) => {
-            const C = Icon as typeof MapPin;
-            return (<ScrollReveal key={String(title)} delay={index * 140} direction="scale" className="h-full">
-                      <article className="
-                          group
-                          h-full
-                          cursor-pointer
-                          border-t
-                          border-white/20
-                          pt-7
-                          transition-all
-                          duration-500
-                          hover:border-teal-300
-                        ">
-                        <span className="
-                            grid
-                            h-14
-                            w-14
-                            place-items-center
-                            rounded-full
-                            bg-white
-                            text-slate-950
-                            shadow-lg
-                            transition-all
-                            duration-500
-                            group-hover:-translate-y-1
-                            group-hover:rotate-6
-                            group-hover:scale-110
-                            group-hover:bg-teal-300
-                          ">
-                          <C />
-                        </span>
-
-                        <h3 className="
-                            mt-6
-                            font-['Manrope']
-                            text-2xl
-                            font-semibold
-                            transition-colors
-                            duration-300
-                            group-hover:text-teal-200
-                          ">
-                          {t(String(title))}
-                        </h3>
-
-                        <p className="mt-3 max-w-sm text-[12px] leading-6 text-slate-300">
-                          {t(String(body))}
-                        </p>
-                      </article>
-                    </ScrollReveal>);
-        })}
-              </div>
-            </div>
-          </section>
-
-          {/* =====================================================
-            HOW IT WORKS
-            Same background image stays behind this section too
-        ====================================================== */}
-          <section className="relative overflow-hidden py-24 sm:py-28">
-            {/* Light translucent surface so the same image is visible */}
-            <div className="absolute inset-0 bg-white/[0.93] backdrop-blur-[1px]"/>
-
-            <div className={`${sectionShell} relative z-10`}>
-              <ScrollReveal>
-                <div className="grid gap-7 lg:grid-cols-[1.15fr_.85fr] lg:items-end">
-                  <div>
-                    <span className={kicker}>
-                      {t('How it works')}
-                    </span>
-
-                    <h2 className="mt-4 font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold leading-[.96] tracking-[-.045em] text-slate-950">
-                      {t('From a Location to a Decision')}
-                      <br />
-                      {t('- in Four Steps.')}
-                    </h2>
-                  </div>
-
-                  <p className="max-w-xl text-sm leading-7 text-slate-600">
-                    {t('Four steps. One system. A council that finally moves as fast as its city does.')}
-                  </p>
-                </div>
-              </ScrollReveal>
-
-              <div className="
-                  mt-14
-                  grid
-                  overflow-hidden
-                  rounded-2xl
-                  border
-                  border-white/70
-                  bg-white/75
-                  shadow-[0_25px_70px_rgba(15,23,42,.12)]
-                  backdrop-blur-md
-                  md:grid-cols-4
-                ">
-                {[
-            [
-                Crosshair,
-                'Map It',
-                'Every parcel, road, building and utility line becomes part of one accurate digital map of the council area.',
-            ],
-            [
-                Building2,
-                'Connect It',
-                'Land records, permits, tax data and citizen services all link back to the same map.',
-            ],
-            [
-                FileText,
-                'Act On It',
-                'Citizens access properties, applications, permits, tax dues, complaints, certificates and notifications from one dashboard.',
-            ],
-            [
-                ShieldCheck,
-                'Track It',
-                'Commissioners and division heads can watch revenue, complaints and projects unfold in real time from one dashboard.',
-            ],
-        ].map(([Icon, title, body], index) => {
-            const C = Icon as typeof Crosshair;
-            const hoverColors = [
-                'hover:bg-cyan-50/90',
-                'hover:bg-blue-50/90',
-                'hover:bg-violet-50/90',
-                'hover:bg-emerald-50/90',
-            ];
-            const iconColors = [
-                'group-hover:bg-cyan-600',
-                'group-hover:bg-blue-600',
-                'group-hover:bg-violet-600',
-                'group-hover:bg-emerald-600',
-            ];
-            return (<ScrollReveal key={String(title)} delay={index * 100} className="h-full">
-                      <article className={`
-                          group
-                          flex
-                          h-full
-                          min-h-[300px]
-                          cursor-pointer
-                          flex-col
-                          border-b
-                          border-slate-200/70
-                          p-8
-                          transition-all
-                          duration-500
-                          hover:-translate-y-1
-                          ${hoverColors[index]}
-                          md:border-b-0
-                          md:border-r
-                          md:last:border-r-0
-                        `}>
-                        
-
-                        <span className={`
-                            mt-10
-                            grid
-                            h-13
-                            w-13
-                            place-items-center
-                            rounded-full
-                            bg-slate-100
-                            text-slate-700
-                            transition-all
-                            duration-500
-                            group-hover:rotate-6
-                            group-hover:scale-110
-                            group-hover:text-white
-                            ${iconColors[index]}
-                          `}>
-                          <C size={21}/>
-                        </span>
-
-                        <h3 className="mt-7 font-['Manrope'] text-2xl font-semibold text-slate-950">
-                          {t(String(title))}
-                        </h3>
-
-                        <p className="mt-3 text-[12px] leading-6 text-slate-500">
-                          {t(String(body))}
-                        </p>
-                      </article>
-                    </ScrollReveal>);
-        })}
-              </div>
-            </div>
-          </section>
-
-          {/* =====================================================
-            GEOGRAPHIC INTELLIGENCE
-            SAME EXACT BACKGROUND CONTINUES
-        ====================================================== */}
-          <section className="relative min-h-[650px] overflow-hidden text-white">
-            {/* Gradient overlay only - background is still same parent image */}
-            <div className="
-                absolute
-                inset-0
-                bg-gradient-to-r
-                from-slate-950/95
-                via-slate-950/60
-                to-slate-950/20
-              "/>
-
-            <div className={`
-                ${sectionShell}
-                relative
-                z-10
-                flex
-                min-h-[650px]
-                items-center
-              `}>
-              <ScrollReveal direction="left" className="max-w-3xl">
-                <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-200">
-                  {t('Geospatial foundation')}
-                </span>
-
-                <h2 className="mt-5 font-['Manrope'] text-[clamp(52px,6vw,90px)] font-semibold leading-[.9] tracking-[-.05em]">
-                  {t('Every Layer of the City,')}
-                  <br />
-                  {t('Finally in One Place.')}
-                </h2>
-
-                <p className="mt-6 max-w-xl text-sm leading-7 text-slate-300">
-                  {t('From what’s underground to what’s being planned next — captured, mapped and ready to use.')}
-                </p>
-
-                <Link to="/map" className="
-                    group
-                    mt-8
-                    inline-flex
-                    min-h-[52px]
-                    items-center
-                    gap-3
-                    rounded-md
-                    bg-white
-                    px-6
-                    text-[11px]
-                    font-semibold
-                    uppercase
-                    tracking-[.05em]
-                    !text-slate-950
-                    shadow-xl
-                    transition-all
-                    duration-300
-                    hover:-translate-y-1
-                    hover:bg-teal-300
-                  ">
-                  {t('Open the municipal map')}
-
-                  <ArrowRight size={16} className="
-                      transition-transform
-                      duration-300
-                      group-hover:translate-x-2
-                    "/>
-                </Link>
-              </ScrollReveal>
-            </div>
-          </section>
-        </div>
-
-        {/* =====================================================
-            IMAGE GRID
-        ====================================================== */}
-        <section className="py-24 sm:py-28">
+        <section className="py-20 sm:py-28">
           <div className={sectionShell}>
-            <ScrollReveal>
-              <div className="mb-12 text-center">
-                <span className={kicker}>
-                  {t('Connected spatial intelligence')}
-                </span>
+            <ScrollReveal className="mb-14 text-center">
+              <span className={kicker}>{t('THE GEOSPATIAL ADVANTAGE')}</span>
 
-                <h2 className="mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(42px,5vw,72px)] font-semibold tracking-[-.045em]">
-                  {t('One Map. Every Department. Every Answer.')}
-                </h2>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid auto-rows-[240px] gap-3 md:grid-cols-2 lg:grid-cols-4">
-              {[
-            'BackgroundSole.png',
-            'ExploreYourArea.png',
-            'FindCivicPlaces.png',
-            'golden-hour-valley-town-aerial.png',
-            'FollowLocalAction.png',
-        ].map((src, index) => (<ScrollReveal key={src} delay={index * 60} direction="scale" className={index === 0
-                ? 'lg:row-span-2'
-                : index === 4
-                    ? 'lg:col-span-2'
-                    : ''}>
-                  <div className="group h-full overflow-hidden rounded-2xl">
-                    <img className="h-full w-full object-cover transition duration-700 group-hover:scale-105" src={`/lgs-media/${src}`} alt={t("Mapped municipality view")}/>
-                  </div>
-                </ScrollReveal>))}
-            </div>
-          </div>
-        </section>
-
-        {/* =====================================================
-            FINAL CTA
-        ====================================================== */}
-        <section className="
-            relative overflow-hidden
-            bg-[url('/lgs-media/Misty%20Tea%20Hills%20at%20Golden%20Sunrise.png')]
-            bg-cover bg-center
-            py-24 text-white
-            before:absolute before:inset-0
-            before:bg-gradient-to-r
-            before:from-[#071522]/95
-            before:via-[#071522]/78
-            before:to-[#071522]/45
-            sm:py-28
-          ">
-          <div className={`
-              ${sectionShell}
-              relative z-10 grid gap-16
-              lg:grid-cols-[1.1fr_.9fr]
-              lg:items-center
-            `}>
-            {/* =====================================================
-            LEFT CONTENT
-        ===================================================== */}
-
-            <ScrollReveal>
-              <span className="
-                  text-[10px] font-semibold uppercase
-                  tracking-[.17em] text-teal-200
-                ">
-                {t('Ready to transform your council?')}
-              </span>
-
-              <h2 className="
-                  mt-4 max-w-3xl
-                  font-['Manrope']
-                  text-[clamp(48px,5vw,78px)]
-                  font-semibold
-                  leading-[.95]
-                  tracking-[-.045em]
-                ">
-                {t('Request a demo and meet our team.')}
+              <h2 className="lgs-section-title mx-auto mt-4 max-w-4xl font-['Manrope'] text-[clamp(38px,4.5vw,64px)] font-semibold leading-[1.02] tracking-[-.045em] text-slate-950">
+                {t("See What Traditional Records Can't Show.")}
               </h2>
 
-              <p className="
-                  mt-5 max-w-xl
-                  text-sm leading-7
-                  text-slate-300
-                ">
-                {t('See how Spatio LGS can bring land records, permits, revenue, assets and citizen services into one connected geospatial platform.')}
+              <p className="mx-auto mt-4 max-w-2xl text-[14px] leading-relaxed text-slate-600 sm:text-[15px]">
+                {t(
+                  'A map reveals relationships that spreadsheets and filing systems often miss. Spatio LGS helps councils understand where assets are located, how infrastructure connects, and what changes across their areas.'
+                )}
               </p>
+            </ScrollReveal>
 
-              {/* ===================================================
-            ACTION BUTTONS
-        =================================================== */}
+            <div className="grid gap-7 lg:grid-cols-3">
+              {[
+                {
+                  title: 'Land Information System',
+                  body: 'Build a clearer picture of properties, parcels, boundaries, and their associated records.',
+                  image: '/lgs-media/ExploreYourArea.png',
+                },
+                {
+                  title: 'Urban Planning',
+                  body: 'Use land-use patterns, zoning, and development information to support informed planning decisions.',
+                  image: '/lgs-media/FindCivicPlaces.png',
+                },
+                {
+                  title: 'Utility Network Management',
+                  body: 'Locate and understand underground water, sewerage, electricity, and telecommunications networks.',
+                  image: '/lgs-media/FollowLocalAction.png',
+                },
+              ].map((card, index) => (
+                <ScrollReveal key={card.title} delay={index * 120}>
+                  <article className="group h-full overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-[0_1px_3px_rgba(15,23,42,0.03)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-teal-600/35 hover:shadow-[0_20px_40px_-15px_rgba(15,23,42,0.08)]">
+                    <div className="relative h-64 overflow-hidden bg-slate-100 sm:h-72">
+                      <img
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                        src={card.image}
+                        alt={t(card.title)}
+                        loading="lazy"
+                      />
+                    </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+                    <div className="p-7">
+                      <h3 className="font-['Manrope'] text-xl font-semibold text-slate-950 transition-colors duration-200 group-hover:text-teal-950 sm:text-2xl">
+                        {t(card.title)}
+                      </h3>
 
-                {/* Explore map */}
+                      <p className="mt-3 text-[13px] leading-relaxed text-slate-600">
+                        {t(card.body)}
+                      </p>
+                    </div>
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <Link to="/map" className="
-                    group
-                    inline-flex min-h-[52px]
-                    items-center justify-center gap-3
-                    rounded-lg
-                    bg-teal-500
-                    px-6
-                    text-[11px] font-bold uppercase
-                    tracking-[.07em]
-                    !text-white
-                    shadow-[0_10px_30px_rgba(20,184,166,.20)]
-                    transition-all duration-200
-                    hover:-translate-y-0.5
-                    hover:bg-teal-400
-                    hover:shadow-[0_14px_35px_rgba(20,184,166,.28)]
-                  ">
-                  <MapPin size={16} strokeWidth={1.8}/>
+        {/* =====================================================
+            SECTION 5 — WHY SPATIO LGS
+        ====================================================== */}
+        <section className="bg-[#071522] py-20 text-white sm:py-28">
+          <div className={`${sectionShell} relative z-10`}>
+            <ScrollReveal className="mb-14">
+              <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-300">
+                {t('WHY SPATIO LGS?')}
+              </span>
 
-                  <span>
-                    {t('Explore map')}
-                  </span>
+              <h2 className="lgs-section-title mt-4 font-['Manrope'] text-[clamp(40px,4.8vw,68px)] font-semibold leading-[1.02] tracking-[-.045em] text-white">
+                {t('Less Friction. More Progress.')}
+              </h2>
+            </ScrollReveal>
 
-                  <ArrowRight size={16} className="
-                      transition-transform duration-200
-                      group-hover:translate-x-1
-                    "/>
-                </Link>
+            <div className="grid gap-6 md:grid-cols-3">
+              {[
+                {
+                  icon: Zap,
+                  title: 'Move Work Forward',
+                  body: 'Reduce repetitive administration and help applications move through each stage with clearer ownership and fewer delays.',
+                },
+                {
+                  icon: Eye,
+                  title: 'Make Progress Visible',
+                  body: 'Give staff and residents a clearer understanding of request status, pending actions, and next steps.',
+                },
+                {
+                  icon: Compass,
+                  title: 'Plan With Confidence',
+                  body: 'Identify service gaps, review local trends, and prioritize work using recorded information and geographic context.',
+                },
+              ].map(({ icon: Icon, title, body }, index) => (
+                <ScrollReveal
+                  key={title}
+                  delay={index * 120}
+                  className="h-full"
+                >
+                  <article className="group flex h-full min-h-[260px] flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.025] p-8 sm:p-9 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-teal-400/40 hover:bg-white/[0.05] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]">
+                    <div>
+                      <div>
+                        <span className="grid h-12 w-12 place-items-center rounded-xl border border-teal-400/20 bg-teal-400/10 text-teal-300 transition-all duration-300 group-hover:border-teal-400/50 group-hover:bg-teal-400/20 group-hover:text-teal-200">
+                          <Icon size={22} strokeWidth={1.8} />
+                        </span>
+                      </div>
 
-                {/* Request demo */}
+                      <h3 className="mt-7 font-['Manrope'] text-2xl font-semibold text-white transition-colors duration-200 group-hover:text-teal-100">
+                        {t(title)}
+                      </h3>
 
-                <Link to="/contact" className="
-                    group
-                    inline-flex min-h-[52px]
-                    items-center justify-center gap-3
-                    rounded-lg
-                    border border-white/25
-                    bg-white/[.07]
-                    px-6
-                    text-[11px] font-bold uppercase
-                    tracking-[.07em]
-                    !text-white
-                    backdrop-blur-md
-                    transition-all duration-200
-                    hover:-translate-y-0.5
-                    hover:border-white/40
-                    hover:bg-white/[.12]
-                  ">
-                  <span>
-                    {t('Request a demo')}
-                  </span>
+                      <p className="mt-3.5 text-[13px] leading-relaxed text-slate-300">
+                        {t(body)}
+                      </p>
+                    </div>
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                  <ArrowRight size={16} className="
-                      transition-transform duration-200
-                      group-hover:translate-x-1
-                    "/>
-                </Link>
+        {/* =====================================================
+            SECTION 6 — HOW IT WORKS
+        ====================================================== */}
+        <section className="bg-slate-50/70 py-20 sm:py-28">
+          <div className={sectionShell}>
+            <ScrollReveal className="mb-14">
+              <span className={kicker}>{t('HOW IT WORKS')}</span>
+
+              <h2 className="lgs-section-title mt-4 font-['Manrope'] text-[clamp(38px,4.5vw,64px)] font-semibold leading-[1.02] tracking-[-.045em] text-slate-950">
+                {t('From Local Information to Meaningful Action.')}
+              </h2>
+
+              <p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-slate-600 sm:text-[15px]">
+                {t(
+                  'A simple process that turns geographic information and everyday council activity into coordinated work.'
+                )}
+              </p>
+            </ScrollReveal>
+
+            {/* Horizontal timeline on desktop / Vertical on mobile */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  icon: Crosshair,
+                  title: 'Map the Area',
+                  body: 'Capture properties, roads, buildings, and infrastructure in a geographic information system.',
+                },
+                {
+                  icon: Building2,
+                  title: 'Link the Records',
+                  body: 'Associate council records and service information with their relevant locations.',
+                },
+                {
+                  icon: FileText,
+                  title: 'Deliver the Service',
+                  body: 'Process applications, respond to requests, and coordinate tasks across the responsible teams.',
+                },
+                {
+                  icon: ShieldCheck,
+                  title: 'Review the Results',
+                  body: 'Monitor progress, identify outstanding work, and use reports to guide the next decision.',
+                },
+              ].map(({ icon: Icon, title, body }, index) => (
+                <ScrollReveal key={title} delay={index * 100} className="h-full">
+                  <div className="group flex h-full flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-7 shadow-[0_1px_3px_rgba(15,23,42,0.03)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-teal-600/35 hover:shadow-[0_18px_32px_-12px_rgba(15,23,42,0.07)]">
+                    <div>
+                      <div>
+                        <span className="grid h-11 w-11 place-items-center rounded-xl border border-teal-600/10 bg-teal-50 text-teal-700 transition-all duration-300 group-hover:border-teal-600/30 group-hover:bg-teal-600 group-hover:text-white group-hover:shadow-sm">
+                          <Icon size={20} strokeWidth={1.8} />
+                        </span>
+                      </div>
+
+                      <h3 className="mt-6 font-['Manrope'] text-lg font-bold text-slate-950 transition-colors duration-200 group-hover:text-teal-950 sm:text-xl">
+                        {t(title)}
+                      </h3>
+
+                      <p className="mt-3 text-[12.5px] leading-relaxed text-slate-600">
+                        {t(body)}
+                      </p>
+                    </div>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            SECTION 7 — INTERACTIVE MAP PREVIEW
+        ====================================================== */}
+        <section className="py-20 sm:py-28" id="map-preview">
+          <div className={sectionShell}>
+            <ScrollReveal className="mb-12">
+              <div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr] lg:items-end">
+                <div>
+                  <span className={kicker}>{t('EXPLORE SPATIO LGS')}</span>
+
+                  <h2 className="lgs-section-title mt-4 font-['Manrope'] text-[clamp(38px,4.5vw,64px)] font-semibold leading-[1.02] tracking-[-.045em] text-slate-950">
+                    {t('Your Council Area, From a New Perspective.')}
+                  </h2>
+                </div>
+
+                <p className="text-[14px] leading-relaxed text-slate-600 sm:text-[15px]">
+                  {t(
+                    'Explore how geographic information can bring properties, infrastructure, and council activities into a clearer view.'
+                  )}
+                </p>
               </div>
             </ScrollReveal>
 
-            {/* =====================================================
-            RIGHT INFORMATION CARDS
-        ===================================================== */}
+            {/* Interactive Layer Chips */}
+            <div className="mb-6 flex flex-wrap items-center gap-2.5">
+              <span className="mr-1 text-[11px] font-bold uppercase tracking-[.1em] text-slate-400">
+                {t('Layers')}:
+              </span>
+              {MAP_LAYERS.map((layer) => {
+                const isSelected = layer.id === activeLayerId
+                return (
+                  <button
+                    key={layer.id}
+                    onClick={() => setActiveLayerId(layer.id)}
+                    className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-[12px] font-semibold transition-all duration-200 hover:-translate-y-0.5 ${isSelected
+                        ? 'bg-slate-950 text-white shadow-md hover:bg-slate-900'
+                        : 'border border-slate-200 bg-white text-slate-700 hover:border-teal-600/40 hover:bg-slate-50 hover:text-slate-950 hover:shadow-sm'
+                      }`}
+                  >
+                    <span>{t(layer.label)}</span>
+                  </button>
+                )
+              })}
+            </div>
 
-            <ScrollReveal delay={140} direction="right">
-              <div className="grid gap-3">
-                {[
-            [
-                Landmark,
-                'Platform',
-                'Spatio LGS',
-            ],
-            [
-                MapPin,
-                'Designed for',
-                'Municipal & Urban Councils',
-            ],
-            [
-                ShieldCheck,
-                'Purpose',
-                'Geospatial decision support',
-            ],
-        ].map(([Icon, label, value]) => {
-            const C = Icon as typeof Landmark;
-            return (<div key={String(label)} className="
-                          flex items-center gap-4
-                          rounded-xl
-                          border border-white/15
-                          bg-[#071522]/45
-                          p-4
-                          shadow-[0_12px_30px_rgba(0,0,0,.08)]
-                          backdrop-blur-md
-                          transition-all duration-200
-                          hover:border-white/25
-                          hover:bg-[#071522]/55
-                        ">
-                        <div className="
-                            grid h-10 w-10
-                            shrink-0 place-items-center
-                            rounded-lg
-                            border border-teal-300/15
-                            bg-teal-400/10
-                          ">
-                          <C size={19} strokeWidth={1.7} className="text-teal-200"/>
-                        </div>
+            {/* Map Frame Card */}
+            <div className="group/map relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-[0_4px_24px_rgba(15,23,42,0.06)] transition-all duration-500 hover:border-slate-300 hover:shadow-[0_20px_45px_-12px_rgba(15,23,42,0.14)]">
+              <div className="relative min-h-[460px] w-full sm:min-h-[520px]">
+                {/* Genuine Municipal Map Asset */}
+                <img
+                  src="/lgs-media/map-full.jpg"
+                  alt={t('Mapped municipality view')}
+                  className="absolute inset-0 h-full w-full object-cover object-center opacity-90 transition-transform duration-700 ease-out group-hover/map:scale-[1.015]"
+                />
 
-                        <span>
-                          <small className="
-                              block
-                              text-[9px]
-                              uppercase
-                              tracking-[.13em]
-                              text-slate-400
-                            ">
-                            {t(String(label))}
-                          </small>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-slate-950/40" />
 
-                          <strong className="
-                              mt-1 block
-                              text-[12px]
-                              font-semibold
-                              text-white
-                            ">
-                            {t(String(value))}
-                          </strong>
-                        </span>
-                      </div>);
-        })}
+                {/* Top Status Badges */}
+                <div className="absolute left-6 right-6 top-6 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/80 px-4 py-1.5 text-[11px] font-semibold text-white">
+                    <LocateFixed size={14} className="text-teal-400" />
+                    <span>{t('Municipal Spatial Grid · Colombo GIS')}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2 rounded-full border border-teal-400/30 bg-teal-950/80 px-4 py-1.5 text-[11px] font-bold text-teal-300">
+                    <span className="h-1.5 w-1.5 rounded-full bg-teal-400" />
+                    <span>{t(activeLayer.stat)}</span>
+                  </div>
+                </div>
+
+                {/* Active Layer Details Panel */}
+                <div className="absolute bottom-6 left-6 right-6 z-10 flex flex-col justify-between gap-6 rounded-2xl border border-white/20 bg-slate-950/90 p-6 md:flex-row md:items-center">
+                  <div className="max-w-xl">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-[.15em] text-teal-300">
+                        {t('Active Map Layer')}
+                      </span>
+                      <span className="h-1 w-1 rounded-full bg-white/40" />
+                      <span className="text-[11px] text-slate-300">
+                        {t(activeLayer.badge)}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-2 text-xl font-bold text-white sm:text-2xl">
+                      {t(activeLayer.label)}
+                    </h3>
+
+                    <p className="mt-2 text-[13px] leading-relaxed text-slate-300">
+                      {t(activeLayer.description)}
+                    </p>
+                  </div>
+
+                  <div className="shrink-0">
+                    <Link
+                      to="/map"
+                      className="group/mapbtn inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-xl bg-teal-500 px-6 text-[12px] font-bold uppercase tracking-[.07em] !text-slate-950 shadow-[0_2px_12px_rgba(20,184,166,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-teal-400 hover:shadow-[0_6px_20px_rgba(20,184,166,0.35)]"
+                    >
+                      <MapPin size={16} />
+                      <span>{t('Explore the Municipal Map')}</span>
+                      <ArrowRight size={15} className="transition-transform duration-200 group-hover/mapbtn:translate-x-1" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            SECTION 8 — FINAL CALL TO ACTION
+        ====================================================== */}
+        <section className="relative overflow-hidden bg-[url('/lgs-media/Misty%20Tea%20Hills%20at%20Golden%20Sunrise.png')] bg-cover bg-center py-20 text-white before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#061420]/95 before:via-[#061420]/80 before:to-[#061420]/55 sm:py-28">
+          <div className={`${sectionShell} relative z-10`}>
+            <ScrollReveal className="max-w-3xl">
+              <span className="text-[10px] font-semibold uppercase tracking-[.17em] text-teal-300">
+                {t('TAKE THE NEXT STEP')}
+              </span>
+
+              <h2 className="lgs-section-title mt-4 font-['Manrope'] text-[clamp(40px,4.8vw,68px)] font-semibold leading-[1.02] tracking-[-.045em] text-white">
+                {t('Ready to Rethink How Your Council Works?')}
+              </h2>
+
+              <p className="mt-5 max-w-xl text-[14px] leading-relaxed text-slate-200 sm:text-[16px] sm:leading-7">
+                {t(
+                  "Discover how Spatio LGS can support your council's day-to-day operations and long-term planning."
+                )}
+              </p>
+
+              <div className="mt-9 flex flex-wrap items-center gap-4">
+                <Link
+                  to="/contact"
+                  className="group inline-flex min-h-[50px] items-center justify-center gap-2.5 rounded-xl bg-teal-500 px-8 text-[12px] font-bold uppercase tracking-[.08em] !text-slate-950 shadow-[0_4px_20px_rgba(20,184,166,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-teal-400 hover:shadow-[0_8px_28px_rgba(20,184,166,0.35)]"
+                >
+                  <span>{t('Request a Demo')}</span>
+                  <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
+
+                <Link
+                  to="/contact"
+                  className="inline-flex min-h-[50px] items-center justify-center gap-2.5 rounded-xl border border-white/20 bg-white/5 px-8 text-[12px] font-bold uppercase tracking-[.08em] !text-white transition-all duration-200 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
+                >
+                  <span>{t('Contact Our Team')}</span>
+                </Link>
               </div>
             </ScrollReveal>
           </div>
@@ -933,5 +622,6 @@ export function LandingPage() {
       </main>
 
       <PublicFooter />
-    </div>);
+    </div>
+  )
 }

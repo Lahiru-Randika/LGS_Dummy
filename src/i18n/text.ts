@@ -186,7 +186,11 @@ export const text = {
   },
   "Citizen-centric services focused on\r\n                    accessibility, responsiveness and\r\n                    transparency": {
     "english": "Citizen-centric services focused on\r\n                    accessibility, responsiveness and\r\n                    transparency",
-    "sinhala": "Citizen-centric services focused on\r\n                    accessibility, responsiveness and\r\n                    transparency"
+    "sinhala": "ජනතාවට පහසුවෙන් ලබාගත හැකි, කඩිනම් සහ විනිවිදභාවයෙන් යුතු සේවාවන් සැපයීම."
+  },
+  "Citizen-centric services focused on accessibility, responsiveness and transparency": {
+    "english": "Citizen-centric services focused on accessibility, responsiveness and transparency",
+    "sinhala": "ජනතාවට පහසුවෙන් ලබාගත හැකි, කඩිනම් සහ විනිවිදභාවයෙන් යුතු සේවාවන් සැපයීම."
   },
   "Clear": {
     "english": "Clear",
@@ -199,6 +203,86 @@ export const text = {
   "Close": {
     "english": "Close",
     "sinhala": "වසන්න"
+  },
+  "Common Digital Platform": {
+    "english": "Common Digital Platform",
+    "sinhala": "ඒකාබද්ධ ඩිජිටල් පද්ධතිය"
+  },
+  "A single shared system connecting every department — replacing scattered logins, forms and spreadsheets with one login and one source of truth.": {
+    "english": "A single shared system connecting every department — replacing scattered logins, forms and spreadsheets with one login and one source of truth.",
+    "sinhala": "විවිධ අංශවල තොරතුරු සහ කාර්යයන් එක් පද්ධතියකට සම්බන්ධ කරමින්, වෙන වෙනම පද්ධති භාවිත කිරීමේ අවශ්යතාව අඩු කරයි. එක් පිවිසුමකින් අවශ්ය සේවාවන් වෙත පහසුවෙන් ප්රවේශ විය හැකිය."
+  },
+  "A single shared system connecting every department - replacing scattered logins, forms and spreadsheets with one login and one source of truth.": {
+    "english": "A single shared system connecting every department - replacing scattered logins, forms and spreadsheets with one login and one source of truth.",
+    "sinhala": "විවිධ අංශවල තොරතුරු සහ කාර්යයන් එක් පද්ධතියකට සම්බන්ධ කරමින්, වෙන වෙනම පද්ධති භාවිත කිරීමේ අවශ්යතාව අඩු කරයි. එක් පිවිසුමකින් අවශ්ය සේවාවන් වෙත පහසුවෙන් ප්රවේශ විය හැකිය."
+  },
+  "Customizable Workflows": {
+    "english": "Customizable Workflows",
+    "sinhala": "අවශ්යතාවට ගැළපෙන කාර්ය ක්රියාවලි"
+  },
+  "Adapts to the council’s existing processes and department structure instead of forcing the council to rebuild its operations from scratch.": {
+    "english": "Adapts to the council’s existing processes and department structure instead of forcing the council to rebuild its operations from scratch.",
+    "sinhala": "පළාත් පාලන ආයතනයේ පවතින ක්රමවේද සහ අංශවල අවශ්යතා අනුව කාර්ය ක්රියාවලි සකස් කරගත හැකි අතර, දැනට සිදුකරන කටයුතු සම්පූර්ණයෙන් වෙනස් කිරීමට අවශ්ය නොවේ."
+  },
+  "Adapts to the council's existing processes and department structure instead of forcing the council to rebuild its operations from scratch.": {
+    "english": "Adapts to the council's existing processes and department structure instead of forcing the council to rebuild its operations from scratch.",
+    "sinhala": "පළාත් පාලන ආයතනයේ පවතින ක්රමවේද සහ අංශවල අවශ්යතා අනුව කාර්ය ක්රියාවලි සකස් කරගත හැකි අතර, දැනට සිදුකරන කටයුතු සම්පූර්ණයෙන් වෙනස් කිරීමට අවශ්ය නොවේ."
+  },
+  "Public Portal & Mobile Access": {
+    "english": "Public Portal & Mobile Access",
+    "sinhala": "මහජන සේවා ද්වාරය සහ ජංගම ප්රවේශය"
+  },
+  "Access council services from anywhere through a responsive web portal and installable mobile experience without being tied to a council counter.": {
+    "english": "Access council services from anywhere through a responsive web portal and installable mobile experience without being tied to a council counter.",
+    "sinhala": "සභා කාර්යාලයට පැමිණීමකින් තොරව, පරිගණකයක් හෝ ජංගම දුරකථනයක් භාවිතයෙන් ඕනෑම ස්ථානයක සිට මහජන සේවාවන් වෙත පහසුවෙන් ප්රවේශ විය හැකිය."
+  },
+  "Geo-Spatial Dashboard": {
+    "english": "Geo-Spatial Dashboard",
+    "sinhala": "භූගෝලීය තොරතුරු දර්ශක පුවරුව"
+  },
+  "Maps, land data, municipal assets and operational decisions are layered onto one interactive geographic view of the council area.": {
+    "english": "Maps, land data, municipal assets and operational decisions are layered onto one interactive geographic view of the council area.",
+    "sinhala": "සභා බලප්රදේශයේ සිතියම්, ඉඩම් තොරතුරු, පොදු දේපළ සහ අනෙකුත් වැදගත් දත්ත එකම අන්තර්ක්රියාකාරී සිතියමක් ඔස්සේ නිරීක්ෂණය කර තීරණ ගැනීමට පහසුකම් සලසයි."
+  },
+  "Field Data Collection": {
+    "english": "Field Data Collection",
+    "sinhala": "ක්ෂේත්ර තොරතුරු රැස් කිරීම"
+  },
+  "Turns mobile devices into real-time GIS-based data capture tools for field officers, making field information available quickly and accurately.": {
+    "english": "Turns mobile devices into real-time GIS-based data capture tools for field officers, making field information available quickly and accurately.",
+    "sinhala": "ක්ෂේත්ර නිලධාරීන්ට ජංගම උපාංග භාවිතයෙන් ස්ථානීය තොරතුරු සහ අනෙකුත් දත්ත සෘජුවම පද්ධතියට ඇතුළත් කළ හැකි අතර, එම තොරතුරු ඉක්මනින් සහ නිවැරදිව ලබාගත හැකිය."
+  },
+  "Report & Analytics": {
+    "english": "Report & Analytics",
+    "sinhala": "වාර්තා සහ දත්ත විශ්ලේෂණය"
+  },
+  "Converts raw operational information into reports, tracking, planning and forecasting that council leadership can use for decision-making.": {
+    "english": "Converts raw operational information into reports, tracking, planning and forecasting that council leadership can use for decision-making.",
+    "sinhala": "පද්ධතියේ රැස්වන තොරතුරු ඇසුරින් වාර්තා සකස් කිරීම, කාර්ය සාධනය නිරීක්ෂණය කිරීම සහ ඉදිරි සැලසුම් සඳහා අවශ්ය තොරතුරු ලබාගැනීම පහසු කරයි."
+  },
+  "Tax Collection & Revenue": {
+    "english": "Tax Collection & Revenue",
+    "sinhala": "බදු සහ ආදායම් කළමනාකරණය"
+  },
+  "Manages assessments, bills, collections and arrears, with every revenue record linked to a real mapped property.": {
+    "english": "Manages assessments, bills, collections and arrears, with every revenue record linked to a real mapped property.",
+    "sinhala": "දේපළවලට අදාළ බදු තක්සේරු, බිල්පත්, ගෙවීම් සහ හිඟ මුදල් කළමනාකරණය කිරීම සඳහා පහසුකම් සලසන අතර, එම තොරතුරු අදාළ දේපළ සමඟ සම්බන්ධ කර තබාගත හැකිය."
+  },
+  "Acquisition of Certificates": {
+    "english": "Acquisition of Certificates",
+    "sinhala": "සහතිකපත් ලබාගැනීම"
+  },
+  "Verifies, approves and issues Street Line Certificates and similar municipal documents digitally with complete audit trails.": {
+    "english": "Verifies, approves and issues Street Line Certificates and similar municipal documents digitally with complete audit trails.",
+    "sinhala": "වීථි රේඛා සහතික ඇතුළු පළාත් පාලන ආයතන මඟින් නිකුත් කරන සහතිකපත් සඳහා අයදුම් කිරීම, තොරතුරු පරීක්ෂා කිරීම, අනුමැතිය ලබාදීම සහ සහතික නිකුත් කිරීම ඩිජිටල් ක්රමයට සිදුකළ හැකිය."
+  },
+  "Process & Document Management": {
+    "english": "Process & Document Management",
+    "sinhala": "කාර්ය ක්රියාවලි සහ ලේඛන කළමනාකරණය"
+  },
+  "Manages internal documents, approval workflows and audit trails so information does not get lost while moving between departments and officers.": {
+    "english": "Manages internal documents, approval workflows and audit trails so information does not get lost while moving between departments and officers.",
+    "sinhala": "අභ්යන්තර ලේඛන, අනුමැති ක්රියාවලි සහ නිලධාරීන් අතර හුවමාරු වන තොරතුරු ක්රමානුකූලව කළමනාකරණය කරමින්, ලේඛන අස්ථානගත වීම සහ අනවශ්ය ප්රමාදයන් අවම කිරීමට උපකාරී වේ."
   },
   "Close CMC feature details": {
     "english": "Close CMC feature details",
@@ -298,7 +382,11 @@ export const text = {
   },
   "Data-driven decisions using reliable,\r\n                    real-time and spatially aware information": {
     "english": "Data-driven decisions using reliable,\r\n                    real-time and spatially aware information",
-    "sinhala": "Data-driven decisions using reliable,\r\n                    real-time and spatially aware information"
+    "sinhala": "විශ්වාසදායක, යාවත්කාලීන සහ භූගෝලීය තොරතුරු ඇසුරින් වඩාත් නිවැරදි තීරණ ගැනීම."
+  },
+  "Data-driven decisions using reliable, real-time and spatially aware information": {
+    "english": "Data-driven decisions using reliable, real-time and spatially aware information",
+    "sinhala": "විශ්වාසදායක, යාවත්කාලීන සහ භූගෝලීය තොරතුරු ඇසුරින් වඩාත් නිවැරදි තීරණ ගැනීම."
   },
   "Demo page — application workflow/API integration will be connected later.": {
     "english": "Demo page — application workflow/API integration will be connected later.",
@@ -358,7 +446,15 @@ export const text = {
   },
   "Every function a municipal council runs today,\r\n                rebuilt as one connected digital system.": {
     "english": "Every function a municipal council runs today,\r\n                rebuilt as one connected digital system.",
-    "sinhala": "Every function a municipal council runs today,\r\n                rebuilt as one connected digital system."
+    "sinhala": "පළාත් පාලන ආයතනයක දෛනික කටයුතු සියල්ල වඩාත් පහසු, කාර්යක්ෂම සහ සම්බන්ධීකරණය වූ එක් ඩිජිටල් පද්ධතියක් හරහා කළමනාකරණය කිරීමට සැලසුම් කර ඇත."
+  },
+  "Every function a municipal council runs today, rebuilt as one connected digital system.": {
+    "english": "Every function a municipal council runs today, rebuilt as one connected digital system.",
+    "sinhala": "පළාත් පාලන ආයතනයක දෛනික කටයුතු සියල්ල වඩාත් පහසු, කාර්යක්ෂම සහ සම්බන්ධීකරණය වූ එක් ඩිජිටල් පද්ධතියක් හරහා කළමනාකරණය කිරීමට සැලසුම් කර ඇත."
+  },
+  "Every job a council runs today, reimagined as one connected digital system.": {
+    "english": "Every job a council runs today, reimagined as one connected digital system.",
+    "sinhala": "පළාත් පාලන ආයතනයක දෛනික කටයුතු සියල්ල වඩාත් පහසු, කාර්යක්ෂම සහ සම්බන්ධීකරණය වූ එක් ඩිජිටල් පද්ධතියක් හරහා කළමනාකරණය කිරීමට සැලසුම් කර ඇත."
   },
   "Evidence": {
     "english": "Evidence",
@@ -378,11 +474,11 @@ export const text = {
   },
   "Explore from the map": {
     "english": "Explore from the map",
-    "sinhala": "Explore from the map"
+    "sinhala": "සිතියමෙන් ගවේෂණය කරන්න"
   },
   "Explore the map": {
     "english": "Explore the map",
-    "sinhala": "Explore the map"
+    "sinhala": "සිතියම ගවේෂණය කරන්න"
   },
   "Field completion": {
     "english": "Field completion",
@@ -422,11 +518,15 @@ export const text = {
   },
   "GIS integration": {
     "english": "GIS integration",
-    "sinhala": "GIS integration"
+    "sinhala": "භූගෝලීය තොරතුරු පද්ධති ඒකාබද්ධ කිරීම"
   },
   "Geographic Information System integration lets\r\n                spatial data drive planning, permitting,\r\n                revenue management and service delivery across\r\n                the council instead of remaining disconnected\r\n                between departments.": {
     "english": "Geographic Information System integration lets\r\n                spatial data drive planning, permitting,\r\n                revenue management and service delivery across\r\n                the council instead of remaining disconnected\r\n                between departments.",
-    "sinhala": "Geographic Information System integration lets\r\n                spatial data drive planning, permitting,\r\n                revenue management and service delivery across\r\n                the council instead of remaining disconnected\r\n                between departments."
+    "sinhala": "භූගෝලීය තොරතුරු පද්ධතිය (GIS) මඟින් ඉඩම් සහ ස්ථානීය තොරතුරු නගර සැලසුම්, බලපත්ර නිකුත් කිරීම, ආදායම් කළමනාකරණය සහ මහජන සේවාවන් සමඟ සම්බන්ධ කරයි. එමඟින් විවිධ අංශවලට එකම තොරතුරු පදනමක් මත වඩාත් කාර්යක්ෂමව කටයුතු කළ හැකිය."
+  },
+  "Geographic Information System integration lets spatial data drive planning, permitting, revenue management and service delivery across the council instead of remaining disconnected between departments.": {
+    "english": "Geographic Information System integration lets spatial data drive planning, permitting, revenue management and service delivery across the council instead of remaining disconnected between departments.",
+    "sinhala": "භූගෝලීය තොරතුරු පද්ධතිය (GIS) මඟින් ඉඩම් සහ ස්ථානීය තොරතුරු නගර සැලසුම්, බලපත්ර නිකුත් කිරීම, ආදායම් කළමනාකරණය සහ මහජන සේවාවන් සමඟ සම්බන්ධ කරයි. එමඟින් විවිධ අංශවලට එකම තොරතුරු පදනමක් මත වඩාත් කාර්යක්ෂමව කටයුතු කළ හැකිය."
   },
   "Governance Evolves": {
     "english": "Governance Evolves",
@@ -470,7 +570,11 @@ export const text = {
   },
   "Interoperability across departments,\r\n                    agencies and connected government systems": {
     "english": "Interoperability across departments,\r\n                    agencies and connected government systems",
-    "sinhala": "Interoperability across departments,\r\n                    agencies and connected government systems"
+    "sinhala": "පළාත් පාලන ආයතනයේ විවිධ අංශ, රාජ්ය ආයතන සහ තොරතුරු පද්ධති අතර පහසු සම්බන්ධීකරණයක් ඇති කිරීම."
+  },
+  "Interoperability across departments, agencies and connected government systems": {
+    "english": "Interoperability across departments, agencies and connected government systems",
+    "sinhala": "පළාත් පාලන ආයතනයේ විවිධ අංශ, රාජ්ය ආයතන සහ තොරතුරු පද්ධති අතර පහසු සම්බන්ධීකරණයක් ඇති කිරීම."
   },
   "Join Spatio LGS": {
     "english": "Join Spatio LGS",
@@ -538,7 +642,11 @@ export const text = {
   },
   "Local government information is often spread\r\n                  across paper records, separate departments and\r\n                  disconnected systems. Spatio LGS connects land\r\n                  records, infrastructure, planning information\r\n                  and public services through one spatially aware\r\n                  platform, helping councils move toward\r\n                  connected, data-driven and sustainable\r\n                  governance.": {
     "english": "Local government information is often spread\r\n                  across paper records, separate departments and\r\n                  disconnected systems. Spatio LGS connects land\r\n                  records, infrastructure, planning information\r\n                  and public services through one spatially aware\r\n                  platform, helping councils move toward\r\n                  connected, data-driven and sustainable\r\n                  governance.",
-    "sinhala": "Local government information is often spread\r\n                  across paper records, separate departments and\r\n                  disconnected systems. Spatio LGS connects land\r\n                  records, infrastructure, planning information\r\n                  and public services through one spatially aware\r\n                  platform, helping councils move toward\r\n                  connected, data-driven and sustainable\r\n                  governance."
+    "sinhala": "පළාත් පාලන ආයතනවල තොරතුරු බොහෝ විට ලිපිගොනු, විවිධ අංශ සහ එකිනෙකට සම්බන්ධ නොවූ පද්ධති අතර විසිරී පවතී. Spatio LGS මඟින් ඉඩම් තොරතුරු, යටිතල පහසුකම්, නගර සැලසුම් සහ මහජන සේවාවන් භූගෝලීය පිහිටීම පදනම් කරගත් එක් ඩිජිටල් පද්ධතියකට සම්බන්ධ කරයි. එමඟින් පළාත් පාලන ආයතනවලට වඩාත් කාර්යක්ෂමව, නිවැරදි තොරතුරු මත පදනම්ව සහ දිගුකාලීන දැක්මක් ඇතිව කටයුතු කිරීමට අවස්ථාව සැලසේ."
+  },
+  "Local government information is often spread across paper records, separate departments and disconnected systems. Spatio LGS connects land records, infrastructure, planning information and public services through one spatially aware platform, helping councils move toward connected, data-driven and sustainable governance.": {
+    "english": "Local government information is often spread across paper records, separate departments and disconnected systems. Spatio LGS connects land records, infrastructure, planning information and public services through one spatially aware platform, helping councils move toward connected, data-driven and sustainable governance.",
+    "sinhala": "පළාත් පාලන ආයතනවල තොරතුරු බොහෝ විට ලිපිගොනු, විවිධ අංශ සහ එකිනෙකට සම්බන්ධ නොවූ පද්ධති අතර විසිරී පවතී. Spatio LGS මඟින් ඉඩම් තොරතුරු, යටිතල පහසුකම්, නගර සැලසුම් සහ මහජන සේවාවන් භූගෝලීය පිහිටීම පදනම් කරගත් එක් ඩිජිටල් පද්ධතියකට සම්බන්ධ කරයි. එමඟින් පළාත් පාලන ආයතනවලට වඩාත් කාර්යක්ෂමව, නිවැරදි තොරතුරු මත පදනම්ව සහ දිගුකාලීන දැක්මක් ඇතිව කටයුතු කිරීමට අවස්ථාව සැලසේ."
   },
   "Location": {
     "english": "Location",
@@ -666,7 +774,11 @@ export const text = {
   },
   "One platform. Ten jobs.": {
     "english": "One platform. Ten jobs.",
-    "sinhala": "One platform. Ten jobs."
+    "sinhala": "එකම පද්ධතියක්. සේවා රැසක්."
+  },
+  "One platform. Ten jobs. Zero filing cabinets.": {
+    "english": "One platform. Ten jobs. Zero filing cabinets.",
+    "sinhala": "එකම පද්ධතියක්. සේවා රැසක්. ලිපිගොනු ගොඩවල් වෙනුවට ඩිජිටල් විසඳුමක්."
   },
   "Open navigation": {
     "english": "Open navigation",
@@ -714,7 +826,7 @@ export const text = {
   },
   "Platform capability": {
     "english": "Platform capability",
-    "sinhala": "Platform capability"
+    "sinhala": "පද්ධතියේ විශේෂාංග"
   },
   "Platform demos, council implementation\r\n                      and solution discussions": {
     "english": "Platform demos, council implementation\r\n                      and solution discussions",
@@ -738,7 +850,11 @@ export const text = {
   },
   "Public Services. Local Requests. Municipal Action. One Connected Map.\r\n                Spatio LGS is a geospatial decision-support platform built for Municipal\r\n                and Urban Councils managing real complexity.": {
     "english": "Public Services. Local Requests. Municipal Action. One Connected Map.\r\n                Spatio LGS is a geospatial decision-support platform built for Municipal\r\n                and Urban Councils managing real complexity.",
-    "sinhala": "ජනතා සේවාවන්. ප්‍රාදේශීය ඉල්ලීම්. පළාත් පාලන ක්‍රියාකාරකම්. සියල්ල එකම සිතියමකින්. Spatio LGS යනු මහ නගර සභා සහ නගර සභාවල සංකීර්ණ පරිපාලන හා සේවා කටයුතු වඩාත් කාර්යක්ෂමව කළමනාකරණය කිරීම සඳහා භූගෝලීය තොරතුරු පදනම් කරගත් තීරණ ගැනීමේ සහාය ලබාදෙන ඩිජිටල් වේදිකාවකි."
+    "sinhala": "පොදු සේවා. ප්‍රාදේශීය ඉල්ලීම්. පළාත් පාලන ක්‍රියාමාර්ග. මේ සියල්ල එකම සිතියමක. නගර සභා සහ මහ නගර සභා මුහුණ දෙන සංකීර්ණ අභියෝගවලට ප්‍රායෝගික විසඳුම් ලබාදීම සඳහා නිර්මාණය කළ, භූගෝලීය තොරතුරු පදනම් කරගත් තීරණ ගැනීමේ සහායක වේදිකාවකි Spatio LGS."
+  },
+  "Public Services. Local Requests. Municipal Action. One Connected Map.\n                Spatio LGS is a geospatial decision-support platform built for Municipal\n                and Urban Councils managing real complexity.": {
+    "english": "Public Services. Local Requests. Municipal Action. One Connected Map.\n                Spatio LGS is a geospatial decision-support platform built for Municipal\n                and Urban Councils managing real complexity.",
+    "sinhala": "පොදු සේවා. ප්‍රාදේශීය ඉල්ලීම්. පළාත් පාලන ක්‍රියාමාර්ග. මේ සියල්ල එකම සිතියමක. නගර සභා සහ මහ නගර සභා මුහුණ දෙන සංකීර්ණ අභියෝගවලට ප්‍රායෝගික විසඳුම් ලබාදීම සඳහා නිර්මාණය කළ, භූගෝලීය තොරතුරු පදනම් කරගත් තීරණ ගැනීමේ සහායක වේදිකාවකි Spatio LGS."
   },
   "Public map": {
     "english": "Public map",
@@ -826,7 +942,7 @@ export const text = {
   },
   "Scroll": {
     "english": "Scroll",
-    "sinhala": "Scroll"
+    "sinhala": "පහළට යන්න"
   },
   "Search ID, issue, place or department...": {
     "english": "Search ID, issue, place or department...",
@@ -846,7 +962,11 @@ export const text = {
   },
   "Secure, privacy-aware and trusted handling\r\n                    of municipal information": {
     "english": "Secure, privacy-aware and trusted handling\r\n                    of municipal information",
-    "sinhala": "Secure, privacy-aware and trusted handling\r\n                    of municipal information"
+    "sinhala": "පළාත් පාලන ආයතනවල තොරතුරු ආරක්ෂිතව සහ පෞද්ගලිකත්වය සුරකිමින් කළමනාකරණය කිරීම."
+  },
+  "Secure, privacy-aware and trusted handling of municipal information": {
+    "english": "Secure, privacy-aware and trusted handling of municipal information",
+    "sinhala": "පළාත් පාලන ආයතනවල තොරතුරු ආරක්ෂිතව සහ පෞද්ගලිකත්වය සුරකිමින් කළමනාකරණය කිරීම."
   },
   "Select a stage to view\r\n              its requests": {
     "english": "Select a stage to view\r\n              its requests",
@@ -942,7 +1062,11 @@ export const text = {
   },
   "The map that ties": {
     "english": "The map that ties",
-    "sinhala": "The map that ties"
+    "sinhala": "සියලු තොරතුරු එකට"
+  },
+  "The map that ties it all together.": {
+    "english": "The map that ties it all together.",
+    "sinhala": "සියලු තොරතුරු එකට ගෙන එන සිතියම."
   },
   "This note is for internal municipal use.": {
     "english": "This note is for internal municipal use.",
@@ -1022,7 +1146,7 @@ export const text = {
   },
   "Weddemulla, Sri Lanka": {
     "english": "Weddemulla, Sri Lanka",
-    "sinhala": "Weddemulla, Sri Lanka"
+    "sinhala": "වැද්දෙමුල්ල, ශ්‍රී ලංකාව"
   },
   "Welcome": {
     "english": "Welcome",
@@ -1070,7 +1194,7 @@ export const text = {
   },
   "Zero filing cabinets.": {
     "english": "Zero filing cabinets.",
-    "sinhala": "Zero filing cabinets."
+    "sinhala": "ලිපිගොනු ගොඩවල් වෙනුවට ඩිජිටල් විසඳුමක්."
   },
   "Zoom in": {
     "english": "Zoom in",
@@ -1098,7 +1222,7 @@ export const text = {
   },
   "it all together.": {
     "english": "it all together.",
-    "sinhala": "it all together."
+    "sinhala": "ගෙන එන සිතියම."
   },
   "on the map.": {
     "english": "on the map.",

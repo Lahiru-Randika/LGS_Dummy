@@ -40,7 +40,6 @@ export const PRESERVED_PLACES = new Set([
   'Town Hall',
   'Independence Square',
   'Nelum Pokuna',
-  'Weddemulla, Sri Lanka',
   'Weddemulla',
   'Sri Lanka',
   'Vihara Maha Devi Park',

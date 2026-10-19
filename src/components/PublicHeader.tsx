@@ -52,7 +52,7 @@ export function PublicHeader({ overlay = false }: {
       <>
         <header className={`public-header ${overlay ? 'public-header--overlay' : ''} ${scrolled ? 'is-scrolled' : ''}`}>
           <div className="public-header__inner">
-            <Brand light={overlay && !scrolled}/>
+            <Brand light={Boolean(overlay || scrolled)}/>
 
             <nav className={`public-site-nav ${open ? 'is-open' : ''}`} aria-label={t("Public navigation")}>
               <div className="public-site-nav__links">
