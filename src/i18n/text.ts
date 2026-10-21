@@ -34,11 +34,11 @@ export const text = {
   },
   "Action taken": {
     "english": "Action taken",
-    "sinhala": "Action taken"
+    "sinhala": "ගත් ක්‍රියාමාර්ග"
   },
   "Add inspection note": {
     "english": "Add inspection note",
-    "sinhala": "Add inspection note"
+    "sinhala": "පරීක්ෂණ සටහනක් එක් කරන්න"
   },
   "Add photos or PDF": {
     "english": "Add photos or PDF",
@@ -94,15 +94,15 @@ export const text = {
   },
   "Assigned officer": {
     "english": "Assigned officer",
-    "sinhala": "Assigned officer"
+    "sinhala": "පැවරුම් ලද නිලධාරියා"
   },
   "Assigning": {
     "english": "Assigning",
-    "sinhala": "Assigning"
+    "sinhala": "පවරමින්..."
   },
   "Assigning to": {
     "english": "Assigning to",
-    "sinhala": "Assigning to"
+    "sinhala": "පවරනු ලබන්නේ"
   },
   "Back": {
     "english": "Back",
@@ -322,7 +322,7 @@ export const text = {
   },
   "Complaint evidence": {
     "english": "Complaint evidence",
-    "sinhala": "Complaint evidence"
+    "sinhala": "පැමිණිල්ලේ සාක්ෂි"
   },
   "Complaints": {
     "english": "Complaints",
@@ -347,6 +347,10 @@ export const text = {
   "Contact preference": {
     "english": "Contact preference",
     "sinhala": "Contact preference"
+  },
+  "Continue inspection": {
+    "english": "Continue inspection",
+    "sinhala": "පරීක්ෂාව ඉදිරියට ගෙන යන්න"
   },
   "Create account": {
     "english": "Create account",
@@ -458,19 +462,19 @@ export const text = {
   },
   "Evidence": {
     "english": "Evidence",
-    "sinhala": "Evidence"
+    "sinhala": "සාක්ෂි"
   },
   "Evidence collected during inspection and field work": {
     "english": "Evidence collected during inspection and field work",
-    "sinhala": "Evidence collected during inspection and field work"
+    "sinhala": "පරීක්ෂණ සහ ක්ෂේත්‍ර කටයුතු අතරතුර රැස් කරන ලද සාක්ෂි"
   },
   "Evidence submitted with the original complaint": {
     "english": "Evidence submitted with the original complaint",
-    "sinhala": "Evidence submitted with the original complaint"
+    "sinhala": "මුල් පැමිණිල්ල සමඟ ඉදිරිපත් කළ සාක්ෂි"
   },
   "Explain how the complaint was resolved...": {
     "english": "Explain how the complaint was resolved...",
-    "sinhala": "Explain how the complaint was resolved..."
+    "sinhala": "පැමිණිල්ල විසඳූ ආකාරය පැහැදිලි කරන්න..."
   },
   "Explore from the map": {
     "english": "Explore from the map",
@@ -482,27 +486,31 @@ export const text = {
   },
   "Field completion": {
     "english": "Field completion",
-    "sinhala": "Field completion"
+    "sinhala": "ක්ෂේත්‍ර වැඩ අවසන් කිරීම"
+  },
+  "Field completion evidence": {
+    "english": "Field completion evidence",
+    "sinhala": "ක්ෂේත්‍ර වැඩ අවසන් කිරීමේ සාක්ෂි"
   },
   "Field officer evidence": {
     "english": "Field officer evidence",
-    "sinhala": "Field officer evidence"
+    "sinhala": "ක්ෂේත්‍ර නිලධාරී සාක්ෂි"
   },
   "File": {
     "english": "File",
-    "sinhala": "File"
+    "sinhala": "ගොනුව"
   },
   "Final review": {
     "english": "Final review",
-    "sinhala": "Final review"
+    "sinhala": "අවසාන සමාලෝචනය"
   },
   "Finish field work": {
     "english": "Finish field work",
-    "sinhala": "Finish field work"
+    "sinhala": "ක්ෂේත්‍ර වැඩ අවසන් කරන්න"
   },
   "Finish this case": {
     "english": "Finish this case",
-    "sinhala": "Finish this case"
+    "sinhala": "මෙම නඩුව අවසන් කරන්න"
   },
   "First name": {
     "english": "First name",
@@ -514,7 +522,7 @@ export const text = {
   },
   "Full name": {
     "english": "Full name",
-    "sinhala": "Full name"
+    "sinhala": "සම්පූර්ණ නම"
   },
   "GIS integration": {
     "english": "GIS integration",
@@ -550,19 +558,23 @@ export const text = {
   },
   "Inspection": {
     "english": "Inspection",
-    "sinhala": "Inspection"
+    "sinhala": "පරීක්ෂාව"
   },
   "Inspection note": {
     "english": "Inspection note",
-    "sinhala": "Inspection note"
+    "sinhala": "පරීක්ෂණ සටහන"
   },
   "Inspection notes": {
     "english": "Inspection notes",
     "sinhala": "පරීක්ෂණ සටහන්"
   },
+  "Inspection evidence": {
+    "english": "Inspection evidence",
+    "sinhala": "පරීක්ෂණ සාක්ෂි"
+  },
   "Inspection summary *": {
     "english": "Inspection summary *",
-    "sinhala": "Inspection summary *"
+    "sinhala": "පරීක්ෂණ සාරාංශය *"
   },
   "Interactive CMC Visigeo map": {
     "english": "Interactive CMC Visigeo map",
@@ -722,15 +734,15 @@ export const text = {
   },
   "No complaint evidence attached": {
     "english": "No complaint evidence attached",
-    "sinhala": "No complaint evidence attached"
+    "sinhala": "පැමිණිල්ලට අදාළ සාක්ෂි අමුණා නැත"
   },
   "No field officer evidence uploaded yet": {
     "english": "No field officer evidence uploaded yet",
-    "sinhala": "No field officer evidence uploaded yet"
+    "sinhala": "ක්ෂේත්‍ර නිලධාරී සාක්ෂි තවමත් එක් කර නැත"
   },
   "No inspection notes added yet.": {
     "english": "No inspection notes added yet.",
-    "sinhala": "No inspection notes added yet."
+    "sinhala": "තවමත් පරීක්ෂණ සටහන් එක් කර නැත."
   },
   "No matching users found.": {
     "english": "No matching users found.",
@@ -738,7 +750,7 @@ export const text = {
   },
   "No matching workers": {
     "english": "No matching workers",
-    "sinhala": "No matching workers"
+    "sinhala": "ගැලපෙන සේවකයින් නොමැත"
   },
   "No requests found": {
     "english": "No requests found",
@@ -750,7 +762,11 @@ export const text = {
   },
   "No. 44, Beddagana South Road, Pitakotte": {
     "english": "No. 44, Beddagana South Road, Pitakotte",
-    "sinhala": "No. 44, Beddagana South Road, Pitakotte"
+    "sinhala": "නො. 44, බැද්දගාන දකුණු පාර, පිටකෝට්ටේ"
+  },
+  "Not assigned": {
+    "english": "Not assigned",
+    "sinhala": "පවරා නැත"
   },
   "Notification center": {
     "english": "Notification center",
@@ -786,11 +802,11 @@ export const text = {
   },
   "Open on map": {
     "english": "Open on map",
-    "sinhala": "Open on map"
+    "sinhala": "සිතියමෙන් බලන්න"
   },
   "Open related item": {
     "english": "Open related item",
-    "sinhala": "Open related item"
+    "sinhala": "අදාළ අයිතමය විවෘත කරන්න"
   },
   "Our approach": {
     "english": "Our approach",
@@ -798,7 +814,7 @@ export const text = {
   },
   "Ownership": {
     "english": "Ownership",
-    "sinhala": "Ownership"
+    "sinhala": "හිමිකාරිත්වය"
   },
   "Participants": {
     "english": "Participants",
@@ -814,7 +830,7 @@ export const text = {
   },
   "Photos & documents": {
     "english": "Photos & documents",
-    "sinhala": "Photos & documents"
+    "sinhala": "ඡායාරූප සහ ලේඛන"
   },
   "Pin the issue to a location so the right\r\n              team starts with clear context.": {
     "english": "Pin the issue to a location so the right\r\n              team starts with clear context.",
@@ -822,7 +838,11 @@ export const text = {
   },
   "Pinned": {
     "english": "Pinned",
-    "sinhala": "Pinned"
+    "sinhala": "සිතියම්ගත කළ"
+  },
+  "Pinned map location": {
+    "english": "Pinned map location",
+    "sinhala": "සිතියම්ගත කළ ස්ථානය"
   },
   "Platform capability": {
     "english": "Platform capability",
@@ -838,11 +858,11 @@ export const text = {
   },
   "Prefer to reach us directly?": {
     "english": "Prefer to reach us directly?",
-    "sinhala": "Prefer to reach us directly?"
+    "sinhala": "අපව සෘජුවම සම්බන්ධ කර ගැනීමට කැමතිද?"
   },
   "Primary service need": {
     "english": "Primary service need",
-    "sinhala": "Primary service need"
+    "sinhala": "ප්‍රධාන සේවා අවශ්‍යතාවය"
   },
   "Priority": {
     "english": "Priority",
@@ -878,7 +898,7 @@ export const text = {
   },
   "Recommendation": {
     "english": "Recommendation",
-    "sinhala": "Recommendation"
+    "sinhala": "නිර්දේශය"
   },
   "Register to report issues and track\r\n                municipal service requests.": {
     "english": "Register to report issues and track\r\n                municipal service requests.",
@@ -890,19 +910,19 @@ export const text = {
   },
   "Request information": {
     "english": "Request information",
-    "sinhala": "Request information"
+    "sinhala": "තොරතුරු විමසන්න"
   },
   "Request not found": {
     "english": "Request not found",
-    "sinhala": "Request not found"
+    "sinhala": "ඉල්ලීම හමු නොවීය"
   },
   "Request received": {
     "english": "Request received",
-    "sinhala": "Request received"
+    "sinhala": "ඉල්ලීම ලැබුණි"
   },
   "Request timeline": {
     "english": "Request timeline",
-    "sinhala": "Request timeline"
+    "sinhala": "ඉල්ලීම් කාලරාමුව"
   },
   "Request workflow": {
     "english": "Request workflow",
@@ -1012,13 +1032,17 @@ export const text = {
     "english": "Spatio LGS is a geospatial decision-support\r\n                platform for Municipal and Urban Councils,\r\n                bringing land management, permits, revenue,\r\n                civic services and citizen engagement into\r\n                one connected digital system.",
     "sinhala": "Spatio LGS is a geospatial decision-support\r\n                platform for Municipal and Urban Councils,\r\n                bringing land management, permits, revenue,\r\n                civic services and citizen engagement into\r\n                one connected digital system."
   },
+  "Start inspection": {
+    "english": "Start inspection",
+    "sinhala": "පරීක්ෂාව ආරම්භ කරන්න"
+  },
   "Status": {
     "english": "Status",
     "sinhala": "තත්ත්වය"
   },
   "Status history": {
     "english": "Status history",
-    "sinhala": "Status history"
+    "sinhala": "තත්ත්ව ඉතිහාසය"
   },
   "Subject": {
     "english": "Subject",
@@ -1026,15 +1050,19 @@ export const text = {
   },
   "Submit field report": {
     "english": "Submit field report",
-    "sinhala": "Submit field report"
+    "sinhala": "ක්ෂේත්‍ර වාර්තාව ඉදිරිපත් කරන්න"
   },
   "Submit your findings to the government administrator\r\n                    for final review.": {
     "english": "Submit your findings to the government administrator\r\n                    for final review.",
-    "sinhala": "Submit your findings to the government administrator\r\n                    for final review."
+    "sinhala": "අවසාන සමාලෝචනය සඳහා ඔබේ සොයාගැනීම් රජයේ පරිපාලක වෙත ඉදිරිපත් කරන්න."
+  },
+  "Submitted": {
+    "english": "Submitted",
+    "sinhala": "ඉදිරිපත් කරන ලදී"
   },
   "Submitted by complainant": {
     "english": "Submitted by complainant",
-    "sinhala": "Submitted by complainant"
+    "sinhala": "පැමිණිලිකරු විසින් ඉදිරිපත් කරන ලදී"
   },
   "Suggestions": {
     "english": "Suggestions",
@@ -1042,19 +1070,19 @@ export const text = {
   },
   "Talk to an expert.": {
     "english": "Talk to an expert.",
-    "sinhala": "Talk to an expert."
+    "sinhala": "විශේෂඥයෙකු සමඟ කතා කරන්න."
   },
   "Talk to the Spatio LGS team about your council’s\r\n                needs, existing challenges and how a connected\r\n                geospatial platform can support better local\r\n                government operations.": {
     "english": "Talk to the Spatio LGS team about your council’s\r\n                needs, existing challenges and how a connected\r\n                geospatial platform can support better local\r\n                government operations.",
-    "sinhala": "Talk to the Spatio LGS team about your council’s\r\n                needs, existing challenges and how a connected\r\n                geospatial platform can support better local\r\n                government operations."
+    "sinhala": "ඔබේ සභාවේ අවශ්‍යතා, පවතින අභියෝග සහ වඩා හොඳ පළාත් පාලන මෙහෙයුම් සඳහා සම්බන්ධිත භූ-අවකාශීය වේදිකාවක් සහාය වන ආකාරය පිළිබඳව Spatio LGS කණ්ඩායම සමඟ සාකච්ඡා කරන්න."
   },
   "Tell us about your council, current challenges and what you would like to improve…": {
     "english": "Tell us about your council, current challenges and what you would like to improve…",
-    "sinhala": "Tell us about your council, current challenges and what you would like to improve…"
+    "sinhala": "ඔබේ සභාව, පවතින අභියෝග සහ ඔබ වැඩිදියුණු කිරීමට කැමති දේ ගැන අපට කියන්න..."
   },
   "Tell us about your council, the services you\r\n                  want to improve and the problems you are\r\n                  hoping to solve. Our team can walk you through\r\n                  how Spatio LGS can work in your own council\r\n                  area.": {
     "english": "Tell us about your council, the services you\r\n                  want to improve and the problems you are\r\n                  hoping to solve. Our team can walk you through\r\n                  how Spatio LGS can work in your own council\r\n                  area.",
-    "sinhala": "Tell us about your council, the services you\r\n                  want to improve and the problems you are\r\n                  hoping to solve. Our team can walk you through\r\n                  how Spatio LGS can work in your own council\r\n                  area."
+    "sinhala": "ඔබේ සභාව, ඔබට වැඩිදියුණු කිරීමට අවශ්‍ය සේවාවන් සහ විසඳීමට බලාපොරොත්තු වන ගැටළු ගැන අපට කියන්න. ඔබේ සභා බලප්‍රදේශය තුළ Spatio LGS ක්‍රියාත්මක වන ආකාරය පිළිබඳව අපගේ කණ්ඩායමට ඔබට පැහැදිලි කළ හැකිය."
   },
   "Tell us what’s happening.": {
     "english": "Tell us what’s happening.",
@@ -1182,7 +1210,7 @@ export const text = {
   },
   "Your full name": {
     "english": "Your full name",
-    "sinhala": "Your full name"
+    "sinhala": "ඔබගේ සම්පූර්ණ නම"
   },
   "Your password": {
     "english": "Your password",
@@ -1251,5 +1279,185 @@ export const text = {
   "· Submitted": {
     "english": "· Submitted",
     "sinhala": "· Submitted"
+  },
+  "Updates": {
+    "english": "Updates",
+    "sinhala": "යාවත්කාලීන"
+  },
+  "UPDATES": {
+    "english": "UPDATES",
+    "sinhala": "යාවත්කාලීන"
+  },
+  "Mark all read": {
+    "english": "Mark all read",
+    "sinhala": "සියල්ල කියවූ ලෙස සලකුණු කරන්න"
+  },
+  "Mark all as read": {
+    "english": "Mark all as read",
+    "sinhala": "සියල්ල කියවූ ලෙස සලකුණු කරන්න"
+  },
+  "Close notifications": {
+    "english": "Close notifications",
+    "sinhala": "දැනුම්දීම් වසන්න"
+  },
+  "Loading notifications...": {
+    "english": "Loading notifications...",
+    "sinhala": "දැනුම්දීම් පූරණය වෙමින්..."
+  },
+  "Unable to load notifications": {
+    "english": "Unable to load notifications",
+    "sinhala": "දැනුම්දීම් පූරණය කිරීමට නොහැකි විය"
+  },
+  "Unable to load notifications.": {
+    "english": "Unable to load notifications.",
+    "sinhala": "දැනුම්දීම් පූරණය කිරීමට නොහැකි විය."
+  },
+  "Notifications could not be loaded.": {
+    "english": "Notifications could not be loaded.",
+    "sinhala": "දැනුම්දීම් පූරණය කිරීමට නොහැකි විය."
+  },
+  "Try again": {
+    "english": "Try again",
+    "sinhala": "නැවත උත්සාහ කරන්න"
+  },
+  "View": {
+    "english": "View",
+    "sinhala": "බලන්න"
+  },
+  "You're all caught up": {
+    "english": "You're all caught up",
+    "sinhala": "ඔබ සියලු දැනුම්දීම් පරීක්ෂා කර ඇත"
+  },
+  "New municipal updates will appear here.": {
+    "english": "New municipal updates will appear here.",
+    "sinhala": "නව නගර සභා යාවත්කාලීන කිරීම් මෙහි දිස්වනු ඇත."
+  },
+  "Refreshing...": {
+    "english": "Refreshing...",
+    "sinhala": "යාවත්කාලීන වෙමින්..."
+  },
+  "No unread notifications": {
+    "english": "No unread notifications",
+    "sinhala": "නොකියවූ දැනුම්දීම් නොමැත"
+  },
+  "No notifications yet": {
+    "english": "No notifications yet",
+    "sinhala": "තවමත් දැනුම්දීම් නොමැත"
+  },
+  "You have read all of your current updates.": {
+    "english": "You have read all of your current updates.",
+    "sinhala": "ඔබ ඔබගේ සියලු වත්මන් යාවත්කාලීන කිරීම් කියවා ඇත."
+  },
+  "Request, inspection and approval updates will appear here.": {
+    "english": "Request, inspection and approval updates will appear here.",
+    "sinhala": "ඉල්ලීම්, පරීක්ෂණ සහ අනුමත කිරීම් යාවත්කාලීන කිරීම් මෙහි දිස්වනු ඇත."
+  },
+  "Open related item": {
+    "english": "Open related item",
+    "sinhala": "අදාළ අයිතමය විවෘත කරන්න"
+  },
+  "Unread notification": {
+    "english": "Unread notification",
+    "sinhala": "නොකියවූ දැනුම්දීම"
+  },
+  "Updates automatically every 30 seconds": {
+    "english": "Updates automatically every 30 seconds",
+    "sinhala": "සෑම තත්පර 30කට වරක් ස්වයංක්‍රීයව යාවත්කාලීන වේ"
+  },
+  "Request received": {
+    "english": "Request received",
+    "sinhala": "ඉල්ලීම ලැබුණි"
+  },
+  "Your complaint has been resolved": {
+    "english": "Your complaint has been resolved",
+    "sinhala": "ඔබගේ පැමිණිල්ල විසඳා ඇත"
+  },
+  "Inspection started": {
+    "english": "Inspection started",
+    "sinhala": "පරීක්ෂාව ආරම්භ කරන ලදී"
+  },
+  "Inspection completed": {
+    "english": "Inspection completed",
+    "sinhala": "පරීක්ෂාව සම්පූර්ණ කරන ලදී"
+  },
+  "Inspection scheduled": {
+    "english": "Inspection scheduled",
+    "sinhala": "පරීක්ෂණය සැලසුම් කර ඇත"
+  },
+  "New request assigned": {
+    "english": "New request assigned",
+    "sinhala": "නව ඉල්ලීමක් පවරා ඇත"
+  },
+  "Your request was assigned": {
+    "english": "Your request was assigned",
+    "sinhala": "ඔබගේ ඉල්ලීම නිලධාරියෙකු වෙත පවරන ලදී"
+  },
+  "Request reassigned to you": {
+    "english": "Request reassigned to you",
+    "sinhala": "ඉල්ලීම නැවත ඔබට පවරන ලදී"
+  },
+  "Assignment removed": {
+    "english": "Assignment removed",
+    "sinhala": "පැවරුම ඉවත් කරන ලදී"
+  },
+  "Officer reassigned": {
+    "english": "Officer reassigned",
+    "sinhala": "වෙනත් නිලධාරියෙකු පවරන ලදී"
+  },
+  "Action required": {
+    "english": "Action required",
+    "sinhala": "ක්‍රියාමාර්ග අවශ්‍යයි"
+  },
+  "Request resolved": {
+    "english": "Request resolved",
+    "sinhala": "ඉල්ලීම විසඳා ඇත"
+  },
+  "Request closed": {
+    "english": "Request closed",
+    "sinhala": "ඉල්ලීම වසා ඇත"
+  },
+  "Request status updated": {
+    "english": "Request status updated",
+    "sinhala": "ඉල්ලීමේ තත්ත්වය යාවත්කාලීන විය"
+  },
+  "Field work completed": {
+    "english": "Field work completed",
+    "sinhala": "ක්ෂේත්‍ර වැඩ සම්පූර්ණ කරන ලදී"
+  },
+  "Officer checked in at site": {
+    "english": "Officer checked in at site",
+    "sinhala": "නිලධාරියා අදාළ ස්ථානයට පැමිණ වාර්තා කරන ලදී"
+  },
+  "Approval required": {
+    "english": "Approval required",
+    "sinhala": "අනුමැතිය අවශ්‍යයි"
+  },
+  "Request sent for approval": {
+    "english": "Request sent for approval",
+    "sinhala": "ඉල්ලීම අනුමැතිය සඳහා යොමු කරන ලදී"
+  },
+  "Tax Payment Confirmed": {
+    "english": "Tax Payment Confirmed",
+    "sinhala": "බදු ගෙවීම තහවුරු කරන ලදී"
+  },
+  "Tax payment confirmed": {
+    "english": "Tax payment confirmed",
+    "sinhala": "බදු ගෙවීම තහවුරු කරන ලදී"
+  },
+  "Booking Confirmed": {
+    "english": "Booking Confirmed",
+    "sinhala": "වෙන්කිරීම තහවුරු කරන ලදී"
+  },
+  "Booking confirmed": {
+    "english": "Booking confirmed",
+    "sinhala": "වෙන්කිරීම තහවුරු කරන ලදී"
+  },
+  "Yesterday": {
+    "english": "Yesterday",
+    "sinhala": "ඊයේ"
+  },
+  "Just now": {
+    "english": "Just now",
+    "sinhala": "දැන්"
   }
 } as const

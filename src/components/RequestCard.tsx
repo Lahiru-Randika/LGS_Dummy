@@ -18,7 +18,7 @@ export function RequestCard({ request, compact = false }: { request: ServiceRequ
         {!compact && <p>{request.description}</p>}
       </div>
       <div className="request-card__meta">
-        <span><MapPin size={14} />{request.locationLabel}</span>
+        <span><MapPin size={14} />{t(request.locationLabel)}</span>
         <span><Clock3 size={14} />{request.updatedAt.slice(5, 10).replace('-', '/')}</span>
       </div>
       <Link className="request-card__open" to={`/app/requests/${request.id}`} aria-label={`Open ${request.id}`}>

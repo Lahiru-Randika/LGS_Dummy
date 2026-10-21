@@ -214,11 +214,63 @@ const additionalPhrases: Record<string, string> = {
   'Suspended': 'අත්හිටුවූ',
   'Inactive': 'අක්‍රිය',
   'Notification center': 'දැනුම්දීම් මධ්‍යස්ථානය',
+  'Notifications': 'දැනුම්දීම්',
+  'Updates': 'යාවත්කාලීන',
+  'UPDATES': 'යාවත්කාලීන',
   'Unread': 'නොකියවූ',
   'Mark all as read': 'සියල්ල කියවූ ලෙස සලකුණු කරන්න',
+  'Mark all read': 'සියල්ල කියවූ ලෙස සලකුණු කරන්න',
+  'Close notifications': 'දැනුම්දීම් වසන්න',
+  'Loading notifications...': 'දැනුම්දීම් පූරණය වෙමින්...',
+  'Unable to load notifications': 'දැනුම්දීම් පූරණය කිරීමට නොහැකි විය',
+  'Unable to load notifications.': 'දැනුම්දීම් පූරණය කිරීමට නොහැකි විය.',
+  'Notifications could not be loaded.': 'දැනුම්දීම් පූරණය කිරීමට නොහැකි විය.',
+  'Try again': 'නැවත උත්සාහ කරන්න',
+  'View': 'බලන්න',
+  "You're all caught up": 'ඔබ සියලු දැනුම්දීම් පරීක්ෂා කර ඇත',
+  "You're all caught up.": 'ඔබ සියලු දැනුම්දීම් පරීක්ෂා කර ඇත.',
+  'You’re all caught up.': 'ඔබ සියලු දැනුම්දීම් පරීක්ෂා කර ඇත.',
+  'New municipal updates will appear here.': 'නව නගර සභා යාවත්කාලීන කිරීම් මෙහි දිස්වනු ඇත.',
+  'Refreshing...': 'යාවත්කාලීන වෙමින්...',
   'Refresh': 'නැවුම් කරන්න',
   'No notifications found': 'දැනුම්දීම් හමු නොවීය',
-  'You’re all caught up.': 'ඔබ සියලු දැනුම්දීම් පරීක්ෂා කර ඇත.',
+  'No unread notifications': 'නොකියවූ දැනුම්දීම් නොමැත',
+  'No notifications yet': 'තවමත් දැනුම්දීම් නොමැත',
+  'You have read all of your current updates.': 'ඔබ ඔබගේ සියලු වත්මන් යාවත්කාලීන කිරීම් කියවා ඇත.',
+  'Request, inspection and approval updates will appear here.': 'ඉල්ලීම්, පරීක්ෂණ සහ අනුමත කිරීම් යාවත්කාලීන කිරීම් මෙහි දිස්වනු ඇත.',
+  'Open related item': 'අදාළ අයිතමය විවෘත කරන්න',
+  'Unread notification': 'නොකියවූ දැනුම්දීම',
+  'Updates automatically every 30 seconds': 'සෑම තත්පර 30කට වරක් ස්වයංක්‍රීයව යාවත්කාලීන වේ',
+
+  // Notification Titles & States
+  'Request received': 'ඉල්ලීම ලැබුණි',
+  'Your complaint has been resolved': 'ඔබගේ පැමිණිල්ල විසඳා ඇත',
+  'Inspection started': 'පරීක්ෂාව ආරම්භ කරන ලදී',
+  'Inspection completed': 'පරීක්ෂාව සම්පූර්ණ කරන ලදී',
+  'Inspection scheduled': 'පරීක්ෂණය සැලසුම් කර ඇත',
+  'New request assigned': 'නව ඉල්ලීමක් පවරා ඇත',
+  'Your request was assigned': 'ඔබගේ ඉල්ලීම නිලධාරියෙකු වෙත පවරන ලදී',
+  'Request reassigned to you': 'ඉල්ලීම නැවත ඔබට පවරන ලදී',
+  'Assignment removed': 'පැවරුම ඉවත් කරන ලදී',
+  'Officer reassigned': 'වෙනත් නිලධාරියෙකු පවරන ලදී',
+  'Action required': 'ක්‍රියාමාර්ග අවශ්‍යයි',
+  'Request resolved': 'ඉල්ලීම විසඳා ඇත',
+  'Request closed': 'ඉල්ලීම වසා ඇත',
+  'Request status updated': 'ඉල්ලීමේ තත්ත්වය යාවත්කාලීන විය',
+  'Field work completed': 'ක්ෂේත්‍ර වැඩ සම්පූර්ණ කරන ලදී',
+  'Officer checked in at site': 'නිලධාරියා අදාළ ස්ථානයට පැමිණ වාර්තා කරන ලදී',
+  'Approval required': 'අනුමැතිය අවශ්‍යයි',
+  'Request sent for approval': 'ඉල්ලීම අනුමැතිය සඳහා යොමු කරන ලදී',
+  'Tax Payment Confirmed': 'බදු ගෙවීම තහවුරු කරන ලදී',
+  'Tax payment confirmed': 'බදු ගෙවීම තහවුරු කරන ලදී',
+  'Booking Confirmed': 'වෙන්කිරීම තහවුරු කරන ලදී',
+  'Booking confirmed': 'වෙන්කිරීම තහවුරු කරන ලදී',
+  'Booking cancelled': 'වෙන්කිරීම අවලංගු කරන ලදී',
+  'Booking completed': 'වෙන්කිරීම සම්පූර්ණයි',
+  'Booking pending': 'වෙන්කිරීම බලාපොරොත්තු වේ',
+  'Booking rejected': 'වෙන්කිරීම ප්‍රතික්ෂේපයි',
+  'Yesterday': 'ඊයේ',
+  'Just now': 'දැන්',
   'About Spatio LGS': 'Spatio LGS පිළිබඳව',
   'Our approach': 'අපගේ ප්‍රවේශය',
   'One connected picture for every council.': 'සෑම නගර සභාවකටම එක් සම්බන්ධිත දර්ශනයක්.',
@@ -277,7 +329,7 @@ const additionalPhrases: Record<string, string> = {
   'Environmental': 'පාරිසරික',
   'Utilities': 'පොදු උපයෝගිතා',
   'Planning': 'නාගරික සැලසුම්',
-  'Explore requests on map': 'සිතියමෙන් ඉල්ලීම් ගවේෂණය කරන්න',
+  'Explore requests on map': 'ඉල්ලීම් ඇති ස්ථාන සිතියමෙන් බලන්න',
   'Work queue': 'වැඩ පෝලිම',
   'Assigned to you': 'ඔබට පවරා ඇති',
   'Full queue': 'සම්පූර්ණ පෝලිම',
@@ -303,7 +355,7 @@ const additionalPhrases: Record<string, string> = {
   'Needs ownership': 'හිමිකාරිත්වය අවශ්‍යයි',
   'Is this open today?': 'මෙය අද විවෘතද?',
   'Citizen workspace': 'පුරවැසි වැඩ අවකාශය',
-  'Your local services, requests and places—kept in one clear view.': 'ඔබගේ ප්‍රාදේශීය සේවා, ඉල්ලීම් සහ ස්ථාන—එක් පැහැදිලි දැක්මකින්.',
+  'Your local services, requests and places—kept in one clear view.': 'ඔබගේ ප්‍රාදේශීය සේවා, ඉල්ලීම් සහ ස්ථාන එක් පැහැදිලි දැක්මකින්.',
   'Your requests': 'ඔබගේ ඉල්ලීම්',
   'What the municipality is currently seeing around your area.': 'නගර සභාව විසින් ඔබගේ ප්‍රදේශය තුළ දැනට නිරීක්ෂණය කරන තොරතුරු.',
   'Field operations': 'ක්ෂේත්‍ර මෙහෙයුම්',
@@ -699,8 +751,8 @@ const additionalPhrases: Record<string, string> = {
 
   // 04 | භූගෝලීය තොරතුරු පදනම
   'Strong geospatial foundation': 'ශක්තිමත් භූගෝලීය තොරතුරු පදනමක්',
-  'Every Layer of the City, Finally in One Place.': 'නගරයේ සියලු තොරතුරු ස්ථර — දැන් එකම තැනක.',
-  'Every Layer of the City,': 'නගරයේ සියලු තොරතුරු ස්ථර —',
+  'Every Layer of the City, Finally in One Place.': 'නගරයේ සියලුම තොරතුරු දැන් එකම තැනක.',
+  'Every Layer of the City,': 'නගරයේ සියලුම තොරතුරු ',
   'Finally in One Place.': 'දැන් එකම තැනක.',
   'Spatial foundation': 'භූගෝලීය දත්ත පදනම',
   'Manage municipal assets and infrastructure with real location intelligence instead of guesswork.': 'අනුමාන මත නොව, නිවැරදි ස්ථානීය තොරතුරු මත පදනම්ව සභාවට අයත් වත්කම් සහ යටිතල පහසුකම් කළමනාකරණය කරන්න.',
@@ -862,6 +914,126 @@ const additionalPhrases: Record<string, string> = {
   'Contact Our Team': 'අපගේ කණ්ඩායම අමතන්න',
   'Location intelligence for more responsive, informed, and coordinated local government.': 'වඩාත් කාර්යක්ෂම, දැනුවත් සහ සම්බන්ධීකරණය වූ පළාත් පාලනයක් සඳහා ස්ථානීය තොරතුරු තාක්ෂණය.',
 
+  // Section 9: Contact Page & Editorial Form
+  'Prefer to reach us directly?': 'අපව සෘජුවම සම්බන්ධ කර ගැනීමට කැමතිද?',
+  'PREFER TO REACH US DIRECTLY?': 'අපව සෘජුවම සම්බන්ධ කර ගැනීමට කැමතිද?',
+  'Talk to an expert.': 'විශේෂඥයෙකු සමඟ කතා කරන්න.',
+  'TALK TO AN EXPERT.': 'විශේෂඥයෙකු සමඟ කතා කරන්න.',
+  'Tell us about your council, the services you want to improve and the problems you are hoping to solve. Our team can walk you through how Spatio LGS can work in your own council area.': 'ඔබේ සභාව, ඔබට වැඩිදියුණු කිරීමට අවශ්‍ය සේවාවන් සහ විසඳීමට බලාපොරොත්තු වන ගැටළු ගැන අපට කියන්න. ඔබේ සභා බලප්‍රදේශය තුළ Spatio LGS ක්‍රියාත්මක වන ආකාරය පිළිබඳව අපගේ කණ්ඩායමට ඔබට පැහැදිලි කළ හැකිය.',
+  'Office': 'කාර්යාලය',
+  'OFFICE': 'කාර්යාලය',
+  'Head office': 'ප්‍රධාන කාර්යාලය',
+  'No. 44, Beddagana South Road, Pitakotte': 'නො. 44, බැද්දගාන දකුණු පාර, පිටකෝට්ටේ',
+  'Platform demos, council implementation and solution discussions': 'වේදිකා නිරූපණ, සභා ක්‍රියාත්මක කිරීම් සහ විසඳුම් සාකච්ඡා',
+  'Full name': 'සම්පූර්ණ නම',
+  'FULL NAME': 'සම්පූර්ණ නම',
+  'Your full name': 'ඔබගේ සම්පූර්ණ නම',
+  'Primary service need': 'ප්‍රධාන සේවා අවශ්‍යතාවය',
+  'PRIMARY SERVICE NEED': 'ප්‍රධාන සේවා අවශ්‍යතාවය',
+  'Land, tax, permits, complaints...': 'ඉඩම්, බදු, බලපත්‍ර, පැමිණිලි...',
+  'What are you hoping to solve?': 'ඔබ විසඳීමට බලාපොරොත්තු වන්නේ කුමක්ද?',
+  'WHAT ARE YOU HOPING TO SOLVE?': 'ඔබ විසඳීමට බලාපොරොත්තු වන්නේ කුමක්ද?',
+  'Tell us about your council, current challenges and what you would like to improve…': 'ඔබේ සභාව, පවතින අභියෝග සහ ඔබ වැඩිදියුණු කිරීමට කැමති දේ ගැන අපට කියන්න...',
+  'Tell us about your council, current challenges and what you would like to improve...': 'ඔබේ සභාව, පවතින අභියෝග සහ ඔබ වැඩිදියුණු කිරීමට කැමති දේ ගැන අපට කියන්න...',
+  'Council implementation': 'සභා ක්‍රියාත්මක කිරීම්',
+  'A connected platform for Municipal and Urban Council operations.': 'මහනගර සභා සහ නගර සභා මෙහෙයුම් සඳහා සම්බන්ධිත වේදිකාවකි.',
+  'Geospatial foundation': 'භූ-අවකාශීය පදනම',
+  'One verified map': 'එක් තහවුරු කළ සිතියමක්',
+  'Bring land, infrastructure, services and operational information together spatially.': 'ඉඩම්, යටිතල පහසුකම්, සේවා සහ මෙහෙයුම් තොරතුරු අවකාශීයව එකට එක් කරන්න.',
+  'Decision support': 'තීරණ ගැනීමේ සහාය',
+  'Connected governance': 'සම්බන්ධිත පාලනය',
+  'Support council teams with secure, role-based information and shared operational visibility.': 'ආරක්ෂිත, භූමිකාව පදනම් කරගත් තොරතුරු සහ හවුල් මෙහෙයුම් දෘශ්‍යතාව සමඟ සභා කණ්ඩායම් සවිබල ගන්වන්න.',
+  'Let’s put your council': 'ඔබේ සභාව',
+  'on the map.': 'සිතියමට එක් කරමු.',
+  'Talk to the Spatio LGS team about your council’s needs, existing challenges and how a connected geospatial platform can support better local government operations.': 'ඔබේ සභාවේ අවශ්‍යතා, පවතින අභියෝග සහ වඩා හොඳ පළාත් පාලන මෙහෙයුම් සඳහා සම්බන්ධිත භූ-අවකාශීය වේදිකාවක් සහාය වන ආකාරය පිළිබඳව Spatio LGS කණ්ඩායම සමඟ සාකච්ඡා කරන්න.',
+  'Scroll': 'පහළට යන්න',
+  'Sending message...': 'පණිවිඩය යවමින්...',
+  'Message sent successfully': 'පණිවිඩය සාර්ථකව යවන ලදී',
+  'Thank you for reaching out. We have received your inquiry and our team will get back to you shortly.': 'අප හා සම්බන්ධ වීම ගැන ඔබට ස්තුතියි. ඔබගේ විමසීම අප වෙත ලැබී ඇති අතර අපගේ කණ්ඩායම ඉක්මනින් ඔබව සම්බන්ධ කර ගනු ඇත.',
+  'Unable to send the request.': 'ඉල්ලීම යැවීමට නොහැකි විය.',
+  'Failed to send your message. Please try again.': 'ඔබගේ පණිවිඩය යැවීමට නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.',
+  'OK': 'හරි',
+
+  // Request Detail Page & Evidence & Workflow
+  'Status history': 'තත්ත්ව ඉතිහාසය',
+  'STATUS HISTORY': 'තත්ත්ව ඉතිහාසය',
+  'Request timeline': 'ඉල්ලීම් කාලරාමුව',
+  'Request overview': 'ඉල්ලීම් දළ විශ්ලේෂණය',
+  'Selected workflow stage': 'තෝරාගත් කාර්ය ප්‍රවාහ අදියර',
+  'request': 'ඉල්ලීමක්',
+  'requests': 'ඉල්ලීම්',
+  'Submitted': 'ඉදිරිපත් කරන ලදී',
+  'Pinned map location': 'සිතියම්ගත කළ ස්ථානය',
+  'Assigned officer': 'පැවරුම් ලද නිලධාරියා',
+  'Not assigned': 'පවරා නැත',
+  'Evidence': 'සාක්ෂි',
+  'EVIDENCE': 'සාක්ෂි',
+  'Photos & documents': 'ඡායාරූප සහ ලේඛන',
+  'Complaint evidence': 'පැමිණිල්ලේ සාක්ෂි',
+  'Evidence submitted with the original complaint': 'මුල් පැමිණිල්ල සමඟ ඉදිරිපත් කළ සාක්ෂි',
+  'No complaint evidence attached': 'පැමිණිල්ලට අදාළ සාක්ෂි අමුණා නැත',
+  'Field officer evidence': 'ක්ෂේත්‍ර නිලධාරී සාක්ෂි',
+  'Evidence collected during inspection and field work': 'පරීක්ෂණ සහ ක්ෂේත්‍ර කටයුතු අතරතුර රැස් කරන ලද සාක්ෂි',
+  'No field officer evidence uploaded yet': 'ක්ෂේත්‍ර නිලධාරී සාක්ෂි තවමත් එක් කර නැත',
+  'Inspection': 'පරීක්ෂාව',
+  'INSPECTION': 'පරීක්ෂාව',
+  'No inspection notes added yet.': 'තවමත් පරීක්ෂණ සටහන් එක් කර නැත.',
+  'Open on map': 'සිතියමෙන් බලන්න',
+  'Ownership': 'හිමිකාරිත්වය',
+  'OWNERSHIP': 'හිමිකාරිත්වය',
+  'Field completion evidence': 'ක්ෂේත්‍ර වැඩ අවසන් කිරීමේ සාක්ෂි',
+  'Inspection evidence': 'පරීක්ෂණ සාක්ෂි',
+  'Continue inspection': 'පරීක්ෂාව ඉදිරියට ගෙන යන්න',
+  'Start inspection': 'පරීක්ෂාව ආරම්භ කරන්න',
+  'Field completion': 'ක්ෂේත්‍ර වැඩ අවසන් කිරීම',
+  'FIELD COMPLETION': 'ක්ෂේත්‍ර වැඩ අවසන් කිරීම',
+  'Inspection summary *': 'පරීක්ෂණ සාරාංශය *',
+  'Action taken': 'ගත් ක්‍රියාමාර්ග',
+  'Recommendation': 'නිර්දේශය',
+  'Any recommendation for the administrator?': 'පරිපාලක සඳහා කිසියම් නිර්දේශයක් තිබේද?',
+  'What action was taken at the site?': 'අදාළ ස්ථානයේදී ගත් ක්‍රියාමාර්ග මොනවාද?',
+  'Describe what you found during the inspection...': 'පරීක්ෂාවේදී ඔබ නිරීක්ෂණය කළ කරුණු විස්තර කරන්න...',
+  'This note is for internal municipal use.': 'මෙම සටහන අභ්‍යන්තර නගර සභා භාවිතය සඳහා පමණි.',
+  'Inspection note': 'පරීක්ෂණ සටහන',
+  'Enter observations from the inspection...': 'පරීක්ෂාවේ නිරීක්ෂණ ඇතුළත් කරන්න...',
+  'Save note': 'සටහන සුරකින්න',
+  'Finish field work': 'ක්ෂේත්‍ර වැඩ අවසන් කරන්න',
+  'Submit field report': 'ක්ෂේත්‍ර වාර්තාව ඉදිරිපත් කරන්න',
+  'Finish this case': 'මෙම නඩුව අවසන් කරන්න',
+  'Final review': 'අවසාන සමාලෝචනය',
+  'FINAL REVIEW': 'අවසාන සමාලෝචනය',
+  'Resolution report *': 'විසඳුම් වාර්තාව *',
+  'Explain how the complaint was resolved...': 'පැමිණිල්ල විසඳූ ආකාරය පැහැදිලි කරන්න...',
+  'Mark as finished': 'අවසන් කළ ලෙස සලකුණු කරන්න',
+  'Mark case as finished': 'නඩුව අවසන් කළ ලෙස සලකුණු කරන්න',
+  'Assign / reassign officer': 'නිලධාරියෙකු පවරන්න / නැවත පවරන්න',
+  'Escalate for approval': 'අනුමැතිය සඳහා යොමු කරන්න',
+  'Approval decision': 'අනුමැතියේ තීරණය',
+  'Review the requested action': 'ඉල්ලූ ක්‍රියාමාර්ගය සමාලෝචනය කරන්න',
+  'Approve request': 'ඉල්ලීම අනුමත කරන්න',
+  'Request information': 'තොරතුරු විමසන්න',
+  'Reject request': 'ඉල්ලීම ප්‍රතික්ෂේප කරන්න',
+  'Officer assignment': 'නිලධාරී පැවරුම',
+  'Assign this request': 'මෙම ඉල්ලීම පවරන්න',
+  'Current officer': 'වත්මන් නිලධාරියා',
+  'Search worker by name or ID...': 'නම හෝ හැඳුනුම් අංකය මඟින් සේවකයෙකු සොයන්න...',
+  'No matching workers': 'ගැලපෙන සේවකයින් නොමැත',
+  'Try another worker name or ID.': 'වෙනත් සේවක නමක් හෝ හැඳුනුම් අංකයක් උත්සාහ කරන්න.',
+  'Assigning to': 'පවරනු ලබන්නේ',
+  'Select a worker to continue.': 'ඉදිරියට යාමට සේවකයෙකු තෝරන්න.',
+  'Assigning': 'පවරමින්...',
+  'Assign officer': 'නිලධාරියා පවරන්න',
+  'Close assignment': 'පැවරුම වසන්න',
+  'Submitted by complainant': 'පැමිණිලිකරු විසින් ඉදිරිපත් කරන ලදී',
+  'File': 'ගොනුව',
+  'URGENT': 'හදිසි',
+  'HIGH': 'ඉහළ',
+  'MEDIUM': 'මධ්‍යම',
+  'LOW': 'අඩු',
+  'Urgent': 'හදිසි',
+  'High': 'ඉහළ',
+  'Medium': 'මධ්‍යම',
+  'Low': 'අඩු',
 }
 
 for (const [enStr, siStr] of Object.entries(additionalPhrases)) {
@@ -888,6 +1060,36 @@ for (const [key, value] of Object.entries(reversePhraseMap)) {
   lowerReversePhraseMap[key.toLowerCase()] = value
 }
 
+const SINHALA_MONTHS: Record<string, string> = {
+  Jan: 'ජන',
+  Feb: 'පෙබ',
+  Mar: 'මාර්තු',
+  Apr: 'අප්‍රේල්',
+  May: 'මැයි',
+  Jun: 'ජූනි',
+  Jul: 'ජූලි',
+  Aug: 'අගෝ',
+  Sep: 'සැප්',
+  Oct: 'ඔක්',
+  Nov: 'නොවැ',
+  Dec: 'දෙසැ',
+}
+
+const REVERSE_SINHALA_MONTHS: Record<string, string> = {
+  'ජන': 'Jan',
+  'පෙබ': 'Feb',
+  'මාර්තු': 'Mar',
+  'අප්‍රේල්': 'Apr',
+  'මැයි': 'May',
+  'ජූනි': 'Jun',
+  'ජූලි': 'Jul',
+  'අගෝ': 'Aug',
+  'සැප්': 'Sep',
+  'ඔක්': 'Oct',
+  'නොවැ': 'Nov',
+  'දෙසැ': 'Dec',
+}
+
 // In-memory memoization cache for fast O(1) translation lookup
 const translationMemoCache = new Map<string, string>()
 
@@ -900,7 +1102,8 @@ export function translateText(text: string, lang: Language): string {
   const trimmed = text.trim()
   if (!trimmed) return text
 
-  const cacheKey = `${lang}:${trimmed}`
+  const normalized = trimmed.replace(/\s+/g, ' ')
+  const cacheKey = `${lang}:${normalized}`
   const cached = translationMemoCache.get(cacheKey)
   if (cached !== undefined) {
     return text.replace(trimmed, cached)
@@ -912,38 +1115,83 @@ export function translateText(text: string, lang: Language): string {
     // If the text is Sinhala, convert it back to English
     if (reversePhraseMap[trimmed]) {
       translated = reversePhraseMap[trimmed]
+    } else if (reversePhraseMap[normalized]) {
+      translated = reversePhraseMap[normalized]
     } else if (lowerReversePhraseMap[trimmed.toLowerCase()]) {
       translated = lowerReversePhraseMap[trimmed.toLowerCase()]
+    } else if (lowerReversePhraseMap[normalized.toLowerCase()]) {
+      translated = lowerReversePhraseMap[normalized.toLowerCase()]
     } else {
       // Dynamic patterns in reverse
-      const greetingMatchSi = trimmed.match(/^සුබ දහවලක්,\s+(.+)\.$/)
-      if (greetingMatchSi) {
-        translated = `Good afternoon, ${greetingMatchSi[1]}.`
+      const submittedMatchSi = normalized.match(/^([A-Z0-9-]+)\s+සාර්ථකව ඉදිරිපත් කර ඇත\.$/)
+      if (submittedMatchSi) {
+        translated = `${submittedMatchSi[1]} has been submitted successfully.`
       } else {
-        const wardPulseMatchSi = trimmed.match(/^(Ward\s+\d+)\s+සක්‍රියතාව$/)
-        if (wardPulseMatchSi) {
-          translated = `${wardPulseMatchSi[1]} pulse`
+        const completedReportMatchSi = normalized.match(/^([A-Z0-9-]+)\s+සම්පූර්ණ කර ඇත\.\s+විසඳුම් වාර්තාව බැලීමට ඉල්ලීම විවෘත කරන්න\.$/)
+        if (completedReportMatchSi) {
+          translated = `${completedReportMatchSi[1]} has been completed. Open the request to view the resolution report.`
         } else {
-          const searchingForMatchSi = trimmed.match(/^"(.+)" සොයමින් පවතී\.\.\.$/)
-          if (searchingForMatchSi) {
-            translated = `Searching for "${searchingForMatchSi[1]}"...`
+          const inspectStartedCompletedMatchSi = normalized.match(/^([A-Z0-9-]+)\s+පරීක්ෂාව\s+(ආරම්භ කරන ලදී|සම්පූර්ණ කරන ලදී)\.$/)
+          if (inspectStartedCompletedMatchSi) {
+            const action = inspectStartedCompletedMatchSi[2] === 'ආරම්භ කරන ලදී' ? 'started' : 'completed'
+            translated = `${inspectStartedCompletedMatchSi[1]} inspection has been ${action}.`
           } else {
-            const resultsForMatchSi = trimmed.match(/^"(.+)" සඳහා ප්‍රතිඵල$/)
-            if (resultsForMatchSi) {
-              translated = `Results for "${resultsForMatchSi[1]}"`
+            const inspectScheduledMatchSi = normalized.match(/^([A-Z0-9-]+)\s+සඳහා පරීක්ෂණයක් සැලසුම් කර ඇත\.$/)
+            if (inspectScheduledMatchSi) {
+              translated = `An inspection has been scheduled for ${inspectScheduledMatchSi[1]}.`
             } else {
-              const buildingsNearMatchSi = trimmed.match(/^(.+)\s+සිට මීටර් 250ක් ඇතුළත ගොඩනැගිලි$/)
-              if (buildingsNearMatchSi) {
-                translated = `Buildings within 250 m of ${buildingsNearMatchSi[1]}`
+              const daysAgoMatchSi = normalized.match(/^දින\s+(\d+)කට පෙර$/)
+              if (daysAgoMatchSi) {
+                translated = `${daysAgoMatchSi[1]} days ago`
               } else {
-                const buildingCountMatchSi = trimmed.match(/^(\d+)\s+(ගොඩනැගිල්ල|ගොඩනැගිලි)$/)
-                if (buildingCountMatchSi) {
-                  const count = buildingCountMatchSi[1]
-                  translated = `${count} ${count === '1' ? 'building' : 'buildings'}`
-                } else if (trimmed.startsWith('LGS / ')) {
-                  const sub = trimmed.slice(6).trim()
-                  if (reversePhraseMap[sub]) {
-                    translated = `LGS / ${reversePhraseMap[sub]}`
+                const hrAgoMatchSi = normalized.match(/^පැය\s+(\d+)කට පෙර$/)
+                if (hrAgoMatchSi) {
+                  translated = `${hrAgoMatchSi[1]} hr${hrAgoMatchSi[1] === '1' ? '' : 's'} ago`
+                } else {
+                  const minAgoMatchSi = normalized.match(/^මිනිත්තු\s+(\d+)කට පෙර$/)
+                  if (minAgoMatchSi) {
+                    translated = `${minAgoMatchSi[1]} min ago`
+                  } else {
+                    const greetingMatchSi = trimmed.match(/^සුබ දහවලක්,\s+(.+)\.$/)
+                    if (greetingMatchSi) {
+                      translated = `Good afternoon, ${greetingMatchSi[1]}.`
+                    } else {
+                      const wardPulseMatchSi = trimmed.match(/^(Ward\s+\d+)\s+සක්‍රියතාව$/)
+                      if (wardPulseMatchSi) {
+                        translated = `${wardPulseMatchSi[1]} pulse`
+                      } else {
+                      const dateMonthDayTimeMatchSi = normalized.match(/^(ජන|පෙබ|මාර්තු|අප්‍රේල්|මැයි|ජූනි|ජූලි|අගෝ|සැප්|ඔක්|නොවැ|දෙසැ)\s+(\d{1,2}),\s+(\d{1,2}:\d{2}(?:\s*[APap][Mm])?)$/)
+                      if (dateMonthDayTimeMatchSi) {
+                        const enMonth = REVERSE_SINHALA_MONTHS[dateMonthDayTimeMatchSi[1]] || dateMonthDayTimeMatchSi[1]
+                        translated = `${enMonth} ${dateMonthDayTimeMatchSi[2]}, ${dateMonthDayTimeMatchSi[3]}`
+                      } else {
+                        const searchingForMatchSi = trimmed.match(/^"(.+)" සොයමින් පවතී\.\.\.$/)
+                        if (searchingForMatchSi) {
+                          translated = `Searching for "${searchingForMatchSi[1]}"...`
+                        } else {
+                          const resultsForMatchSi = trimmed.match(/^"(.+)" සඳහා ප්‍රතිඵල$/)
+                          if (resultsForMatchSi) {
+                            translated = `Results for "${resultsForMatchSi[1]}"`
+                          } else {
+                            const buildingsNearMatchSi = trimmed.match(/^(.+)\s+සිට මීටර් 250ක් ඇතුළත ගොඩනැගිලි$/)
+                            if (buildingsNearMatchSi) {
+                              translated = `Buildings within 250 m of ${buildingsNearMatchSi[1]}`
+                            } else {
+                              const buildingCountMatchSi = trimmed.match(/^(\d+)\s+(ගොඩනැගිල්ල|ගොඩනැගිලි)$/)
+                              if (buildingCountMatchSi) {
+                                const count = buildingCountMatchSi[1]
+                                translated = `${count} ${count === '1' ? 'building' : 'buildings'}`
+                              } else if (trimmed.startsWith('LGS / ')) {
+                                const sub = trimmed.slice(6).trim()
+                                if (reversePhraseMap[sub]) {
+                                  translated = `LGS / ${reversePhraseMap[sub]}`
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -952,6 +1200,7 @@ export function translateText(text: string, lang: Language): string {
         }
       }
     }
+  }
 
     const finalVal = translated ?? trimmed
     translationMemoCache.set(cacheKey, finalVal)
@@ -960,7 +1209,7 @@ export function translateText(text: string, lang: Language): string {
 
   // lang === 'si'
   // 1. Strict preservation check for names, places, and IDs
-  if (isPreservedEntity(trimmed)) {
+  if (isPreservedEntity(trimmed) || isPreservedEntity(normalized)) {
     translationMemoCache.set(cacheKey, trimmed)
     return text
   }
@@ -968,13 +1217,279 @@ export function translateText(text: string, lang: Language): string {
   // 2. Exact match in dictionary
   if (phraseMap[trimmed]) {
     translated = phraseMap[trimmed]
+  } else if (phraseMap[normalized]) {
+    translated = phraseMap[normalized]
   } else if (lowerPhraseMap[trimmed.toLowerCase()]) {
     translated = lowerPhraseMap[trimmed.toLowerCase()]
+  } else if (lowerPhraseMap[normalized.toLowerCase()]) {
+    translated = lowerPhraseMap[normalized.toLowerCase()]
   }
 
   if (translated) {
     translationMemoCache.set(cacheKey, translated)
     return text.replace(trimmed, translated)
+  }
+
+  // Relative times & dates
+  if (/^Just now$/i.test(normalized)) {
+    const res = 'දැන්'
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  const minAgoMatch = normalized.match(/^(\d+)\s+min\s+ago$/i)
+  if (minAgoMatch) {
+    const res = `මිනිත්තු ${minAgoMatch[1]}කට පෙර`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  const hrAgoMatch = normalized.match(/^(\d+)\s+hrs?\s+ago$/i)
+  if (hrAgoMatch) {
+    const res = `පැය ${hrAgoMatch[1]}කට පෙර`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  if (/^Yesterday$/i.test(normalized)) {
+    const res = 'ඊයේ'
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  const daysAgoMatch = normalized.match(/^(\d+)\s+days?\s+ago$/i)
+  if (daysAgoMatch) {
+    const res = `දින ${daysAgoMatch[1]}කට පෙර`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // Date formats: e.g. "Oct 5, 2026", "Oct 5, 2026, 2:30 PM", or "5 Oct 2026"
+  const dateMonthFirstMatch = normalized.match(/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2}),\s+(\d{4})(?:(?:,|\s+at)?\s+(\d{1,2}:\d{2}(?:\s*[APap][Mm])?))?$/i)
+  if (dateMonthFirstMatch) {
+    const monthRaw = dateMonthFirstMatch[1].slice(0, 3)
+    const monthKey = monthRaw.charAt(0).toUpperCase() + monthRaw.slice(1).toLowerCase()
+    const sinhalaMonth = SINHALA_MONTHS[monthKey] || monthKey
+    const day = dateMonthFirstMatch[2]
+    const year = dateMonthFirstMatch[3]
+    const time = dateMonthFirstMatch[4]
+    const res = time ? `${year} ${sinhalaMonth} ${day}, ${time}` : `${year} ${sinhalaMonth} ${day}`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  const dateDayFirstMatch = normalized.match(/^(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{4})(?:(?:,|\s+at)?\s+(\d{1,2}:\d{2}(?:\s*[APap][Mm])?))?$/i)
+  if (dateDayFirstMatch) {
+    const day = dateDayFirstMatch[1]
+    const monthRaw = dateDayFirstMatch[2].slice(0, 3)
+    const monthKey = monthRaw.charAt(0).toUpperCase() + monthRaw.slice(1).toLowerCase()
+    const sinhalaMonth = SINHALA_MONTHS[monthKey] || monthKey
+    const year = dateDayFirstMatch[3]
+    const time = dateDayFirstMatch[4]
+    const res = time ? `${year} ${sinhalaMonth} ${day}, ${time}` : `${year} ${sinhalaMonth} ${day}`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // Date format without year: e.g. "Oct 16, 02:53 PM" or "Oct 16, 2:53 PM"
+  const dateMonthDayTimeMatch = normalized.match(/^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2})(?:,\s*|\s+)(\d{1,2}:\d{2}(?:\s*[APap][Mm])?)$/i)
+  if (dateMonthDayTimeMatch) {
+    const monthRaw = dateMonthDayTimeMatch[1].slice(0, 3)
+    const monthKey = monthRaw.charAt(0).toUpperCase() + monthRaw.slice(1).toLowerCase()
+    const sinhalaMonth = SINHALA_MONTHS[monthKey] || monthKey
+    const day = dateMonthDayTimeMatch[2]
+    const time = dateMonthDayTimeMatch[3]
+    const res = `${sinhalaMonth} ${day}, ${time}`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // Dynamic notification bodies
+  // 1. `${CODE} has been submitted successfully.`
+  const submittedMatch = normalized.match(/^([A-Z0-9-]+)\s+has been submitted successfully\.$/i)
+  if (submittedMatch) {
+    const res = `${submittedMatch[1]} සාර්ථකව ඉදිරිපත් කර ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 2. `${CODE} has been completed. Open the request to view the resolution report.`
+  const completedReportMatch = normalized.match(/^([A-Z0-9-]+)\s+has been completed\.\s+Open the request to view the resolution report\.$/i)
+  if (completedReportMatch) {
+    const res = `${completedReportMatch[1]} සම්පූර්ණ කර ඇත. විසඳුම් වාර්තාව බැලීමට ඉල්ලීම විවෘත කරන්න.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 3. `${CODE} inspection has been (started|completed).`
+  const inspectStartedCompletedMatch = normalized.match(/^([A-Z0-9-]+)\s+inspection has been (started|completed)\.$/i)
+  if (inspectStartedCompletedMatch) {
+    const code = inspectStartedCompletedMatch[1]
+    const action = inspectStartedCompletedMatch[2].toLowerCase() === 'started' ? 'ආරම්භ කරන ලදී' : 'සම්පූර්ණ කරන ලදී'
+    const res = `${code} පරීක්ෂාව ${action}.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 4. `An inspection has been scheduled for ${CODE}.`
+  const inspectScheduledMatch = normalized.match(/^An inspection has been scheduled for\s+([A-Z0-9-]+)\.$/i)
+  if (inspectScheduledMatch) {
+    const res = `${inspectScheduledMatch[1]} සඳහා පරීක්ෂණයක් සැලසුම් කර ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 5. `${CODE} has been assigned to you.`
+  const assignedToYouMatch = normalized.match(/^([A-Z0-9-]+)\s+has been assigned to you\.$/i)
+  if (assignedToYouMatch) {
+    const res = `${assignedToYouMatch[1]} ඔබට පවරා ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 6. `${CODE} has been reassigned to you.`
+  const reassignedToYouMatch = normalized.match(/^([A-Z0-9-]+)\s+has been reassigned to you\.$/i)
+  if (reassignedToYouMatch) {
+    const res = `${reassignedToYouMatch[1]} නැවත ඔබට පවරා ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 7. `${CODE} has been reassigned to another officer.`
+  const reassignedOtherMatch = normalized.match(/^([A-Z0-9-]+)\s+has been reassigned to another officer\.$/i)
+  if (reassignedOtherMatch) {
+    const res = `${reassignedOtherMatch[1]} වෙනත් නිලධාරියෙකු වෙත නැවත පවරා ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 8. `A different municipal officer has been assigned to ${CODE}.`
+  const diffOfficerMatch = normalized.match(/^A different municipal officer has been assigned to\s+([A-Z0-9-]+)\.$/i)
+  if (diffOfficerMatch) {
+    const res = `${diffOfficerMatch[1]} සඳහා වෙනත් නගර සභා නිලධාරියෙකු පවරන ලදී.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 9. `${CODE} has been assigned to a municipal officer.`
+  const assignedOfficerMatch = normalized.match(/^([A-Z0-9-]+)\s+has been assigned to a municipal officer\.$/i)
+  if (assignedOfficerMatch) {
+    const res = `${assignedOfficerMatch[1]} නගර සභා නිලධාරියෙකු වෙත පවරා ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 10. `Additional action is required for ${CODE}. Please review the request details.`
+  const actionReqMatch = normalized.match(/^Additional action is required for\s+([A-Z0-9-]+)\.\s+Please review the request details\.$/i)
+  if (actionReqMatch) {
+    const res = `${actionReqMatch[1]} සඳහා අමතර ක්‍රියාමාර්ග අවශ්‍යයි. කරුණාකර ඉල්ලීමේ විස්තර සමාලෝචනය කරන්න.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 11. `${CODE} has been resolved.`
+  const resolvedMatch = normalized.match(/^([A-Z0-9-]+)\s+has been resolved\.$/i)
+  if (resolvedMatch) {
+    const res = `${resolvedMatch[1]} විසඳා ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 12. `${CODE} has been closed.`
+  const closedMatch = normalized.match(/^([A-Z0-9-]+)\s+has been closed\.$/i)
+  if (closedMatch) {
+    const res = `${closedMatch[1]} වසා ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 13. `${CODE} is now ${status}.`
+  const isNowMatch = normalized.match(/^([A-Z0-9-]+)\s+is now\s+(.+)\.$/i)
+  if (isNowMatch) {
+    const code = isNowMatch[1]
+    const rawStatus = isNowMatch[2].trim()
+    const transStatus = phraseMap[rawStatus] || lowerPhraseMap[rawStatus.toLowerCase()] || rawStatus
+    const res = `${code} දැන් ${transStatus} තත්ත්වයේ පවතී.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 14. `The assigned field officer checked in for ${CODE}.`
+  const checkedInMatch = normalized.match(/^The assigned field officer checked in for\s+([A-Z0-9-]+)\.$/i)
+  if (checkedInMatch) {
+    const res = `පැවරුම් ලද ක්ෂේත්‍ර නිලධාරියා ${checkedInMatch[1]} ස්ථානයට පැමිණ වාර්තා කරන ලදී.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 15. `The field officer has completed work for ${CODE}. Review the field report and finish the case.`
+  const completedFieldMatch = normalized.match(/^The field officer has completed work for\s+([A-Z0-9-]+)\.\s+Review the field report and finish the case\.$/i)
+  if (completedFieldMatch) {
+    const res = `ක්ෂේත්‍ර නිලධාරියා ${completedFieldMatch[1]} සඳහා වන වැඩ සම්පූර්ණ කර ඇත. ක්ෂේත්‍ර වාර්තාව සමාලෝචනය කර නඩුව අවසන් කරන්න.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 16. `${CODE} is waiting for your decision.`
+  const waitingDecisionMatch = normalized.match(/^([A-Z0-9-]+)\s+is waiting for your decision\.$/i)
+  if (waitingDecisionMatch) {
+    const res = `${waitingDecisionMatch[1]} ඔබගේ තීරණය අපේක්ෂාවෙන් පවතී.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 17. `${CODE} is awaiting a formal municipal decision.`
+  const awaitingDecisionMatch = normalized.match(/^([A-Z0-9-]+)\s+is awaiting a formal municipal decision\.$/i)
+  if (awaitingDecisionMatch) {
+    const res = `${awaitingDecisionMatch[1]} විධිමත් නගර සභා තීරණයක් අපේක්ෂාවෙන් පවතී.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 18. `Your payment of LKR ${AMOUNT} (${REF}) has been received successfully.`
+  const taxPaymentMatch = normalized.match(/^Your payment of LKR\s+([\d,.]+)\s+\(([^)]+)\)\s+has been received successfully\.$/i)
+  if (taxPaymentMatch) {
+    const res = `ඔබගේ LKR ${taxPaymentMatch[1]} (${taxPaymentMatch[2]}) ගෙවීම සාර්ථකව ලැබී ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 19. `Your booking (${CODE}) for ${FACILITY} on ${DATE} has been confirmed.`
+  const bookingConfirmMatch = normalized.match(/^Your booking\s+\(([^)]+)\)\s+for\s+(.+)\s+on\s+(.+)\s+has been confirmed\.$/i)
+  if (bookingConfirmMatch) {
+    const res = `${bookingConfirmMatch[2]} සඳහා ඔබගේ ${bookingConfirmMatch[3]} දින වෙන්කිරීම (${bookingConfirmMatch[1]}) තහවුරු කර ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 20. `Your booking (${CODE}) for ${FACILITY} has been updated to ${STATUS}.`
+  const bookingUpdateMatch = normalized.match(/^Your booking\s+\(([^)]+)\)\s+for\s+(.+)\s+has been updated to\s+(.+)\.$/i)
+  if (bookingUpdateMatch) {
+    const rawStatus = bookingUpdateMatch[3].trim()
+    const transStatus = phraseMap[rawStatus] || lowerPhraseMap[rawStatus.toLowerCase()] || rawStatus
+    const res = `${bookingUpdateMatch[2]} සඳහා ඔබගේ වෙන්කිරීම (${bookingUpdateMatch[1]}) ${transStatus} ලෙස යාවත්කාලීන කර ඇත.`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 21. `Approval ${STATUS}`
+  const approvalTitleMatch = normalized.match(/^Approval\s+(.+)$/i)
+  if (approvalTitleMatch) {
+    const rawStatus = approvalTitleMatch[1].trim()
+    const transStatus = phraseMap[rawStatus] || lowerPhraseMap[rawStatus.toLowerCase()] || rawStatus
+    const res = `අනුමැතිය ${transStatus}`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
+  }
+
+  // 22. `Booking ${STATUS}`
+  const bookingTitleMatch = normalized.match(/^Booking\s+(.+)$/i)
+  if (bookingTitleMatch) {
+    const rawStatus = bookingTitleMatch[1].trim()
+    const transStatus = phraseMap[rawStatus] || lowerPhraseMap[rawStatus.toLowerCase()] || rawStatus
+    const res = `වෙන්කිරීම ${transStatus}`
+    translationMemoCache.set(cacheKey, res)
+    return text.replace(trimmed, res)
   }
 
   // 3. Dynamic patterns that preserve placeholders, user names, or numbers

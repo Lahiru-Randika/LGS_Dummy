@@ -919,10 +919,16 @@ export function MyBookingsPage() {
           VIEW DETAILS MODAL
       ========================================================= */}
       {selectedBookingForDetails && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 p-4 sm:p-6 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-150">
-          <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 p-3 sm:p-4 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-150"
+          onClick={() => setSelectedBookingForDetails(null)}
+        >
+          <div
+            className="relative w-full max-w-lg my-auto max-h-[calc(100dvh-2rem)] flex flex-col rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Modal Header Image */}
-            <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
+            <div className="shrink-0 relative h-32 sm:h-36 w-full bg-slate-100 overflow-hidden">
               <img
                 src={getFacilityImage(
                   selectedBookingForDetails.facility || selectedBookingForDetails.facilityName,
@@ -931,54 +937,55 @@ export function MyBookingsPage() {
                 alt={selectedBookingForDetails.facility || selectedBookingForDetails.facilityName}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent" />
               <button
                 type="button"
                 onClick={() => setSelectedBookingForDetails(null)}
-                className="absolute right-3.5 top-3.5 rounded-full bg-black/40 p-1.5 text-white hover:bg-black/60 transition-colors"
+                className="absolute right-3 top-3 rounded-full bg-black/50 p-1.5 text-white hover:bg-black/70 transition-colors"
+                aria-label={t('Close')}
               >
                 <X size={16} />
               </button>
-              <div className="absolute bottom-3.5 left-4 right-4 flex items-end justify-between">
-                <div>
-                  <span className="text-[11px] font-bold text-teal-300 uppercase tracking-widest">
+              <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between gap-3">
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-teal-300 uppercase tracking-widest block">
                     {selectedBookingForDetails.bookingCode || selectedBookingForDetails.id}
                   </span>
-                  <h3 className="text-xl font-extrabold text-white leading-tight">
+                  <h3 className="text-lg sm:text-xl font-extrabold text-white leading-tight truncate">
                     {selectedBookingForDetails.facility || selectedBookingForDetails.facilityName}
                   </h3>
                 </div>
-                <div>{renderStatusBadge(selectedBookingForDetails.status)}</div>
+                <div className="shrink-0">{renderStatusBadge(selectedBookingForDetails.status)}</div>
               </div>
             </div>
 
-            {/* Modal Body Details */}
-            <div className="p-5 sm:p-6 space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+            {/* Modal Body Details (Scrollable if needed on very small screens) */}
+            <div className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-5 space-y-3 text-xs [scrollbar-width:thin]">
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 sm:p-3">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">
                     {t('Booking date')}
                   </span>
-                  <div className="flex items-center gap-2 text-slate-800 font-semibold text-sm">
-                    <CalendarDays size={15} className="text-teal-600" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-slate-800 font-semibold text-xs sm:text-sm">
+                    <CalendarDays size={14} className="text-teal-600 shrink-0" />
                     <span>{selectedBookingForDetails.date}</span>
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 sm:p-3">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">
                     {t('Allocated time')}
                   </span>
-                  <div className="flex items-center gap-2 text-slate-800 font-semibold text-sm">
-                    <Clock3 size={15} className="text-teal-600" />
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-slate-800 font-semibold text-xs sm:text-sm">
+                    <Clock3 size={14} className="text-teal-600 shrink-0" />
                     <span>{selectedBookingForDetails.time}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3.5 space-y-2">
+              <div className="rounded-xl border border-slate-100 bg-slate-50/80 p-3 space-y-2">
                 <div className="flex items-start gap-2.5">
-                  <MapPin size={15} className="text-teal-600 shrink-0 mt-0.5" />
+                  <MapPin size={14} className="text-teal-600 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">
                       {t('Premises location')}
@@ -990,7 +997,7 @@ export function MyBookingsPage() {
                 </div>
 
                 <div className="flex items-start gap-2.5 pt-2 border-t border-slate-200/60">
-                  <Users size={15} className="text-teal-600 shrink-0 mt-0.5" />
+                  <Users size={14} className="text-teal-600 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">
                       {t('Expected attendees')}
@@ -1002,7 +1009,7 @@ export function MyBookingsPage() {
                 </div>
 
                 <div className="flex items-start gap-2.5 pt-2 border-t border-slate-200/60">
-                  <FileText size={15} className="text-teal-600 shrink-0 mt-0.5" />
+                  <FileText size={14} className="text-teal-600 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-[10px] uppercase font-bold text-slate-400 block">
                       {t('Event purpose')}
@@ -1015,36 +1022,36 @@ export function MyBookingsPage() {
               </div>
 
               {/* Official Stamp */}
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3 text-emerald-900 flex items-center gap-2.5">
-                <CheckCircle2 size={18} className="text-emerald-600 shrink-0" />
-                <div className="text-[11px] leading-relaxed">
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-2.5 sm:p-3 text-emerald-900 flex items-center gap-2.5">
+                <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+                <div className="text-[11px] leading-snug">
                   <strong className="block font-bold">
                     {t('Official Municipal Verification')}
                   </strong>
-                  <span>
+                  <span className="text-emerald-800/90">
                     {t('This booking is officially registered with Colombo Municipal Council Civic Operations.')}
                   </span>
                 </div>
               </div>
+            </div>
 
-              {/* Modal Actions */}
-              <div className="flex items-center justify-between pt-2">
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
-                >
-                  <Printer size={14} />
-                  <span>{t('Print receipt')}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedBookingForDetails(null)}
-                  className="primary-btn"
-                >
-                  {t('Close')}
-                </button>
-              </div>
+            {/* Modal Actions - Anchored at the bottom so it never gets clipped */}
+            <div className="shrink-0 border-t border-slate-100 bg-slate-50/60 px-4 sm:px-5 py-3 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
+              >
+                <Printer size={14} />
+                <span>{t('Print receipt')}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedBookingForDetails(null)}
+                className="primary-btn"
+              >
+                {t('Close')}
+              </button>
             </div>
           </div>
         </div>
@@ -1054,9 +1061,15 @@ export function MyBookingsPage() {
           EDIT BOOKING MODAL
       ========================================================= */}
       {editingBooking && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 p-4 sm:p-6 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-150">
-          <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 p-5 sm:p-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 p-3 sm:p-4 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-150"
+          onClick={() => setEditingBooking(null)}
+        >
+          <div
+            className="relative w-full max-w-md my-auto max-h-[calc(100dvh-2rem)] flex flex-col rounded-2xl bg-white shadow-2xl border border-slate-200 p-4 sm:p-5 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="shrink-0 flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
               <div>
                 <span className="eyebrow text-teal-700">{editingBooking.bookingCode || editingBooking.id}</span>
                 <h3 className="text-base font-extrabold text-slate-900 mt-0.5">
@@ -1072,7 +1085,7 @@ export function MyBookingsPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSaveEdit} className="space-y-3.5 text-xs">
+            <form onSubmit={handleSaveEdit} className="flex-1 overflow-y-auto min-h-0 space-y-3 text-xs pr-0.5">
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
                   {t('Facility')}

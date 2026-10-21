@@ -562,8 +562,8 @@ export function RequestsPage() {
               "/>
 
             {activeStage === 'ALL'
-            ? 'Request overview'
-            : 'Selected workflow stage'}
+            ? t('Request overview')
+            : t('Selected workflow stage')}
           </div>
 
           <div className="
@@ -580,7 +580,7 @@ export function RequestsPage() {
                 tracking-[-.025em]
                 text-slate-900
               ">
-              {activeStageInfo.label}
+              {t(activeStageInfo.label)}
             </h2>
 
             <span className="
@@ -588,7 +588,7 @@ export function RequestsPage() {
                 font-medium
                 text-slate-400
               ">
-              {activeStageInfo.description}
+              {t(activeStageInfo.description)}
             </span>
           </div>
         </div>
@@ -633,8 +633,8 @@ export function RequestsPage() {
 
             {visibleRequests.length ===
             1
-            ? ' request'
-            : ' requests'}
+            ? ' ' + t('request')
+            : ' ' + t('requests')}
           </span>
         </div>
       </section>

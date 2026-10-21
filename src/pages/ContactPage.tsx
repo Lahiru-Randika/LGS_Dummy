@@ -50,7 +50,7 @@ export function ContactPage() {
     ).trim().replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    const timeoutId = setTimeout(() => controller.abort(), 25000);
 
     try {
       const response = await fetch(
@@ -315,9 +315,9 @@ export function ContactPage() {
                     <span>
                       <C />
                     </span>
-                    <h3>{String(title)}</h3>
-                    <strong>{String(sub)}</strong>
-                    <p>{String(body)}</p>
+                    <h3>{t(String(title))}</h3>
+                    <strong>{t(String(sub))}</strong>
+                    <p>{t(String(body))}</p>
                   </article>
                 </ScrollReveal>
               );

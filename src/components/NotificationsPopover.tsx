@@ -18,6 +18,10 @@ import {
 } from 'react-router-dom'
 
 import {
+  useLanguage,
+} from '../context/LanguageContext'
+
+import {
   notificationTarget,
   notificationsService,
 } from '../services/notifications.service'
@@ -37,6 +41,9 @@ export function NotificationsPopover({
 }: {
   onClose: () => void
 }) {
+  const { t } =
+    useLanguage()
+
   const navigate =
     useNavigate()
 
@@ -284,11 +291,11 @@ export function NotificationsPopover({
           <span
             className="eyebrow"
           >
-            Updates
+            {t('Updates')}
           </span>
 
           <h3>
-            Notifications
+            {t('Notifications')}
           </h3>
         </div>
 
@@ -310,7 +317,7 @@ export function NotificationsPopover({
                 }
               />
 
-              Mark all read
+              {t('Mark all read')}
             </button>
           )}
 
@@ -320,7 +327,7 @@ export function NotificationsPopover({
             onClick={
               onClose
             }
-            aria-label="Close notifications"
+            aria-label={t('Close notifications')}
           >
             <X
               size={
@@ -349,7 +356,7 @@ export function NotificationsPopover({
               className="animate-spin text-teal-700"
             />
 
-            Loading notifications...
+            {t('Loading notifications...')}
           </div>
         ) : error ? (
           <div
@@ -365,7 +372,7 @@ export function NotificationsPopover({
             <p
               className="mt-2 text-[10px] font-semibold text-slate-700"
             >
-              {error}
+              {t(error)}
             </p>
 
             <button
@@ -375,7 +382,7 @@ export function NotificationsPopover({
                 void load()
               }
             >
-              Try again
+              {t('Try again')}
             </button>
           </div>
         ) : notifications.length ? (
@@ -451,21 +458,21 @@ export function NotificationsPopover({
                     >
                       <strong>
                         {
-                          item.title
+                          t(item.title)
                         }
                       </strong>
 
                       {item.unread && (
                         <span
                           className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600"
-                          aria-label="Unread"
+                          aria-label={t('Unread')}
                         />
                       )}
                     </div>
 
                     <p>
                       {
-                        item.body
+                        t(item.body)
                       }
                     </p>
 
@@ -474,7 +481,7 @@ export function NotificationsPopover({
                     >
                       <small>
                         {
-                          item.time
+                          t(item.time)
                         }
                       </small>
 
@@ -482,7 +489,7 @@ export function NotificationsPopover({
                         <small
                           className="font-bold text-teal-700"
                         >
-                          View
+                          {t('View')}
                         </small>
                       )}
                     </div>
@@ -505,13 +512,13 @@ export function NotificationsPopover({
             <strong
               className="mt-3 block text-[10px] text-slate-700"
             >
-              You're all caught up
+              {t("You're all caught up")}
             </strong>
 
             <p
               className="mt-1 text-[9px] text-slate-400"
             >
-              New municipal updates will appear here.
+              {t('New municipal updates will appear here.')}
             </p>
           </div>
         )}
@@ -537,7 +544,7 @@ export function NotificationsPopover({
             }
           />
 
-          Notification center
+          {t('Notification center')}
         </button>
       </div>
     </div>

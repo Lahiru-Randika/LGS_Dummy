@@ -631,7 +631,7 @@ export function RequestDetailPage() {
 
           <div className="request-priority-card">
             <small>{t("Priority")}</small>
-            <strong>{request.priority}</strong>
+            <strong>{t(request.priority)}</strong>
             <span>{t("Last updated")}<br />
               {new Date(request.updatedAt).toLocaleDateString()}
             </span>
@@ -657,10 +657,10 @@ export function RequestDetailPage() {
 
                     <div>
                       <StatusBadge status={event.status}/>
-                      <strong>{event.label}</strong>
+                      <strong>{t(event.label)}</strong>
                       <p>{event.note}</p>
                       <small>
-                        {event.at} · {event.by}
+                        {t(event.at)} · {event.by}
                       </small>
                     </div>
 
@@ -778,8 +778,8 @@ export function RequestDetailPage() {
 
                               <small>
                                 {completionEvidence
-                    ? 'Field completion evidence'
-                    : 'Inspection evidence'}
+                    ? t('Field completion evidence')
+                    : t('Inspection evidence')}
                                 {' · '}{t("File")}{index + 1}
                               </small>
                             </span>
@@ -849,7 +849,7 @@ export function RequestDetailPage() {
                                 font-bold
                                 text-slate-800
                               ">
-                              {note.author || 'Field officer'}
+                              {note.author || t('Field officer')}
                             </strong>
 
                             <small className="
@@ -892,11 +892,11 @@ export function RequestDetailPage() {
           <aside className="request-side">
             <section className="panel detail-summary">
               <span className="eyebrow">{t("Location")}</span>
-              <h3>{request.locationLabel}</h3>
+              <h3>{t(request.locationLabel)}</h3>
 
               <p>
                 <MapPin size={15}/>
-                {request.ward}
+                {t(request.ward)}
               </p>
 
               {building && (<div className="location-card">
@@ -946,7 +946,7 @@ export function RequestDetailPage() {
 
                 <span>
                   <small>{t("Department")}</small>
-                  <strong>{request.department}</strong>
+                  <strong>{t(request.department)}</strong>
                 </span>
               </div>
 
@@ -956,7 +956,7 @@ export function RequestDetailPage() {
                 <span>
                   <small>{t("Assigned officer")}</small>
                   <strong>
-                    {request.assignedToName || 'Not assigned'}
+                    {request.assignedToName || t('Not assigned')}
                   </strong>
                 </span>
               </div>
@@ -990,8 +990,8 @@ export function RequestDetailPage() {
 
                       {request.inspection?.status ===
                     'IN_PROGRESS'
-                    ? 'Continue inspection'
-                    : 'Start inspection'}
+                    ? t('Continue inspection')
+                    : t('Start inspection')}
                     </button>
 
                     {/* CHECK IN AT SITE */}
@@ -1549,7 +1549,7 @@ export function RequestDetailPage() {
 
                         text-slate-900
                       ">
-                      {request.assignedToName || 'Not assigned'}
+                      {request.assignedToName || t('Not assigned')}
                     </strong>
                   </div>
                 </div>
@@ -1573,7 +1573,7 @@ export function RequestDetailPage() {
 
                     shadow-sm
                   ">
-                  {request.assignedToName ? 'Assigned' : 'Open'}
+                  {request.assignedToName ? t('Assigned') : t('Open')}
                 </span>
               </div>
             </div>

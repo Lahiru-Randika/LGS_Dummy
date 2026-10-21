@@ -104,15 +104,15 @@ export function NotificationsPage() {
         }
     }
     return (<div className="page">
-      <PageHeader eyebrow="Updates" title={t("Notification center")} actions={<div className="flex flex-wrap items-center gap-2">
+      <PageHeader eyebrow={t("Updates")} title={t("Notification center")} actions={<div className="flex flex-wrap items-center gap-2">
             <button type="button" className="secondary-btn" onClick={() => void load()} disabled={loading}>
                 <RefreshCw size={15} className={loading
                 ? 'animate-spin'
                 : ''}/>
 
                 {loading
-                ? 'Refreshing...'
-                : 'Refresh'}
+                ? t('Refreshing...')
+                : t('Refresh')}
                 </button>
 
             {unreadCount >
@@ -156,7 +156,7 @@ export function NotificationsPage() {
             <strong className="mt-3 text-[12px] text-slate-800">{t("Unable to load notifications")}</strong>
 
             <p className="mt-1 text-[10px] text-slate-500">
-              {error}
+              {error ? t(error) : ''}
             </p>
 
             <button type="button" className="secondary-btn mt-4" onClick={() => void load()}>
@@ -183,19 +183,19 @@ export function NotificationsPage() {
                     <span className="min-w-0 flex-1">
                       <span className="flex items-start gap-2">
                         <strong className="text-[11px] font-extrabold text-slate-900">
-                          {item.title}
+                          {t(item.title)}
                         </strong>
 
                         {item.unread && (<i className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-600" aria-label={t("Unread notification")}/>)}
                       </span>
 
                       <span className="mt-1 block max-w-3xl text-[10px] leading-5 text-slate-500">
-                        {item.body}
+                        {t(item.body)}
                       </span>
 
                       <span className="mt-2 flex flex-wrap items-center gap-2">
                         <small className="text-[8px] font-semibold text-slate-400">
-                          {item.time}
+                          {t(item.time)}
                         </small>
 
                         {item.createdAt && (<>
@@ -204,7 +204,7 @@ export function NotificationsPage() {
                             </small>
 
                             <small className="text-[8px] text-slate-400">
-                              {exactTime(item.createdAt)}
+                              {t(exactTime(item.createdAt))}
                             </small>
                           </>)}
 
@@ -227,15 +227,15 @@ export function NotificationsPage() {
             <strong className="mt-4 text-[12px] text-slate-800">
               {filter ===
                 'UNREAD'
-                ? 'No unread notifications'
-                : 'No notifications yet'}
+                ? t('No unread notifications')
+                : t('No notifications yet')}
             </strong>
 
             <p className="mt-1 max-w-sm text-[10px] leading-5 text-slate-400">
               {filter ===
                 'UNREAD'
-                ? 'You have read all of your current updates.'
-                : 'Request, inspection and approval updates will appear here.'}
+                ? t('You have read all of your current updates.')
+                : t('Request, inspection and approval updates will appear here.')}
             </p>
           </div>)}
       </section>

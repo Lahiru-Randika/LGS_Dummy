@@ -68,6 +68,7 @@ export const PRESERVED_NAMES = new Set([
   'LGS User',
   'Admin',
   'Lahiru',
+  'Lahiru Randika',
 ])
 
 // Regex patterns for identifiers, numbers, dates, emails, and coordinates

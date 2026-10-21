@@ -20,7 +20,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const t = useCallback((value: string): string => {
     if (language === 'en' || isPreservedEntity(value)) return value
     const entry = (text as Record<string, {english: string; sinhala: string}>)[value]
-    if (entry) return entry.sinhala
+    if (entry && entry.sinhala && entry.sinhala.trim() !== entry.english.trim()) return entry.sinhala
     return translateText(value, language)
   }, [language])
   useEffect(() => {
