@@ -62,3 +62,73 @@ jobs:
             org.opencontainers.image.source=https://github.com/Lahiru-Randika/LGS_Dummy
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+
+  deploy:
+    name: Deploy frontend to DigitalOcean
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          SSH_HOST_KEY: ${{ secrets.DEPLOY_HOST_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_HOST_KEY" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy frontend container
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          IMAGE: ghcr.io/lahiru-randika/lgs_dummy:sha-${{ github.sha }}
+        run: |
+          ssh -o BatchMode=yes \
+              -o StrictHostKeyChecking=yes \
+              -o ConnectTimeout=20 \
+              "$DEPLOY_USER@$DEPLOY_HOST" \
+              bash -s -- "$IMAGE" <<'REMOTE'
+          set -euo pipefail
+
+          IMAGE="$1"
+          cd /opt/lgs/docker
+
+          echo "Pulling $IMAGE"
+          docker pull "$IMAGE"
+
+          echo "Saving rollback image"
+          OLD_IMAGE_ID=$(docker inspect lgs-frontend --format '{{.Image}}')
+          docker tag "$OLD_IMAGE_ID" lgs-frontend:rollback
+
+          cp .env .env.backup
+          chmod 600 .env.backup
+
+          sed -i "s|^FRONTEND_IMAGE=.*|FRONTEND_IMAGE=$IMAGE|" .env
+
+          echo "Deploying frontend"
+          if docker compose up -d --no-deps --no-build lgs-frontend \
+             && curl --fail --silent --show-error \
+                --retry 6 --retry-delay 2 \
+                --output /dev/null \
+                http://127.0.0.1:8080/; then
+
+            echo "Frontend deployment successful"
+            docker compose ps lgs-frontend
+
+          else
+            echo "Deployment failed. Rolling back."
+
+            sed -i \
+              's|^FRONTEND_IMAGE=.*|FRONTEND_IMAGE=lgs-frontend:rollback|' \
+              .env
+
+            docker compose up -d --no-deps --no-build lgs-frontend
+
+            exit 1
+          fi
+          REMOTE
