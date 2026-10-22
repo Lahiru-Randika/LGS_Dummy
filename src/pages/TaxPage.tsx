@@ -1,33 +1,4 @@
 import { useLanguage } from '../context/LanguageContext'
-// import { CircleDollarSign, Landmark, ReceiptText, TrendingUp } from 'lucide-react'
-// import { useEffect, useMemo, useState } from 'react'
-// import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-// import { MetricCard } from '../components/MetricCard'
-// import { PageHeader } from '../components/PageHeader'
-// import { taxService } from '../services/tax.service'
-// function money(value: unknown){
-//   const n=Number(value||0)
-//   if(Math.abs(n)>=1_000_000)return `Rs. ${(n/1_000_000).toFixed(n%1_000_000===0?0:1)}M`
-//   if(Math.abs(n)>=1_000)return `Rs. ${(n/1_000).toFixed(1)}K`
-//   return `Rs. ${n.toLocaleString()}`
-// }
-// export function TaxPage(){
-    const { t } = useLanguage();
-//   const year=new Date().getFullYear()
-//   const [summary,setSummary]=useState<any>({})
-//   const [monthly,setMonthly]=useState<any[]>([])
-//   const [wards,setWards]=useState<any[]>([])
-//   useEffect(()=>{
-//     Promise.all([taxService.summary(year),taxService.monthly(year),taxService.byWard(year)]).then(([s,m,w])=>{setSummary(s);setMonthly(m);setWards(w)}).catch(error=>console.error('Unable to load tax data',error))
-//   },[year])
-//   const taxData=useMemo(()=>monthly.map(item=>({month:String(item.month||'').slice(5)||String(item.month||''),collected:Number(item.collected||0)})),[monthly])
-//   const wardData=useMemo(()=>wards.map(item=>{
-//     const assessed=Number(item.assessed||0),outstanding=Number(item.outstanding||0)
-//     return [String(item.wardName||'Unassigned'),assessed>0?Math.max(0,Math.min(100,Math.round((assessed-outstanding)/assessed*100))):0] as [string,number]
-//   }),[wards])
-//   const latest=monthly.at(-1)
-//   return <div className="page"><PageHeader eyebrow="Financial overview" title="Municipal tax collection" description="Executive-level tax health by collection progress and geographic area."/><div className="metrics-grid metrics-grid--4"><MetricCard icon={Landmark} label="Annual target" value={money(summary.annualTarget)}/><MetricCard icon={CircleDollarSign} label="Collected" value={money(summary.collected)} note={`${Number(summary.collectionRate||0).toFixed(1)}% of annual target`} tone="mint"/><MetricCard icon={ReceiptText} label="Outstanding" value={money(summary.outstanding)} note="Across active assessments"/><MetricCard icon={TrendingUp} label="YoY collection" value="—" note="Year-over-year endpoint not configured" tone="dark"/></div><div className="tax-layout"><section className="panel panel--wide"><div className="panel-head"><div><span className="eyebrow">Collection curve</span><h2>Monthly collection</h2></div><strong className="money-summary">{money(latest?.collected)} <small>{String(latest?.month||'Latest')}</small></strong></div><div className="chart-wrap chart-wrap--xlarge"><ResponsiveContainer width="100%" height="100%"><BarChart data={taxData}><CartesianGrid vertical={false} stroke="#e8edf3"/><XAxis dataKey="month" axisLine={false} tickLine={false}/><YAxis axisLine={false} tickLine={false}/><Tooltip/><Bar dataKey="collected" fill="#0f766e" radius={[6,6,0,0]}/></BarChart></ResponsiveContainer></div></section><section className="panel"><div className="panel-head"><div><span className="eyebrow">By ward</span><h2>Collection progress</h2></div></div><div className="ward-list">{wardData.map(([w,p])=><div key={w}><div><strong>{w}</strong><span>{p}%</span></div><div className="progress"><i style={{width:`${p}%`}}/></div></div>)}</div></section></div></div>
-// }
 import { CircleDollarSign, Landmark, ReceiptText, TrendingUp, } from 'lucide-react';
 import { useMemo, } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, } from 'recharts';
@@ -172,6 +143,7 @@ const monthNames: Record<string, string> = {
    COMPONENT
 ========================================================= */
 export function TaxPage() {
+    const { t } = useLanguage();
     const year = new Date()
         .getFullYear();
     /*

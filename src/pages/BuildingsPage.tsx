@@ -76,34 +76,16 @@ export function BuildingsPage() {
     ======================================================= */
     useEffect(() => {
         const query = search.trim();
-        /*
-          EMPTY SEARCH
-  
-          Do not call the backend.
-        */
-        if (query.length ===
-            0) {
-            searchSequenceRef.current +=
-                1;
-            setBuildings([]);
-            setTotal(0);
-            setLoading(false);
-            setTaxLoading(false);
-            setError(null);
-            return;
-        }
-        /*
-          Give this search its own sequence.
-        */
         const sequence = ++searchSequenceRef.current;
+        const delay = query.length === 0 ? 0 : 350;
+
         const timeout = window.setTimeout(async () => {
             try {
                 setLoading(true);
                 setError(null);
-                const coordinates = parseCoordinates(query);
+                const coordinates = query ? parseCoordinates(query) : null;
                 /* =========================================
                    MAIN BUILDING SEARCH
-  
                    Only ONE API request here.
                 ========================================== */
                 const result = await buildingsService.list(coordinates
@@ -112,12 +94,12 @@ export function BuildingsPage() {
                         longitude: coordinates.longitude,
                         radiusMeters: 250,
                         page: 1,
-                        limit: 20,
+                        limit: 25,
                     }
                     : {
-                        search: query,
+                        search: query || undefined,
                         page: 1,
-                        limit: 20,
+                        limit: 25,
                     });
                 /*
                   Start with whatever Aiven already knows.
@@ -299,12 +281,7 @@ export function BuildingsPage() {
                     setTaxLoading(false);
                 }
             }
-        }, 
-        /*
-          User must stop typing for 450 ms
-          before the request is made.
-        */
-        450);
+        }, delay);
         return () => {
             window.clearTimeout(timeout);
         };
@@ -313,19 +290,12 @@ export function BuildingsPage() {
         can,
     ]);
     const query = search.trim();
-    const coordinates = parseCoordinates(query);
+    const coordinates = query ? parseCoordinates(query) : null;
     /* =======================================================
        CLEAR SEARCH
     ======================================================= */
     function clearSearch() {
-        searchSequenceRef.current +=
-            1;
         setSearch('');
-        setBuildings([]);
-        setTotal(0);
-        setLoading(false);
-        setTaxLoading(false);
-        setError(null);
     }
     /* =======================================================
        UI
@@ -373,95 +343,7 @@ export function BuildingsPage() {
             </button>)}
         </div>
 
-        {/* ===============================================
-            SEARCH STATUS
-        ================================================ */}
-
-        <div className="
-            mt-2
-            flex
-            min-h-[20px]
-            flex-wrap
-            items-center
-            justify-between
-            gap-2
-            px-1
-            text-[9px]
-            text-slate-400
-          ">
-          {!query ? (<span>
-              {t('Start typing to search by building name, ID, address or coordinates')}
-            </span>) : loading ? (<span>
-              {t('Searching for')}{t("&quot;")}{query}{t("&quot;...")}</span>) : coordinates ? (<span>
-              {t('Buildings within 250 m of')}{' '}
-              {coordinates.latitude},{' '}
-              {coordinates.longitude}
-            </span>) : (<span>
-              {t('Results for')}{t("&quot;")}{query}{t("&quot;")}</span>)}
-
-          {query &&
-            !loading && (<div className="flex items-center gap-2">
-                {taxLoading && (<span className="flex items-center gap-1 text-slate-400">
-                    <LoaderCircle size={10} className="animate-spin"/>
-
-                    {t('Loading tax data')}
-                  </span>)}
-
-                <strong className="text-slate-500">
-                  {total}{' '}
-                  {total ===
-                1
-                ? t('building')
-                : t('buildings')}
-                </strong>
-              </div>)}
-        </div>
       </div>
-
-      {/* ===================================================
-            INITIAL STATE
-  
-            This replaces the pointless loading state that
-            appeared when the page first opened.
-        ==================================================== */}
-
-      {!query && (<div className="
-            mt-5
-            flex
-            min-h-[220px]
-            flex-col
-            items-center
-            justify-center
-            px-5
-            text-center
-          ">
-          <span className="
-              grid
-              h-12
-              w-12
-              place-items-center
-              rounded-2xl
-              bg-white
-              text-slate-400
-              shadow-sm
-            ">
-            <Search size={21}/>
-          </span>
-
-          <strong className="mt-3 text-[12px] text-slate-700">
-            {t('Search municipal buildings')}
-          </strong>
-
-          <p className="
-              mt-1
-              max-w-md
-              text-[10px]
-              leading-5
-              text-slate-400
-            ">
-            {t('Enter a building name, LGS building ID, CMC ID, address or latitude and longitude.')}
-          </p>
-        </div>)}
 
       {/* ===================================================
             SEARCH LOADING
@@ -469,8 +351,7 @@ export function BuildingsPage() {
             Only displayed AFTER user has typed.
         ==================================================== */}
 
-      {query &&
-            loading &&
+      {loading &&
             !buildings.length && (<div className="
               flex
               min-h-[220px]
@@ -489,8 +370,7 @@ export function BuildingsPage() {
             ERROR
         ==================================================== */}
 
-      {query &&
-            error && (<div className="
+      {error && (<div className="
               mt-4
               rounded-xl
               border
@@ -509,8 +389,7 @@ export function BuildingsPage() {
             EMPTY SEARCH RESULT
         ==================================================== */}
 
-      {query &&
-            !loading &&
+      {!loading &&
             !error &&
             buildings.length ===
                 0 && (<div className="
@@ -559,9 +438,8 @@ export function BuildingsPage() {
             RESULTS
         ==================================================== */}
 
-      {query &&
-            buildings.length >
-                0 && (<div className="building-grid">
+      {buildings.length >
+            0 && (<div className="building-grid">
             {buildings.map((building) => {
                 const longitude = building
                     .center?.[0] ??

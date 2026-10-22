@@ -278,6 +278,11 @@ export function MyBookingsPage() {
       })
 
       setIsModalOpen(false)
+      setBookingDate('')
+      setStartTime('09:00')
+      setEndTime('12:00')
+      setPurpose('')
+      setCollisionWarning(null)
       setActionMessage({
         type: 'success',
         text: `Booking ${res.bookingCode} confirmed successfully!`,

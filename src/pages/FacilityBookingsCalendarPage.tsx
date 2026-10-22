@@ -438,6 +438,9 @@ export function FacilityBookingsCalendarPage() {
       })
 
       setIsModalOpen(false)
+      setNewDate('')
+      setNewPurpose('')
+      setCollisionWarning(null)
       setActionNotice({
         type: 'success',
         text: `Facility booking ${res.bookingCode} locked and confirmed successfully!`,

@@ -27,10 +27,10 @@ function formatEventTime(value: unknown) {
 
 function mapHistory(raw: any[] | undefined): StatusEvent[] {
   return (raw || []).map((event) => ({
-    status: event.toStatus as RequestStatus,
-    label: String(event.label || String(event.toStatus || '').replaceAll('_', ' ')),
-    at: formatEventTime(event.createdAt),
-    by: String(event.changedBy || 'LGS'),
+    status: (event.toStatus || event.tostatus) as RequestStatus,
+    label: String(event.label || String(event.toStatus || event.tostatus || '').replaceAll('_', ' ')),
+    at: formatEventTime(event.createdAt || event.createdat),
+    by: String(event.changedBy || event.changedby || 'LGS'),
     note: event.note == null ? undefined : String(event.note),
   }))
 }
@@ -40,10 +40,10 @@ function mapAttachments(raw: any[] | undefined): RequestAttachment[] {
     id: String(item.id),
     category: String(item.category || 'DOCUMENT'),
     filename: String(item.filename || 'Attachment'),
-    mimeType: String(item.mimeType || ''),
-    fileSize: numberValue(item.fileSize),
+    mimeType: String(item.mimeType || item.mimetype || ''),
+    fileSize: numberValue(item.fileSize ?? item.filesize),
     visibility: String(item.visibility || ''),
-    createdAt: String(item.createdAt || ''),
+    createdAt: String(item.createdAt || item.createdat || ''),
   }))
 }
 
@@ -53,13 +53,13 @@ function mapNotes(raw: any[] | undefined): RequestNote[] {
     body: String(item.body || ''),
     visibility: item.visibility,
     author: String(item.author || 'LGS'),
-    createdAt: String(item.createdAt || ''),
+    createdAt: String(item.createdAt || item.createdat || ''),
   }))
 }
 
 export function mapBackendRequest(raw: any): ServiceRequest {
   const attachments = mapAttachments(raw?.attachments)
-  const requestCode = String(raw?.requestCode || raw?.id || '')
+  const requestCode = String(raw?.requestCode || raw?.requestcode || raw?.request_code || raw?.id || '')
   return {
     id: requestCode,
     type: raw?.type as RequestType,
@@ -67,22 +67,22 @@ export function mapBackendRequest(raw: any): ServiceRequest {
     description: String(raw?.description || ''),
     status: raw?.status as RequestStatus,
     priority: (raw?.priority || 'NORMAL') as RequestPriority,
-    ward: String(raw?.wardName || raw?.ward || 'Unassigned ward'),
-    department: String(raw?.departmentName || raw?.department || 'Unassigned'),
-    buildingId: raw?.buildingCode ? String(raw.buildingCode) : undefined,
-    locationLabel: String(raw?.locationLabel || raw?.buildingName || 'Mapped location'),
+    ward: String(raw?.wardName || raw?.wardname || raw?.ward || 'Unassigned ward'),
+    department: String(raw?.departmentName || raw?.departmentname || raw?.department || 'Unassigned'),
+    buildingId: raw?.buildingCode || raw?.buildingcode ? String(raw.buildingCode || raw.buildingcode) : undefined,
+    locationLabel: String(raw?.locationLabel || raw?.locationlabel || raw?.buildingName || raw?.buildingname || 'Mapped location'),
     latitude: numberValue(raw?.latitude),
     longitude: numberValue(raw?.longitude),
-    createdAt: String(raw?.createdAt || ''),
-    updatedAt: String(raw?.updatedAt || raw?.createdAt || ''),
-    createdBy: String(raw?.createdById || ''),
-    createdByName: raw?.createdByName ? String(raw.createdByName) : undefined,
-    assignedTo: raw?.assignedToId ? String(raw.assignedToId) : undefined,
-    assignedToName: raw?.assignedToName ? String(raw.assignedToName) : undefined,
+    createdAt: String(raw?.createdAt || raw?.createdat || ''),
+    updatedAt: String(raw?.updatedAt || raw?.updatedat || raw?.createdAt || raw?.createdat || ''),
+    createdBy: String(raw?.createdById || raw?.createdbyid || raw?.created_by_user_id || ''),
+    createdByName: raw?.createdByName || raw?.createdbyname ? String(raw.createdByName || raw.createdbyname) : undefined,
+    assignedTo: raw?.assignedToId || raw?.assignedtoid ? String(raw.assignedToId || raw.assignedtoid) : undefined,
+    assignedToName: raw?.assignedToName || raw?.assignedtoname ? String(raw.assignedToName || raw.assignedtoname) : undefined,
     photos: attachments.map((item) => item.filename),
     history: mapHistory(raw?.history),
     version: numberValue(raw?.version, 1),
-    contactPreference: raw?.contactPreference,
+    contactPreference: raw?.contactPreference || raw?.contactpreference,
     attachments,
     notes: mapNotes(raw?.notes),
     inspection: (raw?.inspection ?? null) as Inspection | null,

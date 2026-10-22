@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { buildingsService } from '../services/buildings.service'
 import { ApiError } from '../services/http'
 import { requestsService } from '../services/requests.service'
@@ -43,6 +43,7 @@ export function RequestFormModal({
   onCreated: () => void
 }) {
   const routeLocation = useLocation()
+  const navigate = useNavigate()
 
   const routeState =
     (routeLocation.state as RequestRouteState | null) ?? null
@@ -349,19 +350,36 @@ export function RequestFormModal({
             </span>
           </div>
 
-          <button
-            className="primary-btn full"
-            onClick={onCreated}
-          >
-            View my requests
-          </button>
+          <div className="flex flex-col gap-2.5 w-full mt-2">
+            {requestCode && (
+              <button
+                type="button"
+                className="primary-btn full"
+                onClick={() => {
+                  onClose()
+                  navigate(`/app/requests/${requestCode}`)
+                }}
+              >
+                Open request
+              </button>
+            )}
 
-          <button
-            className="text-button"
-            onClick={onClose}
-          >
-            Close
-          </button>
+            <button
+              type="button"
+              className={requestCode ? 'secondary-btn full' : 'primary-btn full'}
+              onClick={onCreated}
+            >
+              View my requests
+            </button>
+
+            <button
+              type="button"
+              className="text-button"
+              onClick={onClose}
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     )
