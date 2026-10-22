@@ -1202,7 +1202,7 @@ export const text = {
   },
   "You're all caught up": {
     "english": "You're all caught up",
-    "sinhala": "You're all caught up"
+    "sinhala": "ඔබ සියලු දැනුම්දීම් පරීක්ෂා කර ඇත"
   },
   "Your city.": {
     "english": "Your city.",
@@ -1280,33 +1280,13 @@ export const text = {
     "english": "· Submitted",
     "sinhala": "· Submitted"
   },
-  "Updates": {
-    "english": "Updates",
-    "sinhala": "යාවත්කාලීන"
-  },
   "UPDATES": {
     "english": "UPDATES",
     "sinhala": "යාවත්කාලීන"
   },
-  "Mark all read": {
-    "english": "Mark all read",
-    "sinhala": "සියල්ල කියවූ ලෙස සලකුණු කරන්න"
-  },
   "Mark all as read": {
     "english": "Mark all as read",
     "sinhala": "සියල්ල කියවූ ලෙස සලකුණු කරන්න"
-  },
-  "Close notifications": {
-    "english": "Close notifications",
-    "sinhala": "දැනුම්දීම් වසන්න"
-  },
-  "Loading notifications...": {
-    "english": "Loading notifications...",
-    "sinhala": "දැනුම්දීම් පූරණය වෙමින්..."
-  },
-  "Unable to load notifications": {
-    "english": "Unable to load notifications",
-    "sinhala": "දැනුම්දීම් පූරණය කිරීමට නොහැකි විය"
   },
   "Unable to load notifications.": {
     "english": "Unable to load notifications.",
@@ -1315,22 +1295,6 @@ export const text = {
   "Notifications could not be loaded.": {
     "english": "Notifications could not be loaded.",
     "sinhala": "දැනුම්දීම් පූරණය කිරීමට නොහැකි විය."
-  },
-  "Try again": {
-    "english": "Try again",
-    "sinhala": "නැවත උත්සාහ කරන්න"
-  },
-  "View": {
-    "english": "View",
-    "sinhala": "බලන්න"
-  },
-  "You're all caught up": {
-    "english": "You're all caught up",
-    "sinhala": "ඔබ සියලු දැනුම්දීම් පරීක්ෂා කර ඇත"
-  },
-  "New municipal updates will appear here.": {
-    "english": "New municipal updates will appear here.",
-    "sinhala": "නව නගර සභා යාවත්කාලීන කිරීම් මෙහි දිස්වනු ඇත."
   },
   "Refreshing...": {
     "english": "Refreshing...",
@@ -1351,22 +1315,6 @@ export const text = {
   "Request, inspection and approval updates will appear here.": {
     "english": "Request, inspection and approval updates will appear here.",
     "sinhala": "ඉල්ලීම්, පරීක්ෂණ සහ අනුමත කිරීම් යාවත්කාලීන කිරීම් මෙහි දිස්වනු ඇත."
-  },
-  "Open related item": {
-    "english": "Open related item",
-    "sinhala": "අදාළ අයිතමය විවෘත කරන්න"
-  },
-  "Unread notification": {
-    "english": "Unread notification",
-    "sinhala": "නොකියවූ දැනුම්දීම"
-  },
-  "Updates automatically every 30 seconds": {
-    "english": "Updates automatically every 30 seconds",
-    "sinhala": "සෑම තත්පර 30කට වරක් ස්වයංක්‍රීයව යාවත්කාලීන වේ"
-  },
-  "Request received": {
-    "english": "Request received",
-    "sinhala": "ඉල්ලීම ලැබුණි"
   },
   "Your complaint has been resolved": {
     "english": "Your complaint has been resolved",

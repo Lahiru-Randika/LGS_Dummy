@@ -1157,7 +1157,11 @@ export function MyBookingsPage() {
                     <strong>{fac.name}</strong>
                     <small>
                       {fac.capacity ? `${t('Cap')}: ${fac.capacity}` : ''}
-                      {fac.openingHours ? ` • ${fac.openingHours}` : ''}
+                      {fac.openingHours
+                        ? ` • ${fac.openingHours}`
+                        : fac.openingTime && fac.closingTime
+                          ? ` • ${fac.openingTime} - ${fac.closingTime}`
+                          : ''}
                     </small>
                   </button>
                 )

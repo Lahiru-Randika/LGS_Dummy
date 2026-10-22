@@ -38,6 +38,7 @@ export interface BookableFacility {
   closingTime?: string
   rawOpeningTime?: string
   rawClosingTime?: string
+  openingHours?: string
   description?: string
   imageUrl?: string
   isAvailable?: boolean
