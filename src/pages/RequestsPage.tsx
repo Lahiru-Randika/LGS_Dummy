@@ -78,6 +78,13 @@ export function RequestsPage() {
     const [showNew, setShowNew] = useState(params.get('new') === '1');
     const [requests, setRequests] = useState<ServiceRequest[]>([]);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (params.get('new') === '1') {
+            setShowNew(true);
+        }
+    }, [params]);
+
     if (!user)
         return null;
     /* =========================================================

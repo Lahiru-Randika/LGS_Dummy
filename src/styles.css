@@ -3038,7 +3038,7 @@ p {
 
 .request-type-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 7px;
   margin: 22px 0 18px
 }
@@ -3070,6 +3070,64 @@ p {
   color: #8996a2;
   margin-top: 4px;
   line-height: 1.4
+}
+
+.facility-type-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 18px 0 16px
+}
+
+.facility-type-grid button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 116px;
+  padding: 8px;
+  border: 1px solid #dce4e7;
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+  transition: all .18s ease;
+  position: relative;
+  width: 100%;
+}
+
+.facility-type-grid button:hover {
+  border-color: #cbd5e1;
+  background: #fafcfc;
+}
+
+.facility-type-grid button.is-selected {
+  border-color: #68aaa0;
+  background: #edf8f5;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, .06);
+}
+
+.facility-type-grid strong {
+  font-size: 11px;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.facility-type-grid small {
+  font-size: 8.5px;
+  color: #8996a2;
+  margin-top: 3px;
+  line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+  .facility-type-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .facility-type-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .form-grid {

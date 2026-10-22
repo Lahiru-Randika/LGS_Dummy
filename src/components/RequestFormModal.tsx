@@ -75,12 +75,6 @@ export function RequestFormModal({
   const [description, setDescription] =
     useState('')
 
-  const [bookingDate, setBookingDate] =
-    useState('')
-
-  const [participants, setParticipants] =
-    useState('')
-
   /*
     Citizens do not choose operational priority.
     The request is created as NORMAL and can later be
@@ -172,10 +166,6 @@ export function RequestFormModal({
   const hasLocation =
     Boolean(mapLocation || selected)
 
-  const canBook =
-    type !== 'BOOKING' ||
-    Boolean(selected?.publicFacility)
-
   /* =========================================================
      FILE PREVIEWS
   ========================================================= */
@@ -233,14 +223,6 @@ export function RequestFormModal({
   function changeRequestType(item: RequestType) {
     setType(item)
     setError('')
-
-    /*
-      A booking must be attached to a real public facility,
-      not just an arbitrary map point.
-    */
-    if (item === 'BOOKING') {
-      setMapLocation(null)
-    }
   }
 
   /* =========================================================
@@ -265,26 +247,6 @@ export function RequestFormModal({
     if (description.trim().length < 10) {
       setError(
         'Description must contain at least 10 characters.',
-      )
-      return
-    }
-
-    if (
-      type === 'BOOKING' &&
-      (!bookingDate || Number(participants) < 1)
-    ) {
-      setError(
-        'Booking date and participant count are required.',
-      )
-      return
-    }
-
-    if (
-      type === 'BOOKING' &&
-      !selected?.publicFacility
-    ) {
-      setError(
-        'Please select an eligible public facility for this booking.',
       )
       return
     }
@@ -327,17 +289,6 @@ export function RequestFormModal({
             priority: citizenPriority,
             contactPreference,
             location: requestLocation,
-            ...(type === 'BOOKING'
-              ? {
-                  booking: {
-                    date: bookingDate,
-                    participants:
-                      Number(participants),
-                    purpose:
-                      description.trim(),
-                  },
-                }
-              : {}),
           },
           files,
         )
@@ -462,7 +413,6 @@ export function RequestFormModal({
               'COMPLAINT',
               'SUGGESTION',
               'INQUIRY',
-              'BOOKING',
             ] as RequestType[]
           ).map((item) => (
             <button
@@ -483,9 +433,7 @@ export function RequestFormModal({
                   ? 'Report a local problem'
                   : item === 'SUGGESTION'
                     ? 'Propose an improvement'
-                    : item === 'INQUIRY'
-                      ? 'Ask for information'
-                      : 'Reserve a public place'}
+                    : 'Ask for information'}
               </small>
             </button>
           ))}
@@ -496,7 +444,7 @@ export function RequestFormModal({
           <label className="form-field form-field--full">
             <span>Mapped location</span>
 
-            {mapLocation && type !== 'BOOKING' ? (
+            {mapLocation && typeof mapLocation.latitude === 'number' && typeof mapLocation.longitude === 'number' ? (
               <div className="flex min-h-[62px] items-center gap-3 rounded-[14px] border border-teal-300 bg-teal-50/60 px-4 py-2.5 shadow-[0_0_0_3px_rgba(20,184,166,.05)]">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-teal-100 text-teal-700">
                   <MapPin size={18} />
@@ -548,19 +496,13 @@ export function RequestFormModal({
                   }}
                 >
                   <option value="">
-                    {type === 'BOOKING'
-                      ? 'Select a public facility'
-                      : 'Select a mapped location'}
+                    Select a mapped location
                   </option>
 
                   {buildings.map((building) => (
                     <option
                       value={building.id}
                       key={building.id}
-                      disabled={
-                        type === 'BOOKING' &&
-                        !building.publicFacility
-                      }
                     >
                       {building.name}
                       {building.address
@@ -577,15 +519,6 @@ export function RequestFormModal({
                 />
               </div>
             )}
-
-            {type === 'BOOKING' &&
-              selected &&
-              !selected.publicFacility && (
-                <small className="field-warning">
-                  Bookings are only available for eligible
-                  public facilities.
-                </small>
-              )}
           </label>
 
           {/* SUBJECT */}
@@ -613,34 +546,7 @@ export function RequestFormModal({
             />
           </label>
 
-          {/* BOOKING */}
-          {type === 'BOOKING' && (
-            <>
-              <label className="form-field">
-                <span>Booking date</span>
-                <input
-                  type="date"
-                  value={bookingDate}
-                  onChange={(event) =>
-                    setBookingDate(event.target.value)
-                  }
-                />
-              </label>
 
-              <label className="form-field">
-                <span>Participants</span>
-                <input
-                  type="number"
-                  placeholder="45"
-                  min="1"
-                  value={participants}
-                  onChange={(event) =>
-                    setParticipants(event.target.value)
-                  }
-                />
-              </label>
-            </>
-          )}
 
           {/* CONTACT PREFERENCE */}
           <label className="form-field form-field--full">
@@ -784,7 +690,7 @@ export function RequestFormModal({
         <div className="request-modal__footer">
           <span>
             <MapPin size={15} />
-            {mapLocation
+            {mapLocation && typeof mapLocation.latitude === 'number' && typeof mapLocation.longitude === 'number'
               ? `Pinned at ${mapLocation.latitude.toFixed(5)}, ${mapLocation.longitude.toFixed(5)}`
               : selected
                 ? `Pinned to ${selected.name}`
@@ -795,7 +701,6 @@ export function RequestFormModal({
             type="button"
             className="primary-btn"
             disabled={
-              !canBook ||
               !hasLocation ||
               submitting
             }

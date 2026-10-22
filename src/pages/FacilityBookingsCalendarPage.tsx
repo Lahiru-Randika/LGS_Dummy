@@ -16,6 +16,9 @@ import {
   Plus,
   RefreshCw,
   RotateCcw,
+  ShieldCheck,
+  Trash2,
+  Upload,
   User,
   X,
 } from 'lucide-react'
@@ -26,6 +29,7 @@ import {
   type BookableFacility,
   type BookingItem,
   bookingsService,
+  resolveFacilityImageUrl,
 } from '../services/bookings.service'
 
 function formatDateKey(d: Date): string {
@@ -66,9 +70,27 @@ export function FacilityBookingsCalendarPage() {
 
   const [bookings, setBookings] = useState<BookingItem[]>([])
   const [facilities, setFacilities] = useState<BookableFacility[]>([])
+  const [allFacilities, setAllFacilities] = useState<BookableFacility[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  // Navigation: Calendar vs Venue Management
+  const [activeMainTab, setActiveMainTab] = useState<'CALENDAR' | 'VENUES'>('CALENDAR')
+
+  // Venue Management State
+  const [isAddVenueOpen, setIsAddVenueOpen] = useState(false)
+  const [venueName, setVenueName] = useState('')
+  const [venueCode, setVenueCode] = useState('')
+  const [venueAddress, setVenueAddress] = useState('Colombo Municipal Council')
+  const [venueCapacity, setVenueCapacity] = useState(100)
+  const [venueOpeningTime, setVenueOpeningTime] = useState('08:00')
+  const [venueClosingTime, setVenueClosingTime] = useState('20:00')
+  const [venueDescription, setVenueDescription] = useState('')
+  const [venueImageFile, setVenueImageFile] = useState<File | null>(null)
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null)
+  const [submittingVenue, setSubmittingVenue] = useState(false)
+  const [togglingFacilityId, setTogglingFacilityId] = useState<number | null>(null)
 
   // Calendar State: currentDate tracks month/year viewed, selectedDate tracks active day
   const [currentDate, setCurrentDate] = useState(new Date(2026, 9, 14)) // Oct 14, 2026
@@ -113,13 +135,15 @@ export function FacilityBookingsCalendarPage() {
     setLoading(true)
     setError(null)
     try {
-      const [bookingsList, facilitiesList] = await Promise.all([
+      const [bookingsList, facilitiesList, allFacList] = await Promise.all([
         bookingsService.list(),
-        bookingsService.facilities().catch(() => []),
+        bookingsService.facilities(false),
+        bookingsService.facilities(true).catch(() => []),
       ])
-      setBookings(bookingsList)
-      setFacilities(facilitiesList)
-      if (facilitiesList.length > 0 && !newFacilityCode) {
+      setBookings(bookingsList || [])
+      setFacilities(facilitiesList || [])
+      setAllFacilities(allFacList && allFacList.length > 0 ? allFacList : (facilitiesList || []))
+      if (facilitiesList && facilitiesList.length > 0 && !newFacilityCode) {
         setNewFacilityCode(facilitiesList[0].code)
       }
     } catch (err: any) {
@@ -454,6 +478,88 @@ export function FacilityBookingsCalendarPage() {
     }
   }
 
+  // Toggle venue availability or remove from booking list
+  const handleToggleVenue = async (fac: BookableFacility) => {
+    const isCurrentlyActive = fac.isAvailable !== false && fac.buildingActive !== false && fac.profileActive !== false
+    const actionWord = isCurrentlyActive ? 'remove from the booking list' : 'reactivate for citizen bookings'
+    if (!window.confirm(`Are you sure you want to ${actionWord} "${fac.name}"?`)) {
+      return
+    }
+
+    setTogglingFacilityId(fac.id)
+    try {
+      await bookingsService.toggleFacility(fac.id)
+      setActionNotice({
+        type: 'success',
+        text: `Venue "${fac.name}" ${isCurrentlyActive ? 'deactivated and removed from booking list' : 'reactivated successfully'}!`,
+      })
+      await loadData()
+    } catch (err: any) {
+      console.error('Failed to toggle venue:', err)
+      setActionNotice({
+        type: 'error',
+        text: err?.message || 'Failed to update venue status.',
+      })
+    } finally {
+      setTogglingFacilityId(null)
+    }
+  }
+
+  // Image file selection handler with preview
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setVenueImageFile(file)
+      const url = URL.createObjectURL(file)
+      setImagePreviewUrl(url)
+    }
+  }
+
+  // Create new venue with image upload
+  const handleCreateVenue = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!venueName.trim()) {
+      setActionNotice({ type: 'error', text: 'Please provide a venue name.' })
+      return
+    }
+
+    setSubmittingVenue(true)
+    try {
+      const formData = new FormData()
+      formData.append('name', venueName.trim())
+      if (venueCode.trim()) formData.append('code', venueCode.trim())
+      if (venueAddress.trim()) formData.append('address', venueAddress.trim())
+      formData.append('capacity', String(venueCapacity || 100))
+      formData.append('openingTime', venueOpeningTime)
+      formData.append('closingTime', venueClosingTime)
+      if (venueDescription.trim()) formData.append('description', venueDescription.trim())
+      if (venueImageFile) formData.append('image', venueImageFile)
+
+      const res = await bookingsService.createFacility(formData)
+      setIsAddVenueOpen(false)
+      // Reset form
+      setVenueName('')
+      setVenueCode('')
+      setVenueDescription('')
+      setVenueImageFile(null)
+      setImagePreviewUrl(null)
+
+      setActionNotice({
+        type: 'success',
+        text: res.message || `New venue "${venueName}" created and added to the booking list!`,
+      })
+      await loadData()
+    } catch (err: any) {
+      console.error('Failed to create venue:', err)
+      setActionNotice({
+        type: 'error',
+        text: err?.message || 'Failed to create venue.',
+      })
+    } finally {
+      setSubmittingVenue(false)
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     const s = (status || '').toUpperCase()
     if (s === 'CONFIRMED') {
@@ -571,8 +677,61 @@ export function FacilityBookingsCalendarPage() {
         </div>
       )}
 
-      {/* Summary Metrics */}
-      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+      {/* View Switcher: Calendar vs Venues Management */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveMainTab('CALENDAR')}
+            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all ${
+              activeMainTab === 'CALENDAR'
+                ? 'bg-teal-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <CalendarDays size={16} />
+            <span>{t('Bookings calendar')}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveMainTab('VENUES')}
+            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-all ${
+              activeMainTab === 'VENUES'
+                ? 'bg-teal-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <Building2 size={16} />
+            <span>{t('Manage venues & premises')}</span>
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                activeMainTab === 'VENUES' ? 'bg-teal-700 text-white' : 'bg-slate-200 text-slate-700'
+              }`}
+            >
+              {allFacilities.length}
+            </span>
+          </button>
+        </div>
+
+        {activeMainTab === 'VENUES' && (
+          <button
+            type="button"
+            onClick={() => {
+              setActionNotice(null)
+              setIsAddVenueOpen(true)
+            }}
+            className="primary-btn inline-flex items-center gap-2"
+          >
+            <Plus size={16} />
+            <span>{t('Add New Venue')}</span>
+          </button>
+        )}
+      </div>
+
+      {activeMainTab === 'CALENDAR' && (
+        <>
+          {/* Summary Metrics */}
+          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {[
           { label: t('Total Bookings'), value: metrics.total, icon: CalendarDays, color: 'text-slate-700', bg: 'bg-slate-100' },
           { label: t('Locked & Confirmed'), value: metrics.confirmed, icon: Lock, color: 'text-teal-700', bg: 'bg-teal-50' },
@@ -1051,6 +1210,177 @@ export function FacilityBookingsCalendarPage() {
           )}
         </div>
       </div>
+        </>
+      )}
+
+      {/* =========================================================
+          VIEW 2: VENUES & PREMISES MANAGEMENT
+      ========================================================= */}
+      {activeMainTab === 'VENUES' && (
+        <div className="space-y-5">
+          {/* Top Banner info */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div>
+              <span className="eyebrow text-teal-700">{t('Municipal Facility Master')}</span>
+              <h2 className="text-xl font-extrabold text-slate-900 mt-0.5">
+                {t('Bookable Premises & Public Facilities')}
+              </h2>
+              <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
+                {t('Manage municipal facilities open for citizen bookings (community halls, sports grounds, auditoriums, meeting rooms). You can add newly built facilities with images or remove premises from the citizen booking list.')}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setActionNotice(null)
+                setIsAddVenueOpen(true)
+              }}
+              className="primary-btn shrink-0 inline-flex items-center gap-2"
+            >
+              <Plus size={16} />
+              <span>{t('Add New Venue')}</span>
+            </button>
+          </div>
+
+          {/* Venues Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-5">
+            {allFacilities.map((fac) => {
+              const isAvailable = fac.isAvailable !== false && fac.buildingActive !== false && fac.profileActive !== false
+              const venueImg = resolveFacilityImageUrl(fac.imageUrl, fac.name, fac.code)
+
+              return (
+                <div
+                  key={fac.id || fac.code}
+                  className={`group flex flex-col rounded-2xl border bg-white overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 ${
+                    isAvailable ? 'border-slate-200/90' : 'border-rose-200/80 bg-slate-50/50 opacity-80'
+                  }`}
+                >
+                  {/* Venue Image */}
+                  <div className="relative h-44 w-full bg-slate-100 overflow-hidden">
+                    <img
+                      src={venueImg}
+                      alt={fac.name}
+                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/20 to-transparent pointer-events-none" />
+                    <div className="absolute top-3 left-3">
+                      <span className="rounded-md bg-black/55 backdrop-blur-md px-2 py-1 text-[10px] font-bold text-white tracking-wider">
+                        {fac.code}
+                      </span>
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      {isAvailable ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/95 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white shadow-sm">
+                          <CheckCircle2 size={11} />
+                          {t('Active')}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-rose-600/95 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white shadow-sm">
+                          <X size={11} />
+                          {t('Removed / Inactive')}
+                        </span>
+                      )}
+                    </div>
+                    <div className="absolute bottom-2.5 left-3 right-3">
+                      <h3 className="font-extrabold text-white text-base leading-tight drop-shadow-sm">
+                        {fac.name}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Venue Details */}
+                  <div className="p-4 flex-1 flex flex-col justify-between space-y-3 text-xs">
+                    <div className="space-y-2 text-slate-600">
+                      <div className="flex items-start gap-2">
+                        <MapPin size={14} className="text-teal-600 shrink-0 mt-0.5" />
+                        <span className="line-clamp-2 leading-relaxed text-slate-700">{fac.address || 'Colombo Municipal Council'}</span>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 border-t border-slate-100 text-[11px]">
+                        <span className="flex items-center gap-1.5 text-slate-500 font-semibold">
+                          <User size={13} className="text-teal-600" />
+                          {t('Capacity')}:
+                        </span>
+                        <span className="font-bold text-slate-900">{fac.capacity || 'N/A'} {t('people')}</span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="flex items-center gap-1.5 text-slate-500 font-semibold">
+                          <Clock size={13} className="text-teal-600" />
+                          {t('Operating Hours')}:
+                        </span>
+                        <span className="font-bold text-slate-900">
+                          {fac.openingTime || '08:00 AM'} – {fac.closingTime || '08:00 PM'}
+                        </span>
+                      </div>
+
+                      {fac.description && (
+                        <p className="text-[11px] text-slate-500 line-clamp-2 pt-1 italic">
+                          {fac.description}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                      {isAvailable ? (
+                        <button
+                          type="button"
+                          onClick={() => handleToggleVenue(fac)}
+                          disabled={togglingFacilityId === fac.id}
+                          className="w-full text-center rounded-xl border border-rose-200 bg-rose-50/70 hover:bg-rose-100 px-3 py-2 text-xs font-bold text-rose-700 transition-colors inline-flex items-center justify-center gap-1.5"
+                        >
+                          {togglingFacilityId === fac.id ? (
+                            <Loader2 size={13} className="animate-spin" />
+                          ) : (
+                            <Trash2 size={13} />
+                          )}
+                          <span>{t('Remove from booking list')}</span>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleToggleVenue(fac)}
+                          disabled={togglingFacilityId === fac.id}
+                          className="w-full text-center rounded-xl border border-emerald-200 bg-emerald-50/70 hover:bg-emerald-100 px-3 py-2 text-xs font-bold text-emerald-700 transition-colors inline-flex items-center justify-center gap-1.5"
+                        >
+                          {togglingFacilityId === fac.id ? (
+                            <Loader2 size={13} className="animate-spin" />
+                          ) : (
+                            <CheckCircle2 size={13} />
+                          )}
+                          <span>{t('Reactivate Venue')}</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {allFacilities.length === 0 && (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center my-6">
+              <Building2 size={40} className="mx-auto text-slate-300 mb-3" />
+              <h3 className="text-base font-bold text-slate-800">
+                {t('No Municipal Venues Registered')}
+              </h3>
+              <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
+                {t('Add your first venue to allow citizens and municipal departments to book premises.')}
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsAddVenueOpen(true)}
+                className="primary-btn mt-4 inline-flex items-center gap-2"
+              >
+                <Plus size={16} />
+                <span>{t('Add New Venue')}</span>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* =========================================================
           BOOKING DETAILS POPUP MODAL (FIXED SIZE & NEVER CUT OFF)
@@ -1058,12 +1388,34 @@ export function FacilityBookingsCalendarPage() {
       {selectedBooking && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 p-4 sm:p-6 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-150">
           <div className="relative w-full max-w-md sm:max-w-lg my-auto rounded-2xl bg-white shadow-2xl border border-slate-200 p-5 sm:p-6 max-h-[85vh] flex flex-col">
+            {/* Modal Image */}
+            <div className="shrink-0 relative h-36 w-full rounded-xl overflow-hidden bg-slate-100 mb-3">
+              <img
+                src={resolveFacilityImageUrl(
+                  selectedBooking.imageUrl,
+                  selectedBooking.facility || selectedBooking.facilityName,
+                  selectedBooking.facilityCode,
+                )}
+                alt={selectedBooking.facility || selectedBooking.facilityName}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-300 drop-shadow-sm">
+                  {selectedBooking.facilityCode || 'Municipal Venue'}
+                </span>
+                <h4 className="text-base font-extrabold text-white drop-shadow-sm">
+                  {selectedBooking.facility || selectedBooking.facilityName}
+                </h4>
+              </div>
+            </div>
+
             {/* Modal Header */}
             <div className="shrink-0 flex items-start justify-between border-b border-slate-100 pb-3 mb-3">
               <div>
                 <span className="eyebrow text-teal-700">{selectedBooking.bookingCode || selectedBooking.id}</span>
-                <h3 className="text-lg font-extrabold text-slate-900 mt-0.5">
-                  {selectedBooking.facility || selectedBooking.facilityName}
+                <h3 className="text-sm font-bold text-slate-700 mt-0.5">
+                  {t('Booking Details & Status')}
                 </h3>
               </div>
               <button
@@ -1176,70 +1528,165 @@ export function FacilityBookingsCalendarPage() {
       )}
 
       {/* =========================================================
-          ADMIN / OFFICER CREATE BOOKING MODAL (FIXED SIZE)
+          ADMIN / OFFICER CREATE BOOKING MODAL (MATCHING REQUEST MODAL DESIGN)
       ========================================================= */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 p-4 sm:p-6 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-150">
-          <div className="relative w-full max-w-md sm:max-w-lg my-auto rounded-2xl bg-white shadow-2xl border border-slate-200 p-5 sm:p-6 max-h-[85vh] flex flex-col">
+        <div
+          className="modal-backdrop"
+          onMouseDown={(e) => {
+            if (e.currentTarget === e.target) {
+              setIsModalOpen(false)
+            }
+          }}
+        >
+          <div className="request-modal">
             {/* Header */}
-            <div className="shrink-0 flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+            <div className="request-modal__head">
               <div>
-                <span className="eyebrow text-teal-700">{t('Municipal administrator')}</span>
-                <h3 className="text-lg font-extrabold text-slate-900 mt-0.5">{t('Lock facility reservation')}</h3>
+                <span className="eyebrow">{t('Municipal administrator')}</span>
+                <h2>{t('Lock facility reservation.')}</h2>
+                <p>
+                  {t('Directly reserve and lock a municipal facility slot with atomic conflict check.')}
+                </p>
               </div>
+
               <button
                 type="button"
+                className="icon-btn"
                 onClick={() => setIsModalOpen(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                aria-label="Close booking form"
               >
                 <X size={18} />
               </button>
             </div>
 
-            {/* Scrollable Form Body */}
-            <form onSubmit={handleAdminCreateBooking} className="flex-1 overflow-y-auto pr-1 space-y-3.5">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  {t('Municipal facility')} *
-                </label>
-                <select
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  value={newFacilityCode}
-                  onChange={(e) => setNewFacilityCode(e.target.value)}
-                  required
-                >
-                  {facilities.map((fac) => (
-                    <option key={fac.code} value={fac.code}>
-                      {fac.name} (Cap: {fac.capacity || 'N/A'})
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Venue Selector Cards */}
+            <div className="facility-type-grid">
+              {facilities.map((fac) => {
+                const isSelected = newFacilityCode === fac.code
+                const imgUrl = resolveFacilityImageUrl(fac.imageUrl, fac.name, fac.code)
+                return (
+                  <button
+                    type="button"
+                    key={fac.code}
+                    onClick={() => setNewFacilityCode(fac.code)}
+                    className={isSelected ? 'is-selected' : ''}
+                  >
+                    <div className="w-full h-16 rounded-lg overflow-hidden bg-slate-100 mb-2 relative border border-slate-200/60">
+                      <img
+                        src={imgUrl}
+                        alt={fac.name}
+                        className="w-full h-full object-cover"
+                      />
+                      {isSelected && (
+                        <span className="absolute top-1.5 right-1.5 bg-teal-600 text-white rounded-full p-0.5 shadow-sm">
+                          <Check size={11} strokeWidth={3} />
+                        </span>
+                      )}
+                    </div>
+                    <strong>{fac.name}</strong>
+                    <small>
+                      {fac.capacity ? `${t('Cap')}: ${fac.capacity}` : ''}
+                      {fac.openingHours ? ` • ${fac.openingHours}` : ''}
+                    </small>
+                  </button>
+                )
+              })}
+            </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  {t('Booking date')} *
+            <form onSubmit={handleAdminCreateBooking}>
+              <div className="form-grid">
+                {/* Municipal Facility Dropdown */}
+                <label className="form-field form-field--full">
+                  <span>{t('Municipal facility')} *</span>
+                  <div className="relative">
+                    <select
+                      value={newFacilityCode}
+                      onChange={(e) => setNewFacilityCode(e.target.value)}
+                      required
+                    >
+                      {facilities.map((fac) => (
+                        <option key={fac.code} value={fac.code}>
+                          {fac.name} (Cap: {fac.capacity || 'N/A'}) {fac.address ? `— ${fac.address}` : ''}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={17}
+                      strokeWidth={1.8}
+                      className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-500"
+                    />
+                  </div>
                 </label>
-                <input
-                  type="date"
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  value={newDate}
-                  min={todayStr}
-                  onChange={(e) => setNewDate(e.target.value)}
-                  required
-                />
+
+                {/* Booking Date */}
+                <label className="form-field">
+                  <span>{t('Booking date')} *</span>
+                  <input
+                    type="date"
+                    value={newDate}
+                    min={todayStr}
+                    onChange={(e) => setNewDate(e.target.value)}
+                    required
+                  />
+                </label>
+
+                {/* Expected Participants */}
+                <label className="form-field">
+                  <span>{t('Expected participants')}</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10000"
+                    value={newParticipants}
+                    onChange={(e) => setNewParticipants(Number(e.target.value))}
+                  />
+                </label>
+
+                {/* Start Time */}
+                <label className="form-field">
+                  <span>{t('Start time')} *</span>
+                  <input
+                    type="time"
+                    value={newStartTime}
+                    onChange={(e) => setNewStartTime(e.target.value)}
+                    required
+                  />
+                </label>
+
+                {/* End Time */}
+                <label className="form-field">
+                  <span>{t('End time')} *</span>
+                  <input
+                    type="time"
+                    value={newEndTime}
+                    onChange={(e) => setNewEndTime(e.target.value)}
+                    required
+                  />
+                </label>
+
+                {/* Purpose / Description */}
+                <label className="form-field form-field--full">
+                  <span>{t('Purpose / Description')}</span>
+                  <textarea
+                    rows={3}
+                    value={newPurpose}
+                    onChange={(e) => setNewPurpose(e.target.value)}
+                    placeholder={t('Official municipal event, council meeting, or maintenance window...')}
+                  />
+                </label>
               </div>
 
               {/* Real-time Locked Slots Preview */}
               {loadingAvailability && (
-                <div className="flex items-center gap-2 text-xs text-slate-400 py-1">
-                  <Loader2 size={13} className="animate-spin" />
+                <div className="flex items-center gap-2 text-xs text-slate-400 py-1.5 mb-2">
+                  <Loader2 size={13} className="animate-spin text-teal-600" />
                   <span>{t('Checking locked intervals...')}</span>
                 </div>
               )}
 
               {lockedSlotsForSelectedDate.length > 0 && (
-                <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-3 text-xs text-teal-900">
+                <div className="rounded-xl border border-teal-200 bg-teal-50/60 p-3 text-xs text-teal-900 mb-3">
                   <span className="font-bold flex items-center gap-1.5 mb-1 text-teal-800">
                     <Lock size={13} />
                     {t('Locked slots on this date')}:
@@ -1257,37 +1704,9 @@ export function FacilityBookingsCalendarPage() {
                 </div>
               )}
 
-              {/* Time Selection */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    {t('Start time')} *
-                  </label>
-                  <input
-                    type="time"
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                    value={newStartTime}
-                    onChange={(e) => setNewStartTime(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                    {t('End time')} *
-                  </label>
-                  <input
-                    type="time"
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                    value={newEndTime}
-                    onChange={(e) => setNewEndTime(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
               {/* Live Collision / Past Time Warning Banner */}
               {collisionWarning && (
-                <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900 flex items-start gap-2.5 animate-in fade-in duration-150">
+                <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900 flex items-start gap-2.5 mb-3 animate-in fade-in duration-150">
                   <AlertCircle size={16} className="text-amber-600 shrink-0 mt-0.5" />
                   <div>
                     <strong className="block font-bold mb-0.5">{t('Invalid Time Slot')}</strong>
@@ -1296,57 +1715,228 @@ export function FacilityBookingsCalendarPage() {
                 </div>
               )}
 
+              {/* Footer */}
+              <div className="request-modal__footer">
+                <span>
+                  <ShieldCheck size={14} className="text-teal-600" />
+                  {t('Instant conflict check & atomic lock')}
+                </span>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="secondary-btn"
+                    disabled={submittingBooking}
+                  >
+                    {t('Cancel')}
+                  </button>
+                  <button
+                    type="submit"
+                    className="primary-btn inline-flex items-center gap-2"
+                    disabled={submittingBooking || !!collisionWarning}
+                  >
+                    {submittingBooking ? (
+                      <>
+                        <Loader2 size={14} className="animate-spin" />
+                        {t('Locking slot...')}
+                      </>
+                    ) : (
+                      <>
+                        <Lock size={14} />
+                        {t('Lock & Confirm booking')}
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================
+          ADD NEW VENUE MODAL (WITH IMAGE UPLOAD TO BACKEND)
+      ========================================================= */}
+      {isAddVenueOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 p-4 sm:p-6 backdrop-blur-sm flex items-center justify-center animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg my-auto rounded-2xl bg-white shadow-2xl border border-slate-200 p-5 sm:p-6 max-h-[90vh] flex flex-col">
+            {/* Header */}
+            <div className="shrink-0 flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+              <div>
+                <span className="eyebrow text-teal-700">{t('Municipal Facility Master')}</span>
+                <h3 className="text-lg font-extrabold text-slate-900 mt-0.5">{t('Add New Premise / Venue')}</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsAddVenueOpen(false)}
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleCreateVenue} className="flex-1 overflow-y-auto pr-1 space-y-3.5">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  {t('Expected participants')}
+                  {t('Venue / Premise Name')} *
                 </label>
                 <input
-                  type="number"
-                  min="1"
-                  max="1000"
+                  type="text"
                   className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  value={newParticipants}
-                  onChange={(e) => setNewParticipants(Number(e.target.value))}
+                  placeholder="e.g. New Seminar Room 3 or CMC Auditorium"
+                  value={venueName}
+                  onChange={(e) => setVenueName(e.target.value)}
+                  required
                 />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    {t('Facility Code')} ({t('Optional')})
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 uppercase"
+                    placeholder="e.g. LGS-FAC-000005"
+                    value={venueCode}
+                    onChange={(e) => setVenueCode(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    {t('Capacity (Persons)')} *
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10000"
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    value={venueCapacity}
+                    onChange={(e) => setVenueCapacity(Number(e.target.value))}
+                    required
+                  />
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
-                  {t('Purpose / Description')}
+                  {t('Location / Address')} *
+                </label>
+                <input
+                  type="text"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                  placeholder="e.g. Colombo Municipal Council, Level 2, Town Hall"
+                  value={venueAddress}
+                  onChange={(e) => setVenueAddress(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    {t('Opening Time')}
+                  </label>
+                  <input
+                    type="time"
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    value={venueOpeningTime}
+                    onChange={(e) => setVenueOpeningTime(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    {t('Closing Time')}
+                  </label>
+                  <input
+                    type="time"
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                    value={venueClosingTime}
+                    onChange={(e) => setVenueClosingTime(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Venue Image Upload */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  {t('Premise / Venue Image')}
+                </label>
+                <div className="mt-1 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 p-4 hover:border-teal-400 transition-colors bg-slate-50/50">
+                  {imagePreviewUrl ? (
+                    <div className="relative w-full h-36 rounded-lg overflow-hidden mb-2">
+                      <img src={imagePreviewUrl} alt="Preview" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setVenueImageFile(null)
+                          setImagePreviewUrl(null)
+                        }}
+                        className="absolute top-2 right-2 rounded-full bg-black/60 p-1 text-white hover:bg-black/80"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="text-center py-2">
+                      <Upload size={28} className="mx-auto text-slate-400 mb-2" />
+                      <p className="text-xs font-semibold text-slate-700">
+                        {t('Upload an image for this facility')}
+                      </p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        PNG, JPG, or WEBP. Uploads to municipal backend storage.
+                      </p>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg, image/webp"
+                    onChange={handleImageFileChange}
+                    className="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  {t('Description / Facilities')}
                 </label>
                 <textarea
                   rows={2}
                   className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-800 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-                  value={newPurpose}
-                  onChange={(e) => setNewPurpose(e.target.value)}
-                  placeholder="Official municipal event, meeting, or sports tournament..."
+                  value={venueDescription}
+                  onChange={(e) => setVenueDescription(e.target.value)}
+                  placeholder="e.g. Equipped with sound system, projector, air-conditioning, and 120 seats..."
                 />
               </div>
 
-              {/* Footer */}
+              {/* Modal Footer */}
               <div className="shrink-0 flex items-center justify-end gap-3 pt-3 mt-3 border-t border-slate-100">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => setIsAddVenueOpen(false)}
                   className="secondary-btn text-xs"
-                  disabled={submittingBooking}
+                  disabled={submittingVenue}
                 >
                   {t('Cancel')}
                 </button>
                 <button
                   type="submit"
                   className="primary-btn inline-flex items-center gap-2 text-xs"
-                  disabled={submittingBooking || !!collisionWarning}
+                  disabled={submittingVenue}
                 >
-                  {submittingBooking ? (
+                  {submittingVenue ? (
                     <>
                       <Loader2 size={14} className="animate-spin" />
-                      {t('Locking slot...')}
+                      {t('Saving venue...')}
                     </>
                   ) : (
                     <>
-                      <Lock size={14} />
-                      {t('Lock & Confirm booking')}
+                      <CheckCircle2 size={14} />
+                      {t('Create & Publish Venue')}
                     </>
                   )}
                 </button>

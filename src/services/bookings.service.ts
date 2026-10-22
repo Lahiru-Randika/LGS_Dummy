@@ -1,4 +1,4 @@
-import { apiData, apiDataCached, invalidateApiCache, queryString } from './http'
+import { API_BASE_URL, apiData, apiDataCached, invalidateApiCache, queryString } from './http'
 
 export interface BookingItem {
   id: string
@@ -10,6 +10,7 @@ export interface BookingItem {
   facilityId?: number
   facilityCode?: string
   location: string
+  imageUrl?: string
   date: string
   dateIso?: string
   rawDate?: string
@@ -35,7 +36,14 @@ export interface BookableFacility {
   capacity?: number
   openingTime?: string
   closingTime?: string
+  rawOpeningTime?: string
+  rawClosingTime?: string
   description?: string
+  imageUrl?: string
+  isAvailable?: boolean
+  buildingActive?: boolean
+  profileActive?: boolean
+  bookable?: boolean
 }
 
 export interface BookedSlot {
@@ -74,11 +82,45 @@ export interface BookingListFilters {
   endDate?: string
 }
 
+export function resolveFacilityImageUrl(imageUrl?: string, facilityName?: string, code?: string): string {
+  if (imageUrl && imageUrl.trim()) {
+    const trimmed = imageUrl.trim()
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed
+    }
+    if (trimmed.startsWith('/uploads/')) {
+      const backendOrigin = API_BASE_URL.replace(/\/api\/v1\/?$/, '')
+      return `${backendOrigin}${trimmed}`
+    }
+    if (trimmed.startsWith('/facilities/')) {
+      return trimmed
+    }
+  }
+
+  // Fallback to standard venue assets
+  const f = (facilityName || '').toLowerCase()
+  const c = (code || '').toLowerCase()
+  if (f.includes('sport') || f.includes('ground') || f.includes('pitch') || c.includes('fac-000002')) {
+    return '/facilities/sports-ground.jpg'
+  }
+  if (f.includes('auditorium') || f.includes('town hall') || c.includes('fac-000003')) {
+    return '/facilities/town-hall-auditorium.jpg'
+  }
+  if (f.includes('meeting') || f.includes('room') || f.includes('conference') || c.includes('fac-000004')) {
+    return '/facilities/meeting-room.jpg'
+  }
+  return '/facilities/community-hall.jpg'
+}
+
 export const bookingsService = {
   list: (filters: BookingListFilters = {}) =>
-    apiDataCached<BookingItem[]>(`/bookings${queryString(filters as Record<string, unknown>)}`, 6_000),
+    apiDataCached<BookingItem[]>(`/bookings${queryString(filters as Record<string, unknown>)}`, 2_000),
 
-  facilities: () => apiDataCached<BookableFacility[]>('/bookings/facilities', 60_000),
+  facilities: (includeInactive = false) =>
+    apiDataCached<BookableFacility[]>(
+      `/bookings/facilities${queryString({ includeInactive: includeInactive ? 'true' : undefined })}`,
+      5_000,
+    ),
 
   availability: (facilityIdOrCode: string | number, date: string) => {
     const params = typeof facilityIdOrCode === 'number'
@@ -109,6 +151,44 @@ export const bookingsService = {
       method: 'PATCH',
       json: { status, note },
     })
+    invalidateApiCache('/bookings')
+    return result
+  },
+
+  // Government Administrator, Approver, Superior Venue Management APIs
+  createFacility: async (formData: FormData) => {
+    const result = await apiData<{ success: boolean; facility: BookableFacility; message?: string }>(
+      '/bookings/facilities',
+      {
+        method: 'POST',
+        body: formData,
+      },
+    )
+    invalidateApiCache('/bookings/facilities')
+    invalidateApiCache('/bookings')
+    return result
+  },
+
+  deleteFacility: async (id: string | number) => {
+    const result = await apiData<{ success: boolean; removed: boolean; message?: string }>(
+      `/bookings/facilities/${encodeURIComponent(String(id))}`,
+      {
+        method: 'DELETE',
+      },
+    )
+    invalidateApiCache('/bookings/facilities')
+    invalidateApiCache('/bookings')
+    return result
+  },
+
+  toggleFacility: async (id: string | number) => {
+    const result = await apiData<{ success: boolean; active: boolean; message?: string }>(
+      `/bookings/facilities/${encodeURIComponent(String(id))}/toggle`,
+      {
+        method: 'PATCH',
+      },
+    )
+    invalidateApiCache('/bookings/facilities')
     invalidateApiCache('/bookings')
     return result
   },
