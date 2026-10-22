@@ -113,7 +113,9 @@ jobs:
           echo "Deploying frontend"
           if docker compose up -d --no-deps --no-build lgs-frontend \
              && curl --fail --silent --show-error \
-                --retry 6 --retry-delay 2 \
+                --retry 12 \
+                --retry-delay 2 \
+                --retry-all-errors \
                 --output /dev/null \
                 http://127.0.0.1:8080/; then
 
