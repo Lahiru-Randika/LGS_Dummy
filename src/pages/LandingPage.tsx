@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   Building2,
+  CheckCircle2,
   Compass,
   Crosshair,
   Eye,
@@ -10,6 +11,7 @@ import {
   Layers3,
   LocateFixed,
   MapPin,
+  Route,
   ShieldCheck,
   Sparkles,
   Users2,
@@ -32,41 +34,41 @@ const MAP_LAYERS = [
     id: 'properties',
     label: 'Properties',
     badge: 'Cadastral & Parcel Boundaries',
-    description:
-      'Detailed parcels, registered property boundaries, ownership identification, and zoning compliance status.',
     stat: 'Registered Cadastral Parcels',
+    image: '/lgs-media/layer-properties.jpg',
+    icon: Layers3,
   },
   {
     id: 'landuse',
     label: 'Land Use',
     badge: 'Zoning & Master Plan Classifications',
-    description:
-      'Commercial corridors, residential density zones, environmental reservations, and municipal special project areas.',
     stat: 'Validated Municipal Zoning',
+    image: '/lgs-media/layer-landuse.jpg',
+    icon: Compass,
   },
   {
     id: 'roads',
     label: 'Roads',
     badge: 'Street Network & Ward Infrastructure',
-    description:
-      'Classified roadway hierarchy, ward corridors, maintenance responsibilities, and pedestrian access networks.',
     stat: 'Complete Council Road Grid',
+    image: '/lgs-media/layer-roads.jpg',
+    icon: Route,
   },
   {
     id: 'utilities',
     label: 'Utilities',
     badge: 'Underground & Surface Networks',
-    description:
-      'Subsurface water pipelines, drainage canals, electrical conduits, and street lighting maintenance grids.',
     stat: 'Subterranean Utility GIS',
+    image: '/lgs-media/layer-utilities.jpg',
+    icon: Zap,
   },
   {
     id: 'public_assets',
     label: 'Public Assets',
     badge: 'Civic Facilities & Council Properties',
-    description:
-      'Council town halls, community centers, public dispensaries, markets, playgrounds, and municipal properties.',
     stat: 'Live Council Asset Register',
+    image: '/lgs-media/layer-public-assets.jpg',
+    icon: Landmark,
   },
 ]
 
@@ -76,6 +78,7 @@ export function LandingPage() {
 
   const activeLayer =
     MAP_LAYERS.find((layer) => layer.id === activeLayerId) || MAP_LAYERS[0]
+  const ActiveIcon = activeLayer.icon
 
   return (
     <div className="min-h-screen bg-white font-['DM_Sans'] text-slate-950">
@@ -100,10 +103,10 @@ export function LandingPage() {
               className="lgs-home-hero-copy max-w-4xl pl-4 sm:pl-8 md:pl-12 lg:pl-16 xl:pl-20 2xl:pl-24 3xl:max-w-5xl 3xl:pl-32 4k:max-w-6xl 4k:pl-40"
             >
               <h1 className="lgs-home-hero-title mt-6 font-['Manrope'] text-[clamp(40px,5.8vw,88px)] font-semibold leading-[.95] tracking-[-.055em] 3xl:text-[104px] 4k:text-[124px]">
-                {t('Location Drives Insight.')}
+                {t('Location Drives Insight')}
                 <br />
                 <span className="not-italic text-teal-300">
-                  {t('Governance Evolves.')}
+                  {t('Governance Evolves')}
                 </span>
               </h1>
 
@@ -495,22 +498,28 @@ export function LandingPage() {
               </div>
             </ScrollReveal>
 
-            {/* Interactive Layer Chips */}
-            <div className="mb-6 flex flex-wrap items-center gap-2.5">
-              <span className="mr-1 text-[11px] font-bold uppercase tracking-[.1em] text-slate-400">
+            {/* Interactive Layer Chips with Symbols */}
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              <span className="mr-1 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[.12em] text-slate-400">
+                <Layers3 size={13} className="text-teal-600" />
                 {t('Layers')}:
               </span>
               {MAP_LAYERS.map((layer) => {
                 const isSelected = layer.id === activeLayerId
+                const Icon = layer.icon
                 return (
                   <button
                     key={layer.id}
                     onClick={() => setActiveLayerId(layer.id)}
-                    className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-[12px] font-semibold transition-all duration-200 hover:-translate-y-0.5 ${isSelected
-                        ? 'bg-slate-950 text-white shadow-md hover:bg-slate-900'
-                        : 'border border-slate-200 bg-white text-slate-700 hover:border-teal-600/40 hover:bg-slate-50 hover:text-slate-950 hover:shadow-sm'
+                    className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-[12px] font-semibold transition-all duration-200 hover:-translate-y-0.5 ${isSelected
+                      ? 'bg-slate-950 text-white shadow-md shadow-slate-950/20 ring-1 ring-slate-800'
+                      : 'border border-slate-200 bg-white text-slate-700 hover:border-teal-500/40 hover:bg-slate-50 hover:text-slate-950 hover:shadow-sm'
                       }`}
                   >
+                    <Icon
+                      size={14}
+                      className={isSelected ? 'text-teal-400' : 'text-slate-400'}
+                    />
                     <span>{t(layer.label)}</span>
                   </button>
                 )
@@ -520,12 +529,19 @@ export function LandingPage() {
             {/* Map Frame Card */}
             <div className="group/map relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 shadow-[0_4px_24px_rgba(15,23,42,0.06)] transition-all duration-500 hover:border-slate-300 hover:shadow-[0_20px_45px_-12px_rgba(15,23,42,0.14)]">
               <div className="relative min-h-[460px] w-full sm:min-h-[520px]">
-                {/* Genuine Municipal Map Asset */}
-                <img
-                  src="/lgs-media/map-full.jpg"
-                  alt={t('Mapped municipality view')}
-                  className="absolute inset-0 h-full w-full object-cover object-center opacity-90 transition-transform duration-700 ease-out group-hover/map:scale-[1.015]"
-                />
+                {/* Real Generated Municipal Map Assets with smooth crossfade */}
+                {MAP_LAYERS.map((layer) => {
+                  const isVisible = layer.id === activeLayerId
+                  return (
+                    <img
+                      key={layer.id}
+                      src={layer.image}
+                      alt={t(layer.label)}
+                      className={`absolute inset-0 h-full w-full object-cover object-center transition-all duration-700 ease-out group-hover/map:scale-[1.015] ${isVisible ? 'opacity-90 z-0' : 'opacity-0 pointer-events-none'
+                        }`}
+                    />
+                  )
+                })}
 
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-slate-950/40" />
 
@@ -542,36 +558,39 @@ export function LandingPage() {
                   </div>
                 </div>
 
-                {/* Active Layer Details Panel */}
-                <div className="absolute bottom-6 left-6 right-6 z-10 flex flex-col justify-between gap-6 rounded-2xl border border-white/20 bg-slate-950/90 p-6 md:flex-row md:items-center">
-                  <div className="max-w-xl">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold uppercase tracking-[.15em] text-teal-300">
-                        {t('Active Map Layer')}
-                      </span>
-                      <span className="h-1 w-1 rounded-full bg-white/40" />
-                      <span className="text-[11px] text-slate-300">
-                        {t(activeLayer.badge)}
-                      </span>
+                {/* Active Layer Compact Floating HUD Dock */}
+                <div className="absolute bottom-5 left-5 right-5 z-10 flex flex-col justify-between gap-4 rounded-2xl border border-white/15 bg-slate-950/80 px-5 py-3.5 shadow-2xl backdrop-blur-md sm:flex-row sm:items-center">
+                  <div className="flex items-center gap-3.5">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-teal-400/30 bg-teal-500/15 text-teal-300">
+                      <ActiveIcon size={20} strokeWidth={2} />
                     </div>
 
-                    <h3 className="mt-2 text-xl font-bold text-white sm:text-2xl">
-                      {t(activeLayer.label)}
-                    </h3>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-base font-bold text-white tracking-tight sm:text-lg">
+                          {t(activeLayer.label)}
+                        </h3>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-slate-300">
+                          <CheckCircle2 size={11} className="text-teal-400" />
+                          <span>{t(activeLayer.badge)}</span>
+                        </span>
+                      </div>
 
-                    <p className="mt-2 text-[13px] leading-relaxed text-slate-300">
-                      {t(activeLayer.description)}
-                    </p>
+                      <div className="mt-0.5 flex items-center gap-2 text-[11px] font-medium text-teal-300/90">
+                        <span className="h-1.5 w-1.5 rounded-full bg-teal-400 animate-pulse" />
+                        <span>{t(activeLayer.stat)}</span>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="shrink-0">
                     <Link
                       to="/map"
-                      className="group/mapbtn inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-xl bg-teal-500 px-6 text-[12px] font-bold uppercase tracking-[.07em] !text-slate-950 shadow-[0_2px_12px_rgba(20,184,166,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-teal-400 hover:shadow-[0_6px_20px_rgba(20,184,166,0.35)]"
+                      className="group/mapbtn inline-flex min-h-[40px] items-center justify-center gap-2 rounded-xl bg-teal-500 px-5 text-[12px] font-bold uppercase tracking-[.05em] !text-slate-950 shadow-[0_2px_12px_rgba(20,184,166,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-teal-400 hover:shadow-[0_6px_20px_rgba(20,184,166,0.35)]"
                     >
-                      <MapPin size={16} />
-                      <span>{t('Explore the Municipal Map')}</span>
-                      <ArrowRight size={15} className="transition-transform duration-200 group-hover/mapbtn:translate-x-1" />
+                      <MapPin size={15} />
+                      <span>{t('Explore Map')}</span>
+                      <ArrowRight size={14} className="transition-transform duration-200 group-hover/mapbtn:translate-x-0.5" />
                     </Link>
                   </div>
                 </div>

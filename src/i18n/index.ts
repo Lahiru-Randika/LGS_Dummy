@@ -820,7 +820,7 @@ const additionalPhrases: Record<string, string> = {
   // --- Homepage Refresh (New Copy) ---
   // Section 1: Hero
   'SPATIO LGS · LOCATION INTELLIGENCE FOR LOCAL GOVERNMENT': 'SPATIO LGS · පළාත් පාලනය සඳහා භූගෝලීය තොරතුරු බුද්ධිය',
-  'Location Drives Insight. Governance Evolves.': 'ස්ථානයෙන් අවබෝධයට. අවබෝධයෙන් නව පාලනයකට.',
+  'Location Drives Insight Governance Evolves': 'ස්ථානයෙන් අවබෝධයට. අවබෝධයෙන් නව පාලනයකට.',
   'Location Drives Insight.': 'ස්ථානයෙන් අවබෝධයට.',
   'Governance Evolves.': 'අවබෝධයෙන් නව පාලනයකට.',
   'Spatio LGS brings location intelligence into everyday council operations — helping local authorities manage services, respond to communities, and make informed decisions.': 'Spatio LGS මඟින් සභාවේ එදිනෙදා මෙහෙයුම් සඳහා භූගෝලීය තොරතුරු බුද්ධිය එක් කරයි — පළාත් පාලන ආයතනවලට සේවා කළමනාකරණය කිරීමට, ප්‍රජා අවශ්‍යතාවලට ප්‍රතිචාර දැක්වීමට සහ දත්ත මත පදනම් වූ තීරණ ගැනීමට සහාය වේ.',
@@ -1141,31 +1141,32 @@ export function translateText(text: string, lang: Language): string {
                       if (wardPulseMatchSi) {
                         translated = `${wardPulseMatchSi[1]} pulse`
                       } else {
-                      const dateMonthDayTimeMatchSi = normalized.match(/^(ජන|පෙබ|මාර්තු|අප්‍රේල්|මැයි|ජූනි|ජූලි|අගෝ|සැප්|ඔක්|නොවැ|දෙසැ)\s+(\d{1,2}),\s+(\d{1,2}:\d{2}(?:\s*[APap][Mm])?)$/)
-                      if (dateMonthDayTimeMatchSi) {
-                        const enMonth = REVERSE_SINHALA_MONTHS[dateMonthDayTimeMatchSi[1]] || dateMonthDayTimeMatchSi[1]
-                        translated = `${enMonth} ${dateMonthDayTimeMatchSi[2]}, ${dateMonthDayTimeMatchSi[3]}`
-                      } else {
-                        const searchingForMatchSi = trimmed.match(/^"(.+)" සොයමින් පවතී\.\.\.$/)
-                        if (searchingForMatchSi) {
-                          translated = `Searching for "${searchingForMatchSi[1]}"...`
+                        const dateMonthDayTimeMatchSi = normalized.match(/^(ජන|පෙබ|මාර්තු|අප්‍රේල්|මැයි|ජූනි|ජූලි|අගෝ|සැප්|ඔක්|නොවැ|දෙසැ)\s+(\d{1,2}),\s+(\d{1,2}:\d{2}(?:\s*[APap][Mm])?)$/)
+                        if (dateMonthDayTimeMatchSi) {
+                          const enMonth = REVERSE_SINHALA_MONTHS[dateMonthDayTimeMatchSi[1]] || dateMonthDayTimeMatchSi[1]
+                          translated = `${enMonth} ${dateMonthDayTimeMatchSi[2]}, ${dateMonthDayTimeMatchSi[3]}`
                         } else {
-                          const resultsForMatchSi = trimmed.match(/^"(.+)" සඳහා ප්‍රතිඵල$/)
-                          if (resultsForMatchSi) {
-                            translated = `Results for "${resultsForMatchSi[1]}"`
+                          const searchingForMatchSi = trimmed.match(/^"(.+)" සොයමින් පවතී\.\.\.$/)
+                          if (searchingForMatchSi) {
+                            translated = `Searching for "${searchingForMatchSi[1]}"...`
                           } else {
-                            const buildingsNearMatchSi = trimmed.match(/^(.+)\s+සිට මීටර් 250ක් ඇතුළත ගොඩනැගිලි$/)
-                            if (buildingsNearMatchSi) {
-                              translated = `Buildings within 250 m of ${buildingsNearMatchSi[1]}`
+                            const resultsForMatchSi = trimmed.match(/^"(.+)" සඳහා ප්‍රතිඵල$/)
+                            if (resultsForMatchSi) {
+                              translated = `Results for "${resultsForMatchSi[1]}"`
                             } else {
-                              const buildingCountMatchSi = trimmed.match(/^(\d+)\s+(ගොඩනැගිල්ල|ගොඩනැගිලි)$/)
-                              if (buildingCountMatchSi) {
-                                const count = buildingCountMatchSi[1]
-                                translated = `${count} ${count === '1' ? 'building' : 'buildings'}`
-                              } else if (trimmed.startsWith('LGS / ')) {
-                                const sub = trimmed.slice(6).trim()
-                                if (reversePhraseMap[sub]) {
-                                  translated = `LGS / ${reversePhraseMap[sub]}`
+                              const buildingsNearMatchSi = trimmed.match(/^(.+)\s+සිට මීටර් 250ක් ඇතුළත ගොඩනැගිලි$/)
+                              if (buildingsNearMatchSi) {
+                                translated = `Buildings within 250 m of ${buildingsNearMatchSi[1]}`
+                              } else {
+                                const buildingCountMatchSi = trimmed.match(/^(\d+)\s+(ගොඩනැගිල්ල|ගොඩනැගිලි)$/)
+                                if (buildingCountMatchSi) {
+                                  const count = buildingCountMatchSi[1]
+                                  translated = `${count} ${count === '1' ? 'building' : 'buildings'}`
+                                } else if (trimmed.startsWith('LGS / ')) {
+                                  const sub = trimmed.slice(6).trim()
+                                  if (reversePhraseMap[sub]) {
+                                    translated = `LGS / ${reversePhraseMap[sub]}`
+                                  }
                                 }
                               }
                             }
@@ -1181,7 +1182,6 @@ export function translateText(text: string, lang: Language): string {
         }
       }
     }
-  }
 
     const finalVal = translated ?? trimmed
     translationMemoCache.set(cacheKey, finalVal)
