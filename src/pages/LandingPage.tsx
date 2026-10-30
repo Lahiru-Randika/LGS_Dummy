@@ -552,10 +552,10 @@ export function LandingPage() {
                     <span>{t('Municipal Spatial Grid · Colombo GIS')}</span>
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-full border border-teal-400/30 bg-teal-950/80 px-4 py-1.5 text-[11px] font-bold text-teal-300">
+                  {/* <div className="flex items-center gap-2 rounded-full border border-teal-400/30 bg-teal-950/80 px-4 py-1.5 text-[11px] font-bold text-teal-300">
                     <span className="h-1.5 w-1.5 rounded-full bg-teal-400" />
                     <span>{t(activeLayer.stat)}</span>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Active Layer Compact Floating HUD Dock */}

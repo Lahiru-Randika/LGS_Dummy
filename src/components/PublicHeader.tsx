@@ -100,6 +100,7 @@ export function PublicHeader({ overlay = false }: {
                   <LogIn size={17} />
                   <span>{t('Sign in')}</span>
                 </Link>
+                {/* Language toggle (Sinhala / English) - hidden until proofreading is complete
                 <div className="public-site-nav__mobile-lang">
                   <span className="text-[11px] font-semibold text-slate-400">{t('Language')}:</span>
                   <button type="button" className="language-toggle" onClick={toggleLanguage} aria-label={t("Change language")} title={t("Change language")}>
@@ -108,15 +109,18 @@ export function PublicHeader({ overlay = false }: {
                     <span className={language === 'si' ? 'is-active' : ''}>සිං</span>
                   </button>
                 </div>
+                */}
               </div>
             </nav>
 
             <div className="public-header__actions">
+              {/* Language toggle (Sinhala / English) - hidden until proofreading is complete
               <button type="button" className="language-toggle" onClick={toggleLanguage} aria-label={t("Change language")} title={t("Change language")}>
                 <span className={language === 'en' ? 'is-active' : ''}>{t("EN")}</span>
                 <span aria-hidden="true">/</span>
                 <span className={language === 'si' ? 'is-active' : ''}>සිං</span>
               </button>
+              */}
               <Link className="public-header__map" to="/map">{t('Explore map')}</Link>
               <Link className="public-header__signin" to="/login">{t('Sign in')}</Link>
 

@@ -225,9 +225,11 @@ export function AppShell() {
           </div>
 
           <div className="topbar__right">
+            {/* Language toggle (Sinhala / English) - hidden until proofreading is complete
             <button type="button" className="app-language-toggle" onClick={toggleLanguage} aria-label={t("Change language")} title={t("Change language")}>
               <span className={language === 'en' ? 'is-active' : ''}>{t("EN")}</span><span>/</span><span className={language === 'si' ? 'is-active' : ''}>සිං</span>
             </button>
+            */}
             {/* =========================================
             NOTIFICATIONS
         ========================================== */}

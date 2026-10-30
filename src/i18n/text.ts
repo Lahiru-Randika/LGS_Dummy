@@ -10,7 +10,7 @@ export const text = {
   },
   "About LGS": {
     "english": "About LGS",
-    "sinhala": "About LGS"
+    "sinhala": "LGS හැඳින්වීම"
   },
   "About Spatio LGS": {
     "english": "About Spatio LGS",
@@ -18,15 +18,15 @@ export const text = {
   },
   "Access level": {
     "english": "Access level",
-    "sinhala": "Access level"
+    "sinhala": "ප්‍රවේශ මට්ටම"
   },
   "Access maps, service requests and municipal operations from one secure workspace.": {
     "english": "Access maps, service requests and municipal operations from one secure workspace.",
-    "sinhala": "Access maps, service requests and municipal operations from one secure workspace."
+    "sinhala": "එක සුරක්ෂිත වැඩ අවකාශයකින් සිතියම්, සේවා ඉල්ලීම් සහ නගර සේවා ක්‍රියාකලාප වලට ප්‍රවේශ වන්න."
   },
   "Account access": {
     "english": "Account access",
-    "sinhala": "Account access"
+    "sinhala": "ගිණුම් ප්‍රවේශය"
   },
   "Action": {
     "english": "Action",
@@ -42,11 +42,11 @@ export const text = {
   },
   "Add photos or PDF": {
     "english": "Add photos or PDF",
-    "sinhala": "Add photos or PDF"
+    "sinhala": "ඡායාරූප හෝ PDF එකතු කරන්න"
   },
   "Add photos or evidence": {
     "english": "Add photos or evidence",
-    "sinhala": "Add photos or evidence"
+    "sinhala": "ඡායාරූප හෝ සාක්ෂි එකතු කරන්න"
   },
   "All": {
     "english": "All",
@@ -118,7 +118,7 @@ export const text = {
   },
   "Back.": {
     "english": "Back.",
-    "sinhala": "Back."
+    "sinhala": "~"
   },
   "Booking date": {
     "english": "Booking date",
@@ -442,7 +442,7 @@ export const text = {
   },
   "Enter your account details below.": {
     "english": "Enter your account details below.",
-    "sinhala": "Enter your account details below."
+    "sinhala": "ඔබගේ ගිණුම් විස්තර පහතින් ඇතුලත් කරන්න."
   },
   "Escalate for approval": {
     "english": "Escalate for approval",
@@ -694,11 +694,11 @@ export const text = {
   },
   "Mark case as finished": {
     "english": "Mark case as finished",
-    "sinhala": "Mark case as finished"
+    "sinhala": "නඩුව අවසන් කරන්න"
   },
   "Minimum 12 characters": {
     "english": "Minimum 12 characters",
-    "sinhala": "Minimum 12 characters"
+    "sinhala": "අවම වශයෙන් අක්ෂර 12ක් ඇතුලත් කරන්න"
   },
   "Monthly collection": {
     "english": "Monthly collection",
@@ -706,7 +706,7 @@ export const text = {
   },
   "Move this case forward": {
     "english": "Move this case forward",
-    "sinhala": "Move this case forward"
+    "sinhala": "නඩුව ඉදිරියට ගෙන යන්න"
   },
   "Municipal tax collection": {
     "english": "Municipal tax collection",
@@ -714,15 +714,15 @@ export const text = {
   },
   "New municipal request": {
     "english": "New municipal request",
-    "sinhala": "New municipal request"
+    "sinhala": "නව නගර සභා ඉල්ලීම"
   },
   "New municipal updates will appear here.": {
-    "english": "New municipal updates will appear here.",
-    "sinhala": "New municipal updates will appear here."
+    "english": "New municipal updates will appear here",
+    "sinhala": "නව නගර සභා යාවත්කාලීන මෙතනින් දිස්වනු ඇත"
   },
   "New resident?": {
     "english": "New resident?",
-    "sinhala": "New resident?"
+    "sinhala": "නව පදිංචිකරුවෙක් ද?"
   },
   "News & notices": {
     "english": "News & notices",
@@ -978,7 +978,7 @@ export const text = {
   },
   "Secure access": {
     "english": "Secure access",
-    "sinhala": "Secure access"
+    "sinhala": "ආරක්ෂිත ප්‍රවේශය"
   },
   "Secure, privacy-aware and trusted handling\r\n                    of municipal information": {
     "english": "Secure, privacy-aware and trusted handling\r\n                    of municipal information",
@@ -1018,7 +1018,7 @@ export const text = {
   },
   "Sign in to create a request": {
     "english": "Sign in to create a request",
-    "sinhala": "Sign in to create a request"
+    "sinhala": "ඉල්ලීමක් ඉදිරිපත් කිරීමට පුරනය වන්න"
   },
   "Sign out": {
     "english": "Sign out",
@@ -1170,15 +1170,15 @@ export const text = {
   },
   "Want to report an issue here?": {
     "english": "Want to report an issue here?",
-    "sinhala": "Want to report an issue here?"
+    "sinhala": "අවට සිදුවන ගැටළුවක් වාර්තා කිරීමට අවශ්‍යද?"
   },
   "Weddemulla, Sri Lanka": {
-    "english": "Weddemulla, Sri Lanka",
-    "sinhala": "වැද්දෙමුල්ල, ශ්‍රී ලංකාව"
+    "english": "Kotte, Sri Lanka",
+    "sinhala": "කෝට්ටේ, ශ්‍රී ලංකාව"
   },
   "Welcome": {
     "english": "Welcome",
-    "sinhala": "Welcome"
+    "sinhala": "ආයුබෝවන්"
   },
   "Welcome to LGS": {
     "english": "Welcome to LGS",
@@ -1214,7 +1214,7 @@ export const text = {
   },
   "Your password": {
     "english": "Your password",
-    "sinhala": "Your password"
+    "sinhala": "මුරපදය"
   },
   "Your request has been created and added to\r\n            your request timeline.": {
     "english": "Your request has been created and added to\r\n            your request timeline.",
@@ -1236,9 +1236,9 @@ export const text = {
     "english": "across the municipality.",
     "sinhala": "across the municipality."
   },
-  "hello@lgs.example": {
-    "english": "hello@lgs.example",
-    "sinhala": "hello@lgs.example"
+  "operations@sulecoltd.com": {
+    "english": "operations@sulecoltd.com",
+    "sinhala": "operations@sulecoltd.com"
   },
   "info@spatiosds.com": {
     "english": "info@spatiosds.com",

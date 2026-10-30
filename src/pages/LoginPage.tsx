@@ -1,12 +1,13 @@
 import { useLanguage } from '../context/LanguageContext'
 import { ArrowLeft, ArrowRight, Eye, EyeOff, KeyRound, LockKeyhole, Mail, ShieldCheck, } from 'lucide-react';
-import { FormEvent, useState, } from 'react';
+import { FormEvent, useEffect, useState, } from 'react';
 import { Link, useNavigate, } from 'react-router-dom';
 import { Brand } from '../components/Brand';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../services/http';
 export function LoginPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isSi = language === 'si';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword,] = useState(false);
@@ -14,6 +15,19 @@ export function LoginPage() {
   const [submitting, setSubmitting,] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+    };
+  }, []);
+
   async function submit(event: FormEvent) {
     event.preventDefault();
     setError('');
@@ -33,8 +47,36 @@ export function LoginPage() {
   }
   return (<>
     <style>{`
+        html, body {
+          overflow: hidden !important;
+          height: 100% !important;
+        }
+
         .login-page-new {
           isolation: isolate;
+          height: 100vh;
+          height: 100dvh;
+          max-height: 100dvh;
+          overflow: hidden;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+
+        .login-page-new::-webkit-scrollbar {
+          display: none;
+          width: 0;
+          height: 0;
+        }
+
+        @media (max-height: 520px) {
+          html, body {
+            overflow: auto !important;
+          }
+          .login-page-new {
+            overflow-y: auto !important;
+            height: auto !important;
+            min-height: 100dvh !important;
+          }
         }
 
         .login-input-new {
@@ -168,10 +210,10 @@ export function LoginPage() {
     <main className="
           login-page-new
           relative
-          min-h-[100dvh]
+          h-screen
+          h-[100dvh]
           w-full
-          overflow-x-hidden
-          overflow-y-auto
+          overflow-hidden
           bg-slate-950
         ">
       {/* =====================================================
@@ -200,7 +242,6 @@ export function LoginPage() {
       <div className="
             absolute
             inset-0
-
             bg-[linear-gradient(90deg,rgba(3,15,20,.72)_0%,rgba(3,15,20,.32)_45%,rgba(3,15,20,.58)_100%)]
           "/>
 
@@ -208,7 +249,6 @@ export function LoginPage() {
       <div className="
             absolute
             inset-0
-
             bg-[linear-gradient(0deg,rgba(2,12,17,.70)_0%,transparent_45%)]
           "/>
 
@@ -218,14 +258,10 @@ export function LoginPage() {
             absolute
             -left-[15%]
             top-[10%]
-
             h-[650px]
             w-[650px]
-
             rounded-full
-
             bg-teal-500/[0.10]
-
             blur-[140px]
           "/>
 
@@ -239,14 +275,11 @@ export function LoginPage() {
             right-0
             top-0
             z-30
-
             flex
-            h-[78px]
+            h-[72px]
             items-center
-
             px-[5vw]
-
-            max-sm:h-[64px]
+            max-sm:h-[60px]
             max-sm:px-5
           ">
         <div className="origin-left scale-[0.90]">
@@ -261,28 +294,22 @@ export function LoginPage() {
       <div className="
             relative
             z-20
-
             grid
-            min-h-[100dvh]
+            h-full
+            max-h-[100dvh]
             grid-cols-[1.05fr_.95fr]
-
             items-center
-
             px-[6.5vw]
-            pt-[84px]
-            pb-[36px]
-
+            pt-[54px]
+            pb-3
             max-xl:px-[5vw]
-
             max-lg:grid-cols-1
             max-lg:px-5
-            max-lg:pt-[76px]
-            max-lg:pb-8
-
+            max-lg:pt-[50px]
+            max-lg:pb-3
             max-sm:px-4
-            max-sm:pt-[70px]
-            max-sm:pb-6
-
+            max-sm:pt-[46px]
+            max-sm:pb-3
             3xl:px-[8vw]
             4k:px-[10vw]
           ">
@@ -292,13 +319,10 @@ export function LoginPage() {
 
         <section className="
               login-left-enter
-
               flex
               min-h-0
               items-center
-
               pr-[7vw]
-
               max-lg:hidden
             ">
           <div className="max-w-[560px]">
@@ -306,91 +330,72 @@ export function LoginPage() {
                   inline-flex
                   items-center
                   gap-3
-
                   text-[9px]
                   font-extrabold
                   uppercase
                   tracking-[.22em]
-
                   text-teal-300
                 ">
-              <i className="h-7 w-[2px] rounded-full bg-teal-300" />{t("Welcome to LGS")}</span>
+              <i className="h-6 w-[2px] rounded-full bg-teal-300" />{t("Welcome to LGS")}</span>
 
-            <h1 className="
-                  mt-6
-
+            <h1 className={`
+                  mt-3.5
                   font-['Manrope']
-
-                  text-[clamp(52px,5.3vw,82px)]
-
                   font-extrabold
-
-                  leading-[.94]
-
-                  tracking-[-.06em]
-
                   text-white
-                ">{t("Welcome")}<br />{t("Back.")}</h1>
+                  ${isSi
+                    ? 'text-[clamp(30px,3.3vw,52px)] leading-[1.05] tracking-tight'
+                    : 'text-[clamp(38px,4.2vw,68px)] leading-[.95] tracking-[-.06em]'
+                  }
+                `}>
+              {t("Welcome")}
+              {t("Back.") && t("Back.") !== "~" ? (<><br />{t("Back.")}</>) : null}
+            </h1>
 
             <p className="
-                  mt-7
-
+                  mt-4
                   max-w-[440px]
-
-                  text-[13px]
+                  text-[12.5px]
                   font-medium
-                  leading-7
-
+                  leading-6
                   text-white/70
                 ">{t("Access maps, service requests and municipal operations from one secure workspace.")}</p>
 
             {/* Compact trust row */}
 
-            <div className="mt-9">
+            <div className="mt-6">
               <Link to="/" className="
                     group
                     inline-flex
                     items-center
-                    gap-3
-
+                    gap-2.5
                     rounded-xl
                     border
                     border-white/15
-
                     bg-white/[.08]
-
-                    px-4
-                    py-3
-
+                    px-3.5
+                    py-2.5
                     text-white
-
                     backdrop-blur-md
-
                     transition-all
                     duration-200
-
                     hover:-translate-y-0.5
                     hover:border-white/25
                     hover:bg-white/[.12]
                   ">
                 <span className="
                       grid
-                      h-9
-                      w-9
+                      h-8
+                      w-8
                       place-items-center
-
                       rounded-lg
-
                       bg-white/10
-
                       text-teal-200
-
                       transition-transform
                       duration-200
-
                       group-hover:-translate-x-0.5
                     ">
-                  <ArrowLeft size={16} />
+                  <ArrowLeft size={15} />
                 </span>
 
                 <span>
@@ -407,33 +412,25 @@ export function LoginPage() {
 
         <section className="
               login-right-enter
-
               flex
               min-h-0
-
               items-center
               justify-center
-
               max-lg:h-full
             ">
           <div className="
                 w-full
-                max-w-[450px]
-
-                rounded-[24px]
-
+                max-w-[440px]
+                rounded-[22px]
                 border
                 border-white/15
-
                 bg-slate-950/20
-
-                p-[clamp(26px,3vw,38px)]
-
+                p-6
+                sm:p-7
+                xl:p-8
                 shadow-[0_30px_90px_rgba(0,0,0,.22)]
-
                 backdrop-blur-[8px]
-
-                max-lg:max-w-[440px]
+                max-lg:max-w-[420px]
                 max-sm:rounded-[20px]
                 max-sm:p-5
               ">
@@ -446,85 +443,72 @@ export function LoginPage() {
                       font-extrabold
                       uppercase
                       tracking-[.18em]
-
                       text-teal-300
                     ">{t("Secure access")}</span>
 
-                <h2 className="
+                <h2 className={`
+                      m-0
                       mt-1.5
-
+                      mb-0
                       font-['Manrope']
-                      text-[32px]
-                      font-extrabold
-
-                      tracking-[-.045em]
-
                       text-white
-                    ">{t("Sign in")}</h2>
+                      ${isSi
+                        ? 'text-[23px] sm:text-[25px] font-bold leading-tight pb-2 tracking-[-.01em]'
+                        : 'text-[30px] sm:text-[32px] font-extrabold leading-none pb-1 tracking-[-.045em]'
+                      }
+                    `}>{t("Sign in")}</h2>
               </div>
 
               <span className="
                     login-float-icon
-
                     grid
-                    h-11
-                    w-11
+                    h-10
+                    w-10
+                    sm:h-11
+                    sm:w-11
                     place-items-center
-
                     rounded-[14px]
-
                     border
                     border-white/15
-
                     bg-white/10
-
                     text-teal-200
-
                     backdrop-blur-md
                   ">
                 <LockKeyhole size={18} strokeWidth={1.8} />
               </span>
             </div>
 
-            <p className="mt-3 text-[10px] leading-5 text-white/55">{t("Enter your account details below.")}</p>
+            <p className="m-0 mt-2 mb-0 text-[10px] leading-normal text-white/55">{t("Enter your account details below.")}</p>
 
             {/* =================================================
             FORM
         ================================================== */}
 
-            <form onSubmit={submit} className="mt-7">
+            <form onSubmit={submit} className="mt-5">
               {/* EMAIL */}
 
               <label className="block">
                 <span className="
-                      mb-2
+                      mb-1.5
                       block
-
                       text-[8px]
                       font-extrabold
                       uppercase
                       tracking-[.12em]
-
                       text-white/65
                     ">{t("Email address")}</span>
 
                 <div className="
                       login-field-new
-
                       flex
-                      h-[50px]
+                      h-[46px]
                       items-center
                       gap-3
-
                       rounded-[10px]
-
                       border
                       border-white/70
-
                       bg-white
-
-                      px-4
-
+                      px-3.5
                       shadow-[0_8px_24px_rgba(0,0,0,.08)]
                     ">
                   <Mail size={16} strokeWidth={1.7} className="
@@ -538,36 +522,28 @@ export function LoginPage() {
 
               {/* PASSWORD */}
 
-              <label className="mt-4 block">
+              <label className="mt-3.5 block">
                 <span className="
-                      mb-2
+                      mb-1.5
                       block
-
                       text-[8px]
                       font-extrabold
                       uppercase
                       tracking-[.12em]
-
                       text-white/65
                     ">{t("Password")}</span>
 
                 <div className="
                       login-field-new
-
                       flex
-                      h-[50px]
+                      h-[46px]
                       items-center
                       gap-3
-
                       rounded-[10px]
-
                       border
                       border-white/70
-
                       bg-white
-
-                      px-4
-
+                      px-3.5
                       shadow-[0_8px_24px_rgba(0,0,0,.08)]
                     ">
                   <KeyRound size={16} strokeWidth={1.7} className="
@@ -588,20 +564,13 @@ export function LoginPage() {
                         shrink-0
                         cursor-pointer
                         place-items-center
-
                         rounded-lg
-
                         border-0
-
                         bg-transparent
-
                         text-slate-400
-
                         shadow-none
                         outline-none
-
                         transition
-
                         hover:bg-slate-100
                         hover:text-slate-700
                       ">
@@ -613,27 +582,19 @@ export function LoginPage() {
               {/* ERROR */}
 
               {error && (<div className="
-                      mt-4
-
+                      mt-3
                       flex
                       items-start
                       gap-2.5
-
                       rounded-[10px]
-
                       border
                       border-red-300/30
-
                       bg-red-950/35
-
-                      px-3.5
-                      py-3
-
+                      px-3
+                      py-2
                       text-[9px]
                       leading-4
-
                       text-red-100
-
                       backdrop-blur-md
                     ">
                 <KeyRound size={13} className="mt-px shrink-0" />
@@ -647,45 +608,32 @@ export function LoginPage() {
 
               <button type="submit" disabled={submitting} className="
                     group
-
-                    mt-5
-
+                    mt-4
                     flex
-                    h-[50px]
+                    h-[46px]
                     w-full
                     cursor-pointer
                     items-center
                     justify-center
                     gap-2.5
-
                     rounded-[10px]
-
                     border
                     border-teal-200/20
-
                     bg-teal-400
-
                     px-5
-
                     text-[10px]
                     font-extrabold
                     uppercase
                     tracking-[.12em]
-
                     !text-slate-950
-
                     shadow-[0_12px_32px_rgba(20,184,166,.18)]
-
                     transition
                     duration-300
-
                     hover:-translate-y-0.5
                     hover:bg-teal-300
                     hover:shadow-[0_16px_38px_rgba(20,184,166,.24)]
-
                     active:translate-y-0
                     active:scale-[.99]
-
                     disabled:cursor-not-allowed
                     disabled:opacity-60
                   ">
@@ -696,7 +644,6 @@ export function LoginPage() {
                 {!submitting && (<ArrowRight size={15} className="
                         transition-transform
                         duration-300
-
                         group-hover:translate-x-1
                       "/>)}
               </button>
@@ -707,24 +654,18 @@ export function LoginPage() {
         ================================================== */}
 
             <div className="
-                  mt-5
-
+                  mt-4
                   border-t
                   border-white/15
-
-                  pt-4
-
+                  pt-3
                   text-center
                 ">
               <span className="text-[9px] text-white/55">{t("New resident?")}{' '}
 
                 <Link to="/register" className="
                       font-extrabold
-
                       !text-teal-300
-
                       transition
-
                       hover:!text-teal-200
                     ">{t("Create account")}</Link>
               </span>
