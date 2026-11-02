@@ -36,6 +36,7 @@ export function useLeafletCore({
   mode,
   refs,
   layersRef,
+  canPinLocation = false,
   setRgbLoaded,
   setZoom,
   setSelectedFeature,
@@ -49,6 +50,7 @@ export function useLeafletCore({
   layersRef: RefObject<
     Record<LayerKey, boolean>
   >
+  canPinLocation?: boolean
   setRgbLoaded:
     Dispatch<SetStateAction<boolean>>
   setZoom:
@@ -245,20 +247,6 @@ export function useLeafletCore({
         setLayerPanel(false)
         setSearch('')
 
-        const latitude = Number(
-          event.latlng.lat.toFixed(7),
-        )
-        const longitude = Number(
-          event.latlng.lng.toFixed(7),
-        )
-
-        setPendingRequestLocation({
-          kind: 'POINT',
-          latitude,
-          longitude,
-          label: 'Pinned map location',
-        })
-
         if (
           refs.requestPinRef.current &&
           map.hasLayer(
@@ -270,28 +258,46 @@ export function useLeafletCore({
           )
         }
 
-        refs.requestPinRef.current =
-          L.circleMarker(
-            [latitude, longitude],
-            {
-              radius: 8,
-              color: '#ffffff',
-              weight: 3,
-              fillColor: '#0f766e',
-              fillOpacity: 1,
-            },
-          ).addTo(map)
-
-        refs.requestPinRef.current
-          .bindTooltip(
-            'Request location',
-            {
-              direction: 'top',
-              offset: [0, -8],
-              opacity: 0.92,
-            },
+        if (canPinLocation) {
+          const latitude = Number(
+            event.latlng.lat.toFixed(7),
           )
-          .openTooltip()
+          const longitude = Number(
+            event.latlng.lng.toFixed(7),
+          )
+
+          setPendingRequestLocation({
+            kind: 'POINT',
+            latitude,
+            longitude,
+            label: 'Pinned map location',
+          })
+
+          refs.requestPinRef.current =
+            L.circleMarker(
+              [latitude, longitude],
+              {
+                radius: 8,
+                color: '#ffffff',
+                weight: 3,
+                fillColor: '#0f766e',
+                fillOpacity: 1,
+              },
+            ).addTo(map)
+
+          refs.requestPinRef.current
+            .bindTooltip(
+              'Request location',
+              {
+                direction: 'top',
+                offset: [0, -8],
+                opacity: 0.92,
+              },
+            )
+            .openTooltip()
+        } else {
+          setPendingRequestLocation(null)
+        }
 
         map.closePopup()
       }
@@ -358,7 +364,7 @@ export function useLeafletCore({
       refs.initialFitDoneRef.current =
         false
     }
-  }, [mode])
+  }, [mode, canPinLocation])
 
   return mapReady
 }

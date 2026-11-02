@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import {
+  useState,
+} from 'react'
 
 import {
   useAuth,
@@ -48,17 +50,22 @@ import {
 
 export function useCivicMapController(
   mode: 'full' | 'preview',
+  isPublic = false,
 ) {
   const {
     user,
     can,
   } = useAuth()
 
+  const effectiveUser = isPublic ? null : user
+
   const canSeeInternalCmc =
-    can('map.internal')
+    !isPublic && can('map.internal')
 
   const canCacheBuildingResolution =
-    can('building.sensitive.read')
+    !isPublic && can('building.sensitive.read')
+
+  const canPinLocation = Boolean(effectiveUser && effectiveUser.role === 'CITIZEN')
 
   const refs = useMapRefs(mode)
 
@@ -67,7 +74,7 @@ export function useCivicMapController(
 
   const layerState =
     useMapLayerState({
-      user,
+      user: effectiveUser,
       canSeeInternalCmc,
     })
 
@@ -87,7 +94,7 @@ export function useCivicMapController(
     visibleRequests,
   } =
     useGovernmentMapRequests(
-      user,
+      effectiveUser,
     )
 
   const mapReady =
@@ -96,6 +103,7 @@ export function useCivicMapController(
       refs,
       layersRef:
         layerState.layersRef,
+      canPinLocation,
       setRgbLoaded:
         layerState.setRgbLoaded,
       setZoom:
@@ -185,7 +193,7 @@ export function useCivicMapController(
   useRequestMarkers({
     mapReady,
     refs,
-    visibleRequests,
+    visibleRequests: effectiveUser ? visibleRequests : [],
   })
 
   const actions =
@@ -220,7 +228,7 @@ export function useCivicMapController(
   })
 
   return {
-    user,
+    user: effectiveUser,
     refs,
     selection,
     layerState,

@@ -624,6 +624,8 @@ const additionalPhrases: Record<string, string> = {
   'Failed to send your message. Please try again.': 'ඔබගේ පණිවිඩය යැවීමට නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.',
   'Thank you for reaching out. We have received your inquiry and our team will get back to you shortly.': 'අප හා සම්බන්ධ වීම පිළිබඳව ස්තූතියි. ඔබගේ විමසීම ලැබුණු අතර, අපගේ කණ්ඩායම ඉක්මනින් ඔබ හා සම්බන්ධ වනු ඇත.',
   'OK': 'හරි',
+  'Notice': 'දැනුම්දීම',
+  'Delivered': 'යවන ලදී',
   'An idea born from a real, recurring problem.': 'සැබෑ, පුනරාවර්තී ගැටලුවකින් උපන් අදහසක්.',
   'An Idea Born From a Real,': 'සැබෑ, පුනරාවර්තී ගැටලුවකින්',
   'Recurring Problem.': 'උපන් අදහසක්.',

@@ -11,6 +11,7 @@ import { useLanguage } from '../../context/LanguageContext'
 type MapTopControlsProps = {
   layerButtonRef: RefObject<HTMLButtonElement | null>
   layerPanelOpen: boolean
+  canAccessLayers?: boolean
   isCitizen: boolean
   hasPendingRequestLocation: boolean
   onToggleLayers: () => void
@@ -21,6 +22,7 @@ type MapTopControlsProps = {
 export function MapTopControls({
   layerButtonRef,
   layerPanelOpen,
+  canAccessLayers = false,
   isCitizen,
   hasPendingRequestLocation,
   onToggleLayers,
@@ -30,23 +32,25 @@ export function MapTopControls({
   const { t } = useLanguage()
   return (
     <div className="civic-enter-up absolute bottom-4 right-4 z-[1400] flex flex-col items-stretch gap-2 max-sm:bottom-3 max-sm:right-3">
-      <button
-        ref={layerButtonRef}
-        type="button"
-        onClick={onToggleLayers}
-        className={`civic-map-control flex h-[40px] min-w-[116px] cursor-pointer items-center justify-start gap-2 rounded-xl border px-3 text-[10px] font-bold shadow-[0_7px_20px_rgba(15,23,42,.12)] backdrop-blur-xl outline-none max-sm:h-[38px] max-sm:min-w-[108px] max-sm:px-2.5 max-sm:text-[9px] ${
-          layerPanelOpen
-            ? 'border-teal-200 bg-teal-700 text-white'
-            : 'border-white/80 bg-white/95 text-slate-600 hover:bg-white hover:text-teal-700'
-        }`}
-      >
-        <Layers3
-          size={16}
-          strokeWidth={1.9}
-          className="shrink-0"
-        />
-        <span>{t('Layers')}</span>
-      </button>
+      {canAccessLayers && (
+        <button
+          ref={layerButtonRef}
+          type="button"
+          onClick={onToggleLayers}
+          className={`civic-map-control flex h-[40px] min-w-[116px] cursor-pointer items-center justify-start gap-2 rounded-xl border px-3 text-[10px] font-bold shadow-[0_7px_20px_rgba(15,23,42,.12)] backdrop-blur-xl outline-none max-sm:h-[38px] max-sm:min-w-[108px] max-sm:px-2.5 max-sm:text-[9px] ${
+            layerPanelOpen
+              ? 'border-teal-200 bg-teal-700 text-white'
+              : 'border-white/80 bg-white/95 text-slate-600 hover:bg-white hover:text-teal-700'
+          }`}
+        >
+          <Layers3
+            size={16}
+            strokeWidth={1.9}
+            className="shrink-0"
+          />
+          <span>{t('Layers')}</span>
+        </button>
+      )}
 
       <button
         type="button"

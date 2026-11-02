@@ -346,55 +346,76 @@ export function ContactPage() {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/70 p-4 sm:p-6 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-950/60 p-4 sm:p-6 backdrop-blur-md animate-in fade-in duration-200"
           onClick={() => setPopup((prev) => ({ ...prev, isOpen: false }))}
         >
           <div
-            className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200/80 p-6 sm:p-8 text-center animate-in zoom-in-95 duration-200"
+            className="relative w-full max-w-[420px] overflow-hidden rounded-[26px] bg-white p-7 sm:p-8 text-center shadow-[0_25px_60px_-15px_rgba(15,23,42,0.22),0_0_0_1px_rgba(15,23,42,0.05)] animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Ambient Top Glow */}
+            <div
+              className={`pointer-events-none absolute -top-16 left-1/2 -translate-x-1/2 h-36 w-60 rounded-full blur-2xl ${
+                popup.type === 'success' ? 'bg-teal-500/15' : 'bg-rose-500/15'
+              }`}
+              aria-hidden="true"
+            />
+
             {/* Close Button */}
             <button
               type="button"
               onClick={() => setPopup((prev) => ({ ...prev, isOpen: false }))}
-              className="absolute top-4 right-4 rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+              className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border-0 bg-slate-100 text-slate-400 hover:bg-slate-200/70 hover:text-slate-700 outline-none transition-colors"
               aria-label="Close"
             >
-              <X size={18} />
+              <X size={15} strokeWidth={2.2} />
             </button>
 
             {/* Icon */}
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center">
+            <div className="relative mx-auto mb-3.5 flex items-center justify-center">
               {popup.type === 'success' ? (
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200/80 shadow-inner">
-                  <CheckCircle2 size={34} strokeWidth={2.2} />
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 text-teal-600 ring-8 ring-teal-50/50 border border-teal-200/70 shadow-sm">
+                  <CheckCircle2 size={30} strokeWidth={2.2} />
                 </div>
               ) : (
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 border border-rose-200/80 shadow-inner">
-                  <AlertCircle size={34} strokeWidth={2.2} />
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-50 text-rose-500 ring-8 ring-rose-50/50 border border-rose-200/70 shadow-sm">
+                  <AlertCircle size={30} strokeWidth={2.2} />
                 </div>
               )}
             </div>
 
+            {/* Status Pill */}
+            <div className="mb-2">
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase border ${
+                  popup.type === 'success'
+                    ? 'bg-teal-50/80 text-teal-700 border-teal-200/60'
+                    : 'bg-rose-50/80 text-rose-600 border-rose-200/60'
+                }`}
+              >
+                {popup.type === 'success' ? t('Delivered') : t('Notice')}
+              </span>
+            </div>
+
             {/* Title */}
-            <h3 className="font-['Manrope'] text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+            <h3 className="font-['Manrope'] text-lg sm:text-xl font-extrabold tracking-[-0.02em] text-slate-900 leading-snug">
               {popup.title}
             </h3>
 
             {/* Message */}
-            <p className="mt-2.5 text-sm text-slate-600 leading-relaxed sm:text-[15px]">
+            <p className="mt-2 text-sm text-slate-500 leading-relaxed max-w-[320px] mx-auto">
               {popup.message}
             </p>
 
             {/* Action Button */}
-            <div className="mt-6 flex justify-center">
+            <div className="mt-6">
               <button
                 type="button"
                 onClick={() => setPopup((prev) => ({ ...prev, isOpen: false }))}
-                className={`inline-flex items-center justify-center rounded-xl px-7 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-200 active:scale-[0.98] ${
+                className={`inline-flex h-[42px] w-full items-center justify-center rounded-xl px-6 text-[13px] font-bold text-white shadow-md transition-all duration-200 active:scale-[0.98] outline-none border-0 ${
                   popup.type === 'success'
                     ? 'bg-[#061522] hover:bg-[#0c2338] shadow-[#061522]/20'
-                    : 'bg-rose-600 hover:bg-rose-700 shadow-rose-600/20'
+                    : 'bg-slate-900 hover:bg-slate-800 shadow-slate-900/20'
                 }`}
               >
                 {t('OK')}
